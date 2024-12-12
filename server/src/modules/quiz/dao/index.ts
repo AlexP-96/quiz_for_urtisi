@@ -39,16 +39,16 @@ class QuizDao {
         });
     }
 
-    async delete(params: string | number) {
-        return await this.quizDb.destroy(
-            { where: { quiz_id: params } },
-        );
-    }
-
     async update(params: IQuizUpdate) {
         return await this.quizDb.update(
             { quiz_name: params.quiz_name },
             { where: { quiz_id: params.quiz_id } },
+        );
+    }
+
+    async delete(params: string | number) {
+        return await this.quizDb.destroy(
+            { where: { quiz_id: params } },
         );
     }
 

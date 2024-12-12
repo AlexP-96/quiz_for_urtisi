@@ -24,12 +24,12 @@ class QuizController {
 
     async getAllQuiz(req: Request, res: Response) {
         try {
-            const { id } = req.params;
+            const { user_id } = req.params;
 
             const {
                 data,
                 error,
-            } = await this.quizService.findAll(id);
+            } = await this.quizService.findAll(user_id);
 
             if (error) {
                 return res.status(400)
@@ -55,12 +55,12 @@ class QuizController {
 
     async getOneQuiz(req: Request, res: Response) {
         try {
-            const { id } = req.params;
+            const { quiz_id } = req.params;
 
             const {
                 data,
                 error,
-            } = await this.quizService.findOne(id);
+            } = await this.quizService.findOne(quiz_id);
 
             if (error) {
                 return res.status(400)
@@ -86,12 +86,16 @@ class QuizController {
 
     async createQuiz(req: Request, res: Response) {
         try {
-            const payload: IQuizCreate = req?.body;
+            const { quiz_name } = req?.body;
+            const { user_id } = req?.params;
 
             const {
                 data,
                 error,
-            } = await this.quizService.create(payload);
+            } = await this.quizService.create({
+                quiz_name,
+                user_id,
+            });
 
             if (error) {
                 return res.status(400)
@@ -117,12 +121,15 @@ class QuizController {
 
     async updateQuiz(req: Request, res: Response) {
         try {
-            const payload: IQuizUpdate = req?.body;
-
+            const { quiz_name } = req?.body;
+            const { quiz_id } = req?.params;
             const {
                 data,
                 error,
-            } = await this.quizService.update(payload);
+            } = await this.quizService.update({
+                quiz_name,
+                quiz_id,
+            });
 
             if (error) {
                 return res.status(400)
@@ -148,7 +155,7 @@ class QuizController {
 
     async deleteQuiz(req: Request, res: Response) {
         try {
-            const { quiz_id } = req?.body;
+            const { quiz_id } = req?.params;
 
             const {
                 data,

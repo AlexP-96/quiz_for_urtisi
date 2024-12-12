@@ -1,14 +1,9 @@
-export interface IQuizUpdate {
-    quiz_id: number;
-    quiz_name: string;
-}
-
 export interface IQuizDelete {
     quiz_id: number;
 }
 
 export interface IQuizCreate {
-    user_id: number;
+    user_id: string;
     quiz_name: string;
 }
 
@@ -17,8 +12,8 @@ export interface IQuizGetOne {
 }
 
 export interface IQuizUpdate {
-    user_id: number;
-    quiz_id: number;
+    quiz_id: string;
+    quiz_name: string;
 }
 
 export interface IQuizService {

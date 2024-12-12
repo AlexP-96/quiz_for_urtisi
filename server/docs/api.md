@@ -44,9 +44,10 @@
 
 ### Получение одного квиза
 
-**request** http://localhost user/quiz/ <u>**:id**</u> - method **GET**
+**request** http://localhost user/**:user_id**/quiz/**:quiz_id** - method **GET**
 
-**:id** - передаем id квиза
+**:user_id** - передаем id пользователя<br>
+**:quiz_id** - передаем id квиза
 
 **response**
 ```javascript
@@ -64,12 +65,13 @@
 
 ### Создание квиза
 
-**request** http://localhost /create_quiz - method **POST**
+**request** http://localhost /user/**:user_id**/create_quiz - method **POST**
+
+**:user_id** - id пользователя
 
 payload
 ```javascript
 {
-    "user_id": "1",
     "quiz_name": "quiz 3"
 }
 ```
@@ -92,9 +94,9 @@ payload
 ```
 ### Получение всех квизов
 
-**request** http://localhost /user/<u>**:id**</u>/quiz_all - method **GET**
+**request** http://localhost /user/<u>**:user_id**</u>/quiz_all - method **GET**
 
-**:id** - передаем **user_id**
+**:user_id** - передаем id пользователя
 
 **response**
 
@@ -119,34 +121,31 @@ payload
 ```
 ### Удаление квиза
 
-**request** http://localhost /delete_quiz
+**request** http://localhost /user/**:user_id**/delete_quiz/**:quiz_id** - method **DELETE**
+
+**:user_id** - передаем id пользователя<br>
+**:quiz_id** - пердаем id квиза
+
+**response**
+
+```javascript
+    TODO
+```
+### Обновление квиза 
+
+**request** http://localhost /user/**:user_id**/update_quiz/**:quiz_id** - method **POST**
+
+**:user_id** - передаем id пользователя<br>
+**:quiz_id** - передаем id квиза
 
 payload
 
 ```javascript
 {
-    "quiz_id": "1",
-}
-```
-
-**response**
-
-```javascript
-
-```
-### Обновление квиза
-
-**request** 
-
-payload
-
-```javascript
-{
-    "user_id": "1";
-    "quiz_id": "1";
+    "quiz_name": "new name";
 }
 ```
 **response**
 ```javascript
-
+    TODO
 ```
