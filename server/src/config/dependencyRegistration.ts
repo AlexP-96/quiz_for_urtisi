@@ -15,6 +15,9 @@ import QuizService from '../modules/quiz/services';
 import QuizDao from '../modules/quiz/dao';
 import quizDb from '../modules/quiz/models';
 
+import QuestionController from '../modules/questions/controllers';
+import QuestionService from '../modules/questions/service';
+import QuestionDao from '../modules/questions/dao';
 import questionDb from '../modules/questions/models';
 
 import answerDb from '../modules/answers/models';
@@ -40,6 +43,9 @@ const registerDependency = () => {
 
     container.register({
         questionDb: asValue(questionDb),
+        questionDao: asClass(QuestionDao),
+        questionService: asClass(QuestionService),
+        questionController: asClass(QuestionController),
     });
 
     container.register({

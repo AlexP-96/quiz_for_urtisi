@@ -15,6 +15,7 @@ const answerDb = sequelize.define<Model>('answer', {
         },
         question_name: {
             type: DataTypes.STRING,
+            allowNull: false,
         },
         question_id: {
             type: DataTypes.INTEGER,

@@ -24,10 +24,12 @@ const userDb = sequelize.define<Model>('user', {
     },
     success: {
         type: DataTypes.TINYINT,
+        allowNull: false,
         defaultValue: false,
     },
     token: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
 });
 
