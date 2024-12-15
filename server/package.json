@@ -8,7 +8,11 @@
         "start": "npm run prod",
         "prod": "npx tsc && pm2 start ./dist/src/server.js --ignore-watch=node_modules && pm2 save",
         "dev": "nodemon",
-        "test": "jest --testPathPattern unit"
+        "test": "jest --testPathPattern unit",
+        "db:seed:all": "npx sequelize-cli db:seed:all",
+        "db:seed:del": "npx sequelize-cli db:seed:undo:all",
+        "db:migrate:del": "npx sequelize-cli db:migrate:undo:all",
+        "db:migrate": "npx sequelize-cli db:migrate"
     },
     "jest": {
         "preset": "ts-jest"
