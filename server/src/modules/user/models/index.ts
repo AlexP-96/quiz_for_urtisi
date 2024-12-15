@@ -23,7 +23,7 @@ const userDb = sequelize.define<Model>('user', {
         allowNull: false,
     },
     success: {
-        type: DataTypes.TINYINT,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
     },

@@ -1,0 +1,27 @@
+    {
+    "development": {
+        "username": "user_quiz",
+        "password": "242322qWaS",
+        "database": "db_quiz",
+        "host": "127.0.0.1",
+        "port": 3307,
+        "dialect": "mysql"
+    },
+    "test": {
+        "username": "user_quiz",
+        "password": "242322qWaS",
+        "database": "db_quiz",
+        "host": "127.0.0.1",
+        "port": 3307,
+        "dialect": "mysql"
+    },
+    "production": {
+        "username": "user_quiz",
+        "password": "242322qWaS",
+        "database": "db_quiz",
+        "host": "127.0.0.1",
+        "port": 3307,
+        "dialect": "mysql"
+    }
+}
+

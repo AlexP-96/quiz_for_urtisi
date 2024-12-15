@@ -1,13 +1,19 @@
-import {
-    DataTypes,
+'use strict';
+const {
     Model,
-} from 'sequelize';
-import sequelize from '../../../orm';
-import dotenv from 'dotenv';
+    DataTypes,
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+    class answer extends Model {
+        static associate(models) {
+            answer.belongsTo(models.question, {
+                foreignKey: 'question_id',
+                as: 'question',
+            })
+        }
+    }
 
-dotenv.config();
-
-const answerDb = sequelize.define<Model>('answer', {
+    answer.init({
         answer_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -26,7 +32,9 @@ const answerDb = sequelize.define<Model>('answer', {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-    },
-);
-
-export default answerDb;
+    }, {
+        sequelize,
+        modelName: 'answer',
+    });
+    return answer;
+};

@@ -10,16 +10,16 @@ const registrationAssociations = () => {
 
     quizDb.belongsTo(userDb, {
         foreignKey: 'user_id',
-
     });
+
     quizDb.hasMany(questionDb, {
         foreignKey: 'quiz_id',
-
     });
 
     questionDb.belongsTo(quizDb, {
         foreignKey: 'quiz_id',
     });
+
     questionDb.hasMany(answerDb, {
         foreignKey: 'question_id',
     });
