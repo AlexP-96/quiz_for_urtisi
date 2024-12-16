@@ -3,25 +3,22 @@ import {
     Response,
 } from 'express';
 import {
-    IQuestionCreate,
-    IQuestionDelete,
-    IQuestionService,
-    IQuestionUpdate,
+    IAnswerService,
 } from '../types';
 
-class QuestionController {
-    questionService: IQuestionService;
+class AnswerController {
+    answerService: IAnswerService;
 
-    constructor({ questionService }: any) {
-        this.questionService = questionService;
+    constructor({ answerService }: any) {
+        this.answerService = answerService;
 
-        this.getAllQuestion = this.getAllQuestion.bind(this);
-        this.createQuestion = this.createQuestion.bind(this);
-        this.updateQuestion = this.updateQuestion.bind(this);
-        this.deleteQuestion = this.deleteQuestion.bind(this);
+        this.getAllAnswer = this.getAllAnswer.bind(this);
+        this.createAnswer = this.createAnswer.bind(this);
+        this.updateAnswer = this.updateAnswer.bind(this);
+        this.deleteAnswer = this.deleteAnswer.bind(this);
     }
 
-    async getAllQuestion(req: Request, res: Response) {
+    async getAllAnswer(req: Request, res: Response) {
         try {
             const {
                 user_id,
@@ -31,7 +28,7 @@ class QuestionController {
             const {
                 data,
                 error,
-            } = await this.questionService.findAll({
+            } = await this.answerService.findAll({
                 user_id,
                 quiz_id,
             });
@@ -58,16 +55,16 @@ class QuestionController {
         }
     }
 
-    async createQuestion(req: Request, res: Response) {
+    async createAnswer(req: Request, res: Response) {
         try {
-            const { question_name } = req?.body;
+            const { answer_name } = req?.body;
             const { quiz_id } = req?.params;
 
             const {
                 data,
                 error,
-            } = await this.questionService.create({
-                question_name,
+            } = await this.answerService.create({
+                answer_name,
                 quiz_id,
             });
 
@@ -93,16 +90,16 @@ class QuestionController {
         }
     }
 
-    async updateQuestion(req: Request, res: Response) {
+    async updateAnswer(req: Request, res: Response) {
         try {
-            const { question_name } = req?.body;
-            const { question_id } = req?.params;
+            const { answer_name } = req?.body;
+            const { answer_id } = req?.params;
             const {
                 data,
                 error,
-            } = await this.questionService.update({
-                question_name,
-                question_id,
+            } = await this.answerService.update({
+                answer_name,
+                answer_id,
             });
 
             if (error) {
@@ -127,14 +124,14 @@ class QuestionController {
         }
     }
 
-    async deleteQuestion(req: Request, res: Response) {
+    async deleteAnswer(req: Request, res: Response) {
         try {
-            const { question_id } = req?.params;
+            const { answer_id } = req?.params;
 
             const {
                 data,
                 error,
-            } = await this.questionService.delete(question_id);
+            } = await this.answerService.delete(answer_id);
 
             if (error) {
                 return res.status(400)
@@ -159,4 +156,4 @@ class QuestionController {
     }
 }
 
-export default QuestionController;
+export default AnswerController;

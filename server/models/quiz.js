@@ -7,11 +7,11 @@ const {
 module.exports = (sequelize, DataTypes) => {
     class quiz extends Model {
         static associate(models) {
-            quiz.belongsTo(user, {
+            quiz.belongsTo(models.user, {
                 foreignKey: 'user_id',
                 as: 'user',
             });
-            quiz.hasMany(question, {
+            quiz.hasMany(models.question, {
                 foreignKey: 'quiz_id',
                 as: 'quiz',
             });

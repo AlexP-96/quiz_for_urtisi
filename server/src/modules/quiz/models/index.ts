@@ -13,7 +13,7 @@ const quizDb = sequelize.define<Model>('quiz', {
             primaryKey: true,
             autoIncrement: true,
         },
-        quiz_name: {
+    quiz_name: {
             type: DataTypes.STRING,
             allowNull: false,
         },

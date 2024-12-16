@@ -29,7 +29,7 @@ const userDb = sequelize.define<Model>('user', {
     },
     token: {
         type: DataTypes.STRING,
-        allowNull: false,
+        defaultValue: null,
     },
 });
 

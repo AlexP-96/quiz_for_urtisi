@@ -15,3 +15,5 @@ export interface IUserLoginParams {
     email: string;
     password: string;
 }
+
+export type None<T> = T | undefined;

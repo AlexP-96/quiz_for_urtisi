@@ -9,13 +9,16 @@ import {
 class QuestionDao {
     questionDb: any;
     quizDb: any;
+    userDb: any;
 
     constructor({
         questionDb,
         quizDb,
+        userDb,
     }: any) {
         this.questionDb = questionDb;
         this.quizDb = quizDb;
+        this.userDb = userDb;
 
         this.findAll = this.findAll.bind(this);
         this.create = this.create.bind(this);
@@ -25,18 +28,9 @@ class QuestionDao {
 
     async findAll(params: IQuestionGetAll) {
         return await this.questionDb.findAll({
-            include: [
-                {
-                    model: quizDb,
-                    where: { id: params.quiz_id },
-                    include: [
-                        {
-                            model: userDb,
-                            where: { id: params.user_id },
-                        },
-                    ],
-                },
-            ],
+            where: {
+                quiz_id: params.quiz_id,
+            }
         });
     }
 

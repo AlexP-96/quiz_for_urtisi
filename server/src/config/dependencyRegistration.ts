@@ -5,6 +5,7 @@ import {
     createContainer,
 } from 'awilix';
 
+
 import UserController from '../modules/user/controllers';
 import UserService from '../modules/user/services';
 import UserDao from '../modules/user/dao';
@@ -20,6 +21,9 @@ import QuestionService from '../modules/questions/service';
 import QuestionDao from '../modules/questions/dao';
 import questionDb from '../modules/questions/models';
 
+import AnswerController from '../modules/answers/controllers';
+import AnswerService from '../modules/answers/service';
+import AnswerDao from '../modules/answers/dao';
 import answerDb from '../modules/answers/models';
 
 import registrationAssociations from '../orm/all_models';
@@ -50,6 +54,9 @@ const registerDependency = () => {
 
     container.register({
         answerDb: asValue(answerDb),
+        answerDao: asClass(AnswerDao),
+        answerService: asClass(AnswerService),
+        answerController: asClass(AnswerController),
     });
 
     console.log('Dependency registered ...');
