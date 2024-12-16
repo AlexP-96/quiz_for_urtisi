@@ -17,7 +17,7 @@ class UserController {
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
         this.logout = this.logout.bind(this);
-        this.user = this.user.bind(this);
+        this.getAllData = this.getAllData.bind(this);
     }
 
     async register(req: Request, res: Response) {
@@ -110,15 +110,34 @@ class UserController {
         }
     }
 
-    async user(req: Request, res: Response) {
+    async getAllData(req: Request, res: Response) {
         try {
+            const { user_id } = req.params;
+
+            const {
+                data,
+                error,
+            } = await this.userService.getAllData(user_id);
+
+            if (error) {
+                return res.status(400)
+                    .send({
+                        data: null,
+                        error,
+                    });
+            }
+
+            return res.status(200).send({
+                data,
+                error: null,
+            });
 
         } catch (error) {
             res.send(500)
                 .send({
                     data: null,
-                    error: error
-                })
+                    error: error,
+                });
         }
     }
 }

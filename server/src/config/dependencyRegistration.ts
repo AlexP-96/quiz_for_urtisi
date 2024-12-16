@@ -65,6 +65,6 @@ const registerDependency = () => {
 
 registerDependency();
 
-if(process.env.SYNC_DB === 'true') registrationAssociations();
+registrationAssociations();
 
 export { container };

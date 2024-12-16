@@ -12,6 +12,7 @@ const answerController = container.resolve('answerController');
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.post('/register', userController.register);
+router.get('/:user_id/get_all_data', userController.getAllData);
 
 //quiz
 export const getOneQuizRoute = router.get('/:user_id/quiz/:quiz_id', quizController.getOneQuiz);

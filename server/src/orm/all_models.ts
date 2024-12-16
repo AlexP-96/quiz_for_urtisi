@@ -6,22 +6,22 @@ import userDb from '../modules/user/models';
 const registrationAssociations = () => {
     userDb.hasMany(quizDb, {
         foreignKey: 'user_id',
-        as: 'quiz',
+        as: 'quizzes',
     });
 
     quizDb.belongsTo(userDb, {
         foreignKey: 'user_id',
-        as: 'user',
+        as: 'users',
     });
 
     quizDb.hasMany(questionDb, {
         foreignKey: 'quiz_id',
-        as: 'question',
+        as: 'questions',
     });
 
     questionDb.belongsTo(quizDb, {
         foreignKey: 'quiz_id',
-        as: 'quiz',
+        as: 'quizzes',
     });
 
     questionDb.hasMany(answerDb, {
@@ -31,7 +31,7 @@ const registrationAssociations = () => {
 
     answerDb.belongsTo(questionDb, {
         foreignKey: 'question_id',
-        as: 'question',
+        as: 'questions',
     });
 };
 

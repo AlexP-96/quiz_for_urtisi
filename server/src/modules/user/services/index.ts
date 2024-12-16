@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import {
+    IUserGetAll,
     IUserLoginParams,
     IUserLoginRegister,
 } from '../types';
@@ -9,6 +10,8 @@ class UserService {
 
     constructor({ userDao }: any) {
         this.userDao = userDao;
+
+        this.getAllData = this.getAllData.bind(this);
     }
 
     async login(params: IUserLoginParams) {
@@ -82,7 +85,20 @@ class UserService {
         }
     }
 
-
+    async getAllData(params: IUserGetAll) {
+        try {
+            const data = await this.userDao.findAll(params);
+            return {
+                data,
+                error: null,
+            };
+        } catch (error) {
+            return {
+                data: null,
+                error: error,
+            };
+        }
+    }
 }
 
 export default UserService;

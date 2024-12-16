@@ -16,4 +16,8 @@ export interface IUserLoginParams {
     password: string;
 }
 
+export interface IUserGetAll {
+    user_id?: number;
+}
+
 export type None<T> = T | undefined;
