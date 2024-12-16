@@ -21,14 +21,14 @@ class AnswerDao {
     async findAll(params: IAnswerGetAll) {
         return await this.answerDb.findAll({
             where: {
-                quiz_id: params.quiz_id,
+                question_id: params.question_id,
             }
         });
     }
 
     async create(params: IAnswerCreate) {
         return await this.answerDb.create({
-            quiz_id: params.quiz_id,
+            question_id: params.question_id,
             answer_name: params.answer_name,
         });
     }

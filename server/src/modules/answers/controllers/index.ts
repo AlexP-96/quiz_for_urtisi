@@ -21,16 +21,16 @@ class AnswerController {
     async getAllAnswer(req: Request, res: Response) {
         try {
             const {
-                user_id,
                 quiz_id,
+                question_id,
             } = req?.params;
 
             const {
                 data,
                 error,
             } = await this.answerService.findAll({
-                user_id,
                 quiz_id,
+                question_id,
             });
 
             if (error) {
@@ -58,14 +58,14 @@ class AnswerController {
     async createAnswer(req: Request, res: Response) {
         try {
             const { answer_name } = req?.body;
-            const { quiz_id } = req?.params;
+            const { question_id } = req?.params;
 
             const {
                 data,
                 error,
             } = await this.answerService.create({
                 answer_name,
-                quiz_id,
+                question_id,
             });
 
             if (error) {

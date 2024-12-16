@@ -1,6 +1,6 @@
 export interface IAnswerGetAll {
-    user_id: string,
     quiz_id: string,
+    question_id: string,
 }
 
 export interface IAnswerDelete {
@@ -8,7 +8,7 @@ export interface IAnswerDelete {
 }
 
 export interface IAnswerCreate {
-    quiz_id: string;
+    question_id: string;
     answer_name: string;
 }
 

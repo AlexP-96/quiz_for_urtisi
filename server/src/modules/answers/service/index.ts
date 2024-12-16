@@ -37,7 +37,7 @@ class AnswerService {
     async create(params: IAnswerCreate) {
         try {
             const data = await this.answerDao.create({
-                quiz_id: params.quiz_id,
+                question_id: params.question_id,
                 answer_name: params.answer_name,
             });
 
