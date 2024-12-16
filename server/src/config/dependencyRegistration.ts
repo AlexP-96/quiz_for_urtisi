@@ -4,6 +4,7 @@ import {
     asValue,
     createContainer,
 } from 'awilix';
+import { sendLetter } from '../modules/email_sender';
 
 
 import UserController from '../modules/user/controllers';

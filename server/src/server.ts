@@ -6,12 +6,10 @@ import routerUser, {
     getAllQuizRoute,
     createQuizRoute,
     deleteQuizRoute,
-
     createQuestionsRoute,
     updateQuestionsRoute,
     getAllQuestionsRoute,
     deleteQuestionsRoute,
-
     deleteAnswerRoute,
     getAllAnswerRoute,
     updateAnswerRoute,
