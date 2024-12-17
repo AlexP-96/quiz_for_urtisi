@@ -71,7 +71,6 @@ class UserController {
                     data,
                     error,
                 });
-            // res.redirect('/user');
         } catch (error) {
             res.send(500)
                 .send({
@@ -83,10 +82,12 @@ class UserController {
 
     async logout(req: Request, res: Response) {
         try {
+            const { email } = req?.body;
+
             const {
                 data,
                 error,
-            } = await this.userService.logout();
+            } = await this.userService.logout(email);
 
             if (error) {
                 return res.status(400)

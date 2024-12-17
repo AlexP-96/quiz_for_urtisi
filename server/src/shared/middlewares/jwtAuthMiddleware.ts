@@ -1,21 +1,38 @@
-import jwt from "jsonwebtoken";
-import config from "../../config";
-import { STATUS_CODES } from "http";
-import { ResponseDTO } from "../dtos/response.dto";
-import { NextFunction, Request, Response } from "express";
+import jwt from 'jsonwebtoken';
+import { STATUS_CODES } from 'http';
+import { ResponseDTO } from '../dtos/response.dto';
+import {
+    NextFunction,
+    Request,
+    Response,
+} from 'express';
+import dotenv from 'dotenv';
 
-const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const jwtToken = req.headers["authorization"];
+dotenv.config();
 
-  if (!jwtToken) return res.status(401).send(new ResponseDTO(401, STATUS_CODES["401"], null));
+const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const jwtToken: string | undefined = req.headers['authorization']?.split(' ')[1];
 
-  const decodeJwtToken = jwt.verify(jwtToken, config.jwtSecret, (err: any, user: any) => {
-    if (err) return res.status(403).send(new ResponseDTO(403, STATUS_CODES["403"], null));
+        if (jwtToken === undefined) return res.status(403).send(new ResponseDTO(403, STATUS_CODES['403'], null));
 
-    next();
-  });
-
-}
-
+        jwt.verify(jwtToken, String(process.env.JWT_SECRET),
+            (err: any, decoded: any) => {
+                if (decoded) {
+                    console.log('valid');
+                    next();
+                }
+                if (err) {
+                    console.log('no valid');
+                    return res.status(403)
+                        .send({message: err.message});
+                }
+            },
+        );
+    } catch (err) {
+        res.status(500)
+            .send(new ResponseDTO(500, STATUS_CODES['500'], null));
+    }
+};
 
 export default jwtAuthMiddleware;

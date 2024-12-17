@@ -1,9 +1,13 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import {
     IUserGetAll,
     IUserLoginParams,
     IUserLoginRegister,
 } from '../types';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class UserService {
     userDao: any;
@@ -12,6 +16,7 @@ class UserService {
         this.userDao = userDao;
 
         this.getAllData = this.getAllData.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     async login(params: IUserLoginParams) {
@@ -25,10 +30,23 @@ class UserService {
             const match = await bcrypt.compare(String(params.password), password);
 
             if (match) {
+                const token = jwt.sign({
+                        email,
+                        user_id,
+                    }, String(process.env.JWT_SECRET),
+                    { expiresIn: process.env.JWT_EXPIRES_IN },
+                );
+                await this.userDao.createTokenForUser({
+                    email: params.email,
+                    password: params.password,
+                    token,
+                });
+
                 return {
                     data: {
                         user_id,
                         email,
+                        token: `Bearer ${token}`,
                     },
                     error: null,
                 };
@@ -90,6 +108,24 @@ class UserService {
             const data = await this.userDao.findAll(params);
             return {
                 data,
+                error: null,
+            };
+        } catch (error) {
+            return {
+                data: null,
+                error: error,
+            };
+        }
+    }
+
+    async logout(email: string) {
+        try {
+            await this.userDao.deleteTokenForUser(email);
+            return {
+                data: {
+                    token: null,
+                    message: 'Вы успешно вышли из системы',
+                },
                 error: null,
             };
         } catch (error) {

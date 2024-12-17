@@ -10,7 +10,7 @@ const answerController = container.resolve('answerController');
 
 //user
 router.post('/login', userController.login);
-router.post('/logout', userController.logout);
+router.post('/user/logout', userController.logout);
 router.post('/register', userController.register);
 router.get('/:user_id/get_all_data', userController.getAllData);
 

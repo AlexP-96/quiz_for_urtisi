@@ -15,31 +15,31 @@ import routerUser, {
     updateAnswerRoute,
     createAnswerRoute,
 } from './router';
+import jwtAuthMiddleware from './shared/middlewares/jwtAuthMiddleware';
 import { initConnection } from './shared/utils';
 
 initConnection()
     .then(async () => {
         app.use('/', [routerUser]);
+        app.use('/user', jwtAuthMiddleware);
         app.use('/user', [
                 createQuizRoute,
                 getOneQuizRoute,
                 getAllQuizRoute,
                 updateQuizRoute,
                 deleteQuizRoute,
+
+                getAllQuestionsRoute,
+                createQuestionsRoute,
+                deleteQuestionsRoute,
+                updateQuestionsRoute,
+
+                getAllAnswerRoute,
+                createAnswerRoute,
+                updateAnswerRoute,
+                deleteAnswerRoute,
             ],
         );
-        app.use('/user', [
-            getAllQuestionsRoute,
-            createQuestionsRoute,
-            deleteQuestionsRoute,
-            updateQuestionsRoute,
-        ]);
-        app.use('/user', [
-            getAllAnswerRoute,
-            createAnswerRoute,
-            updateAnswerRoute,
-            deleteAnswerRoute,
-        ]);
 
         app.listen(config.port, () => console.log(`Server has started at port ${config.port}....`));
     });

@@ -4,8 +4,6 @@ import {
     asValue,
     createContainer,
 } from 'awilix';
-import { sendLetter } from '../modules/email_sender';
-
 
 import UserController from '../modules/user/controllers';
 import UserService from '../modules/user/services';
@@ -27,7 +25,7 @@ import AnswerService from '../modules/answers/service';
 import AnswerDao from '../modules/answers/dao';
 import answerDb from '../modules/answers/models';
 
-import registrationAssociations from '../orm/all_models';
+import registrationAssociations from '../orm/association_models';
 
 const container = createContainer({ injectionMode: InjectionMode.PROXY });
 

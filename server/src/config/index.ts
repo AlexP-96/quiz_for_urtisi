@@ -2,12 +2,12 @@ import { ENVIRONMENT_STATUS } from "../shared/constants";
 
 const productConfig = {
   port: process.env.PORT || 8085,
-  jwtSecret: process.env.JWT_SECRET || "alexp",
+  jwtSecret: process.env.JWT_SECRET || "telegram - @pw_alexandr",
 };
 
 const developmentConfig = {
   port: process.env.PORT || 8085,
-  jwtSecret: process.env.JWT_SECRET || "alexp",
+  jwtSecret: process.env.JWT_SECRET || "telegram - @pw_alexandr",
 }
 
 const config: any = {

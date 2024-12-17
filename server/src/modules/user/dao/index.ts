@@ -1,5 +1,6 @@
 import {
     IUserGetAll,
+    IUserLoginParams,
     IUserLoginRegister,
 } from '../types';
 import { IEmail } from './types';
@@ -24,6 +25,7 @@ class UserDao {
         this.findOne = this.findOne.bind(this);
         this.create = this.create.bind(this);
         this.findAll = this.findAll.bind(this);
+        this.createTokenForUser = this.createTokenForUser.bind(this);
     }
 
     async findOne(params: IEmail) {
@@ -34,10 +36,27 @@ class UserDao {
         return await this.userDb.create(params);
     }
 
+    async createTokenForUser(params: IUserLoginParams) {
+        return await this.userDb.update(
+            { token: params.token },
+            { where: { email: params.email } },
+        );
+    }
+
+    async deleteTokenForUser(email: string) {
+        return await this.userDb.update(
+            { token: '0' },
+            { where: { email: email } },
+        );
+    }
+
     async findAll(user_id: IUserGetAll) {
         return await this.userDb.findOne({
             where: { user_id: user_id },
-            attributes: ['user_id', 'email'],
+            attributes: [
+                'user_id',
+                'email',
+            ],
             include: [
                 {
                     model: this.quizDb,
@@ -50,10 +69,10 @@ class UserDao {
                                 {
                                     model: this.answerDb,
                                     as: 'answers',
-                                }
-                            ]
-                        }
-                    ]
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
         });
