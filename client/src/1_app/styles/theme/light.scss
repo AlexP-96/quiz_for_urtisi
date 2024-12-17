@@ -1,0 +1,10 @@
+.app.light {
+  font: var(--font-size-m) / var(--font-line-m) var(--font-main);
+  background: #acacaf;
+  height: var(--full-height);
+  color: var(--color-light);
+
+  a:visited {
+    color: #23239a;
+  }
+}

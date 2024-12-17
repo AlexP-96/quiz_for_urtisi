@@ -1,0 +1,11 @@
+
+.app.dark {
+  font: var(--font-size-m) / var(--font-line-m) var(--font-main);
+  background: #23239a;
+  height: var(--full-height);
+  color: var(--color-dark);
+
+  a:visited {
+    color: red;
+  }
+}
