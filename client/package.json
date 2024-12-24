@@ -10,15 +10,10 @@
         "build:dev": "webpack --env mode=development"
     },
     "repository": {
-        "type": "git",
-        "url": "https://github.com/AlexP-96/list_films.git"
+        "type": "git"
     },
     "author": "Alexandr Pupyshev",
     "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/AlexP-96/list_films/issues"
-    },
-    "homepage": "https://github.com/AlexP-96/list_films#readme",
     "devDependencies": {
         "@types/node": "^20.12.8",
         "@types/react": "^18.3.1",

@@ -17,7 +17,7 @@ function RegisterPage() {
                 className='flex max-w-md flex-col gap-4 m-auto p-4 bg-transparent w-100 dark:bg-gray-800'
                 onSubmit={submitDataForm}
             >
-                Введите вашу почту и придумайте пароль
+                Введите вашу почту и придумайте пароль человек
                 <div>
                     <div className='mb-2 block'>
                         <Label
