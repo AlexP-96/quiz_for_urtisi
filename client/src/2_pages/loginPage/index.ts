@@ -1,5 +1,5 @@
-import Login from './ui/Login'
+import LoginPage from './ui/LoginPage'
 
 export {
-    Login
+    LoginPage
 }

@@ -1,19 +1,23 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { Button } from '../../../6_shared/ui/Button/Button';
 import { Input } from '../../../6_shared/ui/Input/Input';
 import { Label } from '../../../6_shared/ui/Label/Label';
 
-function RegisterPage() {
-    const submitForm = (e: FormEvent<HTMLFormElement>) => {
+const Login = () => {
+    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     };
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
             <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
+                {/*<img*/}
+                {/*    alt='Your Company'*/}
+                {/*    src='https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600'*/}
+                {/*    className='mx-auto h-10 w-auto'*/}
+                {/*/>*/}
                 <h2 className='mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>
-                    Зарегистрируйте ваш аккаунт
+                    Войдите в свою учетную запись
                 </h2>
             </div>
             <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
@@ -34,6 +38,7 @@ function RegisterPage() {
                                 id={'email'}
                                 required={true}
                                 name={'email'}
+                                placeholder={'Email'}
                                 className={'block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'}
                             />
                         </div>
@@ -74,6 +79,6 @@ function RegisterPage() {
             </div>
         </div>
     );
-}
+};
 
-export default RegisterPage;
+export default Login;

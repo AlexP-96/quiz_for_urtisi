@@ -6,20 +6,24 @@ interface ButtonProps {
     className?: string;
     eventClick?: () => void;
     children?: React.ReactNode;
+    type?: 'button' | 'submit' | 'reset';
 }
 
 export const Button = ({
     className,
     children,
     eventClick,
+    type,
 }: ButtonProps) => {
     return (
         <button
-            className={classNames(cls.button, {}, [className])}
             onClick={eventClick}
+            type={type}
+            className={classNames(cls.button, {}, [className])}
         >
             {children}
         </button>
-    );
+    )
+        ;
 };
 
