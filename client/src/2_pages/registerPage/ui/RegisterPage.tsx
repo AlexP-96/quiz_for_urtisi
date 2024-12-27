@@ -1,14 +1,50 @@
-import React, { FormEvent } from 'react';
+import { isAllOf } from '@reduxjs/toolkit';
+import React, {
+    FormEvent,
+    useEffect,
+} from 'react';
 import { Link } from 'react-router-dom';
-
 import { Button } from '../../../6_shared/ui/Button/Button';
 import { Input } from '../../../6_shared/ui/Input/Input';
 import { Label } from '../../../6_shared/ui/Label/Label';
+import axios, { AxiosResponse } from 'axios';
+
+interface DataRegistration {
+    email: string;
+    password: string;
+}
+
+interface resData {
+    data: string;
+    error: {};
+}
 
 function RegisterPage() {
-    const submitForm = (e: FormEvent<HTMLFormElement>) => {
+    const [data, setData] = React.useState<DataRegistration>({
+        email: '',
+        password: '',
+    });
+
+    const [resData, setResData] = React.useState<resData>({
+            data: '',
+            error: {},
+        },
+    );
+
+    const submitForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        try {
+            const response: AxiosResponse<resData> = await axios.post('http://localhost:4000/register', data);
+            setResData(response.data);
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    useEffect(() => {
+        console.log(resData);
+    }, [resData]);
+
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
             <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
@@ -24,16 +60,21 @@ function RegisterPage() {
                 >
                     <div>
                         <Label
-                            htmlFor={'email'}
+                            htmlFor='email'
                         >
                             Email адрес
                         </Label>
                         <div className='mt-2'>
                             <Input
-                                type={'email'}
-                                id={'email'}
+                                type='email'
+                                id='email'
                                 required={true}
-                                name={'email'}
+                                name='email'
+                                value={data.email}
+                                handleChange={(e) => setData({
+                                    ...data,
+                                    email: e.target.value,
+                                })}
                                 className={'block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'}
                             />
                         </div>
@@ -54,10 +95,15 @@ function RegisterPage() {
                         </div>
                         <div className='mt-2'>
                             <Input
-                                type={'password'}
+                                type='password'
                                 required={true}
                                 name='password'
                                 id='password'
+                                value={data.password}
+                                handleChange={(e) => setData({
+                                    ...data,
+                                    password: e.target.value,
+                                })}
                                 className={'block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'}
                             />
                         </div>
