@@ -1,9 +1,11 @@
-import { isAllOf } from '@reduxjs/toolkit';
 import React, {
     FormEvent,
     useEffect,
 } from 'react';
-import { Link } from 'react-router-dom';
+import {
+    Link,
+    useNavigate,
+} from 'react-router-dom';
 import { Button } from '../../../6_shared/ui/Button/Button';
 import { Input } from '../../../6_shared/ui/Input/Input';
 import { Label } from '../../../6_shared/ui/Label/Label';
@@ -31,6 +33,8 @@ function RegisterPage() {
         },
     );
 
+    const navigate = useNavigate();
+
     const submitForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -42,16 +46,16 @@ function RegisterPage() {
     };
 
     useEffect(() => {
-        console.log(resData);
-    }, [resData]);
+        // navigate('/login');
+        }, [resData.data]);
 
     return (
         <>
-            {resData.data && resData.data}
+            {resData.data && 1}
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>
-                        Зарегистрируйте ваш аккаунт
+                        Пройдите регистрацию
                     </h2>
                 </div>
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>

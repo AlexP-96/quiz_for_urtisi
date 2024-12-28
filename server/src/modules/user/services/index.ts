@@ -91,8 +91,8 @@ class UserService {
             }
 
             return {
-                data: 'Такой пользователь уже зарегестрирован',
-                error: null,
+                data: null,
+                error: 'Такой пользователь уже зарегестрирован',
             };
 
         } catch (error) {
