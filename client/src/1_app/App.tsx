@@ -1,6 +1,8 @@
 import React from 'react';
 import './styles/index.scss';
-import { Provider } from 'react-redux';
+import {
+    Provider,
+} from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import MenuHeader from '../6_shared/ui/MenuHeader/MenuHeader';
 import WrapperSection from '../6_shared/ui/WrapperSection/WrapperSection';
@@ -12,7 +14,7 @@ const App = () => {
         <Provider store={store}>
             <BrowserRouter>
                 <WrapperSection>
-                    <MenuHeader/>
+                    <MenuHeader />
                     <AppRouter />
                 </WrapperSection>
             </BrowserRouter>

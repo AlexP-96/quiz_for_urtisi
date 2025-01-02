@@ -2,6 +2,9 @@ import {
     userReducer,
     userId,
     emailUser,
+    quizUserName,
+    answersUser,
+    questionUserName,
 } from './slice/userSlice';
 import {
     modalReducer,
@@ -19,4 +22,7 @@ export {
     openModal,
     closeModal,
     emailUser,
+    quizUserName,
+    answersUser,
+    questionUserName,
 };

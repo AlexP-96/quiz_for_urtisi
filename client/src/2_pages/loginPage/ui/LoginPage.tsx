@@ -20,7 +20,6 @@ interface reqData {
     email: string;
     password: string;
 }
-
 interface resDataLogin {
     user_id: string;
     email: string;
@@ -46,15 +45,14 @@ const LoginPage = () => {
                 token,
                 email,
             }: resDataLogin = response.data.data;
-            console.log(response.data);
 
             localStorage.setItem(
                 'data_user',
                 JSON.stringify({
                     user_id,
                     email,
-                    token
-                })
+                    token,
+                }),
             );
 
             dispatch(emailUser(email));
@@ -66,7 +64,6 @@ const LoginPage = () => {
         // dispatch(userId('223'));
     }, []);
 
-    console.log(selector);
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
             <div className='sm:mx-auto sm:w-full sm:max-w-sm'>

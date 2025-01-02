@@ -1,14 +1,10 @@
-import { useState } from 'react';
+import {
+    useEffect,
+    useState,
+} from 'react';
 import {
     Dialog,
     DialogPanel,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Popover,
-    PopoverButton,
-    PopoverGroup,
-    PopoverPanel,
 } from '@headlessui/react';
 import {
     ArrowPathIcon,
@@ -17,14 +13,18 @@ import {
     CursorArrowRaysIcon,
     FingerPrintIcon,
     SquaresPlusIcon,
-    XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
     ChevronDownIcon,
     PhoneIcon,
     PlayCircleIcon,
 } from '@heroicons/react/20/solid';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {
+    emailUser,
+    userId,
+} from '../../../4_entities/templateSlice';
 import { Button } from '../Button/Button';
 
 const products = [
@@ -72,8 +72,27 @@ const callsToAction = [
     },
 ];
 
+interface IUserData {
+    user_id: string;
+    email: string;
+    token: string;
+}
+
 export default function MenuHeader() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const dispatch = useDispatch();
+
+    const token: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {
+        email: '',
+        user_id: '',
+        token: '',
+    };
+    useEffect(() => {
+        if (token.token) {
+            dispatch(userId(token.user_id));
+            dispatch(emailUser(token.email));
+        }
+    }, []);
 
     return (
         <header className='bg-white'>

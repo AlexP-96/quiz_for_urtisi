@@ -24,9 +24,10 @@ import {
     PhoneIcon,
     PlayCircleIcon,
 } from '@heroicons/react/20/solid';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { SelectorUserEmail } from '../../../4_entities/templateSlice/model/selectors';
 import { Bento } from '../../../6_shared/ui/Bento';
-import { Modal } from '../../../6_shared/ui/Modal';
 
 const products = [
     {
@@ -57,6 +58,7 @@ const callsToAction = [
 
 export default function MainPage() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const userEmailSelector = useSelector(SelectorUserEmail);
 
     return (
         <>
@@ -154,7 +156,7 @@ export default function MainPage() {
                             Инструкция
                         </Link>
                     </PopoverGroup>
-                    <p>Приветствую "Пользователь"</p>
+                    <p>Приветствую вас {userEmailSelector}</p>
                 </nav>
                 <Dialog
                     open={mobileMenuOpen}
