@@ -3,19 +3,20 @@ import axios from 'axios';
 interface IPostData {
     endpoint: string;
     data: any;
-    headers: any;
+    headers?: any;
 }
 
 export const axiosGetData = async (endpoint: string) => {
     return await axios.get(`http://localhost:4000/${endpoint}`);
 };
 
-export const axiosPostData = (endpoint: string, data: any) => {
+export const axiosPostData = (endpoint: string, data: any, headers?: any) => {
     try {
         return axios({
             method: 'post',
             url: `http://localhost:4000${endpoint}`,
             data: data,
+            headers,
         });
     } catch (error) {
         console.log(error);

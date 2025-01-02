@@ -1,11 +1,13 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import React, { useEffect } from 'react';
 import {
     useDispatch,
     useSelector,
 } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
+    emailUser,
     SelectorUserId,
     userId,
 } from '../../../4_entities/templateSlice';
@@ -14,25 +16,54 @@ import { Button } from '../../../6_shared/ui/Button/Button';
 import { Input } from '../../../6_shared/ui/Input/Input';
 import { Label } from '../../../6_shared/ui/Label/Label';
 
-interface resData {
+interface reqData {
     email: string;
     password: string;
 }
 
-const Login = () => {
-    const [data, setData] = React.useState<resData>({
+interface resDataLogin {
+    user_id: string;
+    email: string;
+    token: string;
+}
+
+const LoginPage = () => {
+    const [data, setData] = React.useState<reqData>({
         email: '',
         password: '',
     });
-    const dispatch = useDispatch();
+
+    const dispatch = useDispatch<AppDispatch>();
     const selector = useSelector(SelectorUserId);
+
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const response: AxiosResponse = await axiosPostData('/login', data);
-        response.data;
+
+        if (response.status === 200) {
+            const {
+                user_id,
+                token,
+                email,
+            }: resDataLogin = response.data.data;
+            console.log(response.data);
+
+            localStorage.setItem(
+                'data_user',
+                JSON.stringify({
+                    user_id,
+                    email,
+                    token
+                })
+            );
+
+            dispatch(emailUser(email));
+            dispatch(userId(user_id));
+        }
     };
+
     useEffect(() => {
-        dispatch(userId(223));
+        // dispatch(userId('223'));
     }, []);
 
     console.log(selector);
@@ -114,4 +145,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginPage;
