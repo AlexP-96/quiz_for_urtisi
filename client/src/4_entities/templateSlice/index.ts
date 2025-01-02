@@ -1,13 +1,11 @@
 import {
-    counterReducer,
-    decrement,
-    increment,
+    userReducer,
+    userId
 } from './slice/slice';
-import { SelectorCounter } from './model/selectors';
+import { SelectorUserId } from './model/selectors';
 
 export {
-    counterReducer,
-    SelectorCounter,
-    decrement,
-    increment,
+    userReducer,
+    SelectorUserId,
+    userId,
 };

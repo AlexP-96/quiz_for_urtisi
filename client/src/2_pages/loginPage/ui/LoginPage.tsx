@@ -1,14 +1,41 @@
-import React from 'react';
+import axios, { AxiosResponse } from 'axios';
+import React, { useEffect } from 'react';
+import {
+    useDispatch,
+    useSelector,
+} from 'react-redux';
 import { Link } from 'react-router-dom';
+import {
+    SelectorUserId,
+    userId,
+} from '../../../4_entities/templateSlice';
+import { axiosPostData } from '../../../6_shared/api/axiosRequests';
 import { Button } from '../../../6_shared/ui/Button/Button';
 import { Input } from '../../../6_shared/ui/Input/Input';
 import { Label } from '../../../6_shared/ui/Label/Label';
 
+interface resData {
+    email: string;
+    password: string;
+}
+
 const Login = () => {
-    const [email, setEmail] = React.useState('');
-    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const [data, setData] = React.useState<resData>({
+        email: '',
+        password: '',
+    });
+    const dispatch = useDispatch();
+    const selector = useSelector(SelectorUserId);
+    const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const response: AxiosResponse = await axiosPostData('/login', data);
+        response.data;
     };
+    useEffect(() => {
+        dispatch(userId(223));
+    }, []);
+
+    console.log(selector);
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
             <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
@@ -31,8 +58,13 @@ const Login = () => {
                         <div className='mt-2'>
                             <Input
                                 type={'email'}
+                                handleChange={e => setData({
+                                    ...data,
+                                    email: e.target.value,
+                                })}
                                 id={'email'}
                                 required={true}
+                                value={data.email}
                                 name={'email'}
                                 placeholder={'Email'}
                                 className={'block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'}
@@ -56,8 +88,13 @@ const Login = () => {
                         <div className='mt-2'>
                             <Input
                                 type={'password'}
+                                handleChange={e => setData({
+                                    ...data,
+                                    password: e.target.value,
+                                })}
                                 required={true}
                                 name='password'
+                                value={data.password}
                                 id='password'
                                 className={'block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'}
                             />

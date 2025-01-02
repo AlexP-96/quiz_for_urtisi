@@ -1,1 +1,1 @@
-export const SelectorCounter = (state: any) => state.counter.value;
+export const SelectorUserId = (state: any) => state.user.user_id;
