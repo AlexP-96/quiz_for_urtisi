@@ -26,7 +26,7 @@ function RegisterPage() {
         email: '',
         password: '',
     });
-
+    //todo обработать ошибку, потому что объект пустой
     const [resData, setResData] = React.useState<resData>({
             data: null,
             error: {},

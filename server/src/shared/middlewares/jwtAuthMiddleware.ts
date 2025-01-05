@@ -25,7 +25,7 @@ const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction
                 if (err) {
                     console.log('no valid');
                     return res.status(403)
-                        .send({message: err.message});
+                        .send({ message: 'Нужно пройти заново авторизацию' });
                 }
             },
         );

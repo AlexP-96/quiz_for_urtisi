@@ -1,10 +1,15 @@
-import {
+import
+{
     userReducer,
     userId,
     emailUser,
     quizUserName,
     answersUser,
     questionUserName,
+    arrQuizDb,
+    arrQuestionDb,
+    arrAnswersDb,
+    isLoading
 } from './slice/userSlice';
 import {
     modalReducer,
@@ -25,4 +30,8 @@ export {
     quizUserName,
     answersUser,
     questionUserName,
+    arrQuestionDb,
+    arrQuizDb   ,
+    arrAnswersDb,
+    isLoading
 };

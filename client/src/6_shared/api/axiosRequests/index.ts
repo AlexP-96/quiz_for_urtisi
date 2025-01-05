@@ -5,9 +5,17 @@ interface IPostData {
     data: any;
     headers?: any;
 }
+//todo подумать над реализацией заголовков, чтобы их подставлять
 
 export const axiosGetData = async (endpoint: string) => {
-    return await axios.get(`http://localhost:4000/${endpoint}`);
+    return await axios.get(
+        `http://localhost:4000/user${endpoint}`,
+        {
+            headers: {
+                Authorization: JSON.parse(localStorage.getItem('data_user')).token,
+            },
+        },
+    );
 };
 
 export const axiosPostData = (endpoint: string, data: any, headers?: any) => {
@@ -24,19 +32,21 @@ export const axiosPostData = (endpoint: string, data: any, headers?: any) => {
     }
 };
 
-export const axiosAuthPostData = (endpoint: string, data: any, headers?: any) => {
+export const axiosAuthPostData = async (endpoint: string, data: any, headers?: any) => {
     try {
-        return axios({
+        return await axios({
             method: 'post',
             url: `http://localhost:4000/user${endpoint}`,
-            data: data,
+            data,
             headers: {
                 Authorization: JSON.parse(localStorage.getItem('data_user')).token,
             },
         });
     } catch (error) {
-        console.log(error);
-        return error;
+        return {
+            error: error.response.data.message,
+            status: error.response.status,
+        };
     }
 };
 

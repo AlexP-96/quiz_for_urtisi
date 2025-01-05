@@ -84,7 +84,7 @@ class QuizController {
         }
     }
 
-    async  createQuiz(req: Request, res: Response) {
+    async createQuiz(req: Request, res: Response) {
         try {
             const { quiz_name } = req?.body;
             const { user_id } = req?.params;

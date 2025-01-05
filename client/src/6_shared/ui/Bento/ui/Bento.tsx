@@ -1,66 +1,110 @@
-import React from 'react';
+import React, {
+    Suspense,
+    useEffect,
+} from 'react';
 import {
     useDispatch,
     useSelector,
 } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../../../1_app/providers/redux/store/store';
+import { FirstQuiz } from '../../../../2_pages/firstQuiz';
 import {
+    arrQuizDb,
     closeModal,
+    isLoading,
     openModal,
     quizUserName,
     SelectorUserId,
 } from '../../../../4_entities/templateSlice';
-import { SelectorUserQuiz } from '../../../../4_entities/templateSlice/model/selectors';
-import { axiosAuthPostData } from '../../../api/axiosRequests';
+import {
+    SelectorUserArrQuizzes,
+    SelectorUserLoad,
+    SelectorUserQuiz,
+} from '../../../../4_entities/templateSlice/model/selectors';
+import {
+    axiosAuthPostData,
+    axiosGetData,
+} from '../../../api/axiosRequests';
 import { Button } from '../../Button/Button';
 import { FormCreateQuiz } from '../../FormCreateQuiz';
 import { Modal } from '../../Modal';
+import QuizView from '../../QuizView/ui/QuizView';
 
 export default function Bento() {
     const dispatch: AppDispatch = useDispatch();
 
     const nameQuiz = useSelector(SelectorUserQuiz);
     const userId = useSelector(SelectorUserId);
+    const quizData = useSelector(SelectorUserArrQuizzes);
+    const loadData = useSelector(SelectorUserLoad);
+
+    const navigate = useNavigate();
+
+    const getAllQuiz = () => {
+        axiosGetData(`/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`)
+            .then(res => {
+                dispatch(isLoading(true));
+                dispatch(arrQuizDb(res.data.data));
+            })
+            .catch(err => {
+                //todo обработать визуально ошибку и показать визуально что пошло нет так отработать это все
+                navigate('/login');
+                dispatch(isLoading(false));
+                console.log('err', err);
+            });
+    };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        axiosAuthPostData(`/${userId}/create_quiz`, { quiz_name: nameQuiz });
+        const response = axiosAuthPostData(`/${userId}/create_quiz`, { quiz_name: nameQuiz });
+        response.then((res) => {
+            //TODO написать нормальную реализацию ответа от сервера и показать визуально что пошло нет так отработать это все
+            if (res.status === 200) {
+                //todo убрать логи
+                console.log('resTrue', res);
+            }
+            if (res.status === 403) {
+                navigate('/login');
+                //todo убрать логи
+                console.log('resError', res);
+            }
+        });
         dispatch(quizUserName(''));
         dispatch(closeModal());
     };
 
+    useEffect(() => {
+        getAllQuiz();
+    }, []);
+
     return (
-        <>
-            <Modal>
-                <FormCreateQuiz submitForm={submitData} />
-            </Modal>
-            <div className='bg-gray-50 py-24 sm:py-32'>
-                <div className='mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8'>
-                    <p className='mx-auto mt-2 max-w-lg text-balance text-center text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl'>
-                        Создайте ваш первый квиз
-                    </p>
-                    <div className='mt-10 grid gap-4'>
-                        <div className='relative lg:row-span-2'>
-                            <div className='relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] lg:rounded-l-[calc(2rem+1px)]'>
-                                <div className='px-8 pb-3 pt-8 sm:px-10 sm:pb-8 sm:pt-10'>
-                                    <p className='mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center pb-10'>
-                                        У вас еще нет ни одного квиза, создайте свой первый квиз
-                                    </p>
-                                    <Button
-                                        eventClick={() => dispatch(openModal())}
-                                        className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                                    >
-                                        Создать
-                                    </Button>
-                                </div>
-                                <div className='relative w-full grow max-lg:mx-auto max-lg:max-w-sm'>
-                                </div>
-                            </div>
-                            <div className='pointer-events-none absolute inset-px rounded-lg shadow ring-1 ring-black/5 lg:rounded-l-[2rem]'></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+        <Suspense fallback='ЗАгрузка'>
+            <>
+                {
+                    quizData.length > 0 && (
+                        <>
+                            {
+                                quizData.map((quiz: any, index) => (
+                                    <QuizView
+                                        key={index}
+                                        nameQuiz={quiz.quiz_name}
+                                    />
+                                ))
+                            }
+                            <Button>Да</Button>
+                        </>
+                    )
+                }
+                <Modal>
+                    <FormCreateQuiz submitForm={submitData} />
+                </Modal>
+                {
+                    quizData.length === 0 && loadData && (
+                        <FirstQuiz />
+                    )
+                }
+            </>
+        </Suspense>
     );
 }

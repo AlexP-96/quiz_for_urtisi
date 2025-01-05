@@ -11,6 +11,7 @@ const Home = () => {
             <button className=''>Начать</button>
         </Container>
     );
+
 };
 
 export default Home;

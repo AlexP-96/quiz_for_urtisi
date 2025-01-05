@@ -4,7 +4,10 @@ import {
     useDispatch,
     useSelector,
 } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {
+    Link,
+    useNavigate,
+} from 'react-router-dom';
 import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
     emailUser,
@@ -20,6 +23,7 @@ interface reqData {
     email: string;
     password: string;
 }
+
 interface resDataLogin {
     user_id: string;
     email: string;
@@ -34,6 +38,8 @@ const LoginPage = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const selector = useSelector(SelectorUserId);
+
+    const navigate = useNavigate();
 
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -54,9 +60,12 @@ const LoginPage = () => {
                     token,
                 }),
             );
-
             dispatch(emailUser(email));
             dispatch(userId(user_id));
+
+            if (user_id && email) {
+                navigate('/main_menu');
+            }
         }
     };
 

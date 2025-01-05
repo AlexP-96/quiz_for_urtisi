@@ -121,6 +121,13 @@ export default function MenuHeader() {
         ],
     );
 
+    useEffect(() => {
+        // /:user_id/quiz_all
+
+
+    }, []);
+
+
     //TODO сделать изменненное меню при авторизации, а старое которое удалить или просто дополнить
 
     return (
