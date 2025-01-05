@@ -5,6 +5,7 @@ import { MainMenu } from '../../../2_pages/mainPage';
 import { RegisterPage } from '../../../2_pages/registerPage';
 
 export enum AppRoutes {
+    HOME = 'home',
     LOGIN = 'login',
     LOGOUT = 'logout',
     REGISTER = 'register',
@@ -13,6 +14,7 @@ export enum AppRoutes {
 }
 
 export const RoutePath: Record<AppRoutes, string> = {
+    [AppRoutes.HOME]: '/',
     [AppRoutes.LOGIN]: '/login',
     [AppRoutes.LOGOUT]: '/logout',
     [AppRoutes.REGISTER]: '/register',
@@ -21,6 +23,10 @@ export const RoutePath: Record<AppRoutes, string> = {
 };
 
 export const routeConfig: Record<AppRoutes, RouteProps> = {
+    [AppRoutes.HOME]: {
+        path: RoutePath.home,
+        element: <HomePage />,
+    },
     [AppRoutes.LOGIN]: {
         path: RoutePath.login,
         element: <LoginPage />,

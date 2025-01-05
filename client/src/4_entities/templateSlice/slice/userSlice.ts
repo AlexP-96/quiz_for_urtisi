@@ -24,7 +24,7 @@ const userSlice = createSlice({
             state.user_id = action.payload;
         },
         emailUser: (state: UserState, action: { payload: string }) => {
-            state.email = String(action.payload);
+            state.email = action.payload;
         },
         quizUserName: (state: UserState, action: { payload: string }) => {
             state.quiz = action.payload;

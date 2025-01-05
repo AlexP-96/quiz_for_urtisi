@@ -19,12 +19,20 @@ import {
     PhoneIcon,
     PlayCircleIcon,
 } from '@heroicons/react/20/solid';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {
+    useDispatch,
+    useSelector,
+} from 'react-redux';
+import {
+    Link,
+    useNavigate,
+} from 'react-router-dom';
 import {
     emailUser,
+    SelectorUserId,
     userId,
 } from '../../../4_entities/templateSlice';
+import { SelectorUserEmail } from '../../../4_entities/templateSlice/model/selectors';
 import { Button } from '../Button/Button';
 
 const products = [
@@ -82,17 +90,38 @@ export default function MenuHeader() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const dispatch = useDispatch();
 
+    const isUserId = useSelector(SelectorUserId);
+    const isUserEmail = useSelector(SelectorUserEmail);
+
+    const navigate = useNavigate();
+
     const token: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {
         email: '',
         user_id: '',
         token: '',
     };
+
     useEffect(() => {
         if (token.token) {
             dispatch(userId(token.user_id));
             dispatch(emailUser(token.email));
         }
     }, []);
+
+    useEffect(() => {
+            if (isUserEmail && isUserId) {
+                navigate('/main_menu')
+            } else {
+                navigate('/')
+            }
+        },
+        [
+            isUserEmail,
+            isUserId,
+        ],
+    );
+
+    //TODO сделать изменненное меню при авторизации, а старое которое удалить или просто дополнить
 
     return (
         <header className='bg-white'>

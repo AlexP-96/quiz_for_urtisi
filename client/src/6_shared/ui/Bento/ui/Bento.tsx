@@ -1,18 +1,32 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import {
+    useDispatch,
+    useSelector,
+} from 'react-redux';
 import { AppDispatch } from '../../../../1_app/providers/redux/store/store';
-import { openModal } from '../../../../4_entities/templateSlice';
+import {
+    closeModal,
+    openModal,
+    quizUserName,
+    SelectorUserId,
+} from '../../../../4_entities/templateSlice';
+import { SelectorUserQuiz } from '../../../../4_entities/templateSlice/model/selectors';
+import { axiosAuthPostData } from '../../../api/axiosRequests';
 import { Button } from '../../Button/Button';
 import { FormCreateQuiz } from '../../FormCreateQuiz';
-import { Input } from '../../Input/Input';
 import { Modal } from '../../Modal';
 
 export default function Bento() {
     const dispatch: AppDispatch = useDispatch();
-    const [titleQuiz, setTitleQuiz] = React.useState('');
+
+    const nameQuiz = useSelector(SelectorUserQuiz);
+    const userId = useSelector(SelectorUserId);
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        axiosAuthPostData(`/${userId}/create_quiz`, { quiz_name: nameQuiz });
+        dispatch(quizUserName(''));
+        dispatch(closeModal());
     };
 
     return (

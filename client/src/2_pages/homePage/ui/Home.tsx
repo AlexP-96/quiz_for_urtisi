@@ -6,7 +6,9 @@ import cls from './Home.module.scss';
 const Home = () => {
     return (
         <Container>
-            text
+            <h1 className='pb-10 font-extrabold'>Приветствуем вас в сврвисе по созданию уникальных rdbpjd</h1>
+            <p>Пройдите регистрацию или зарегестрируйтесь</p>
+            <button className=''>Начать</button>
         </Container>
     );
 };
