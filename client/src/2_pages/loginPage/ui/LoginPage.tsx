@@ -62,7 +62,6 @@ const LoginPage = () => {
             );
             dispatch(emailUser(email));
             dispatch(userId(user_id));
-
             if (user_id && email) {
                 navigate('/main_menu');
             }

@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import {
+    FC,
+    useState,
+} from 'react';
 import {
     Dialog,
     DialogPanel,
@@ -11,12 +14,9 @@ import {
     PopoverPanel,
 } from '@headlessui/react';
 import {
-    ArrowPathIcon,
     Bars3Icon,
     ChartPieIcon,
     CursorArrowRaysIcon,
-    FingerPrintIcon,
-    SquaresPlusIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
@@ -26,23 +26,16 @@ import {
 } from '@heroicons/react/20/solid';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { SelectorUserEmail } from '../../../4_entities/templateSlice/model/selectors';
+import {
+    SelectorUserArrQuizzes,
+    SelectorUserEmail,
+} from '../../../4_entities/templateSlice/model/selectors';
 import { Bento } from '../../../6_shared/ui/Bento';
+import {
+    PropsQuizView,
+    QuizResData,
+} from '../../../6_shared/ui/QuizView/ui/QuizView';
 
-const products = [
-    {
-        name: 'Первый квиз',
-        description: 'Описание квиза 1',
-        href: '#',
-        icon: ChartPieIcon,
-    },
-    {
-        name: 'Второй квиз',
-        description: 'Опции квиза 2',
-        href: '#',
-        icon: CursorArrowRaysIcon,
-    },
-];
 const callsToAction = [
     {
         name: 'Watch demo',
@@ -56,9 +49,10 @@ const callsToAction = [
     },
 ];
 
-export default function MainPage() {
+const MainPage = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const userEmailSelector = useSelector(SelectorUserEmail);
+    const quizData = useSelector(SelectorUserArrQuizzes);
 
     return (
         <>
@@ -95,26 +89,26 @@ export default function MainPage() {
                                 className='absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in'
                             >
                                 <div className='p-4'>
-                                    {products.map((item) => (
+                                    {quizData.map((item: QuizResData) => (
                                         <div
-                                            key={item.name}
+                                            key={item.quiz_id}
                                             className='group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50'
                                         >
-                                            <div className='flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white'>
-                                                <item.icon
-                                                    aria-hidden='true'
-                                                    className='size-6 text-gray-600 group-hover:text-indigo-600'
-                                                />
-                                            </div>
+                                            {/*<div className='flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white'>*/}
+                                            {/*    <item.icon*/}
+                                            {/*        aria-hidden='true'*/}
+                                            {/*        className='size-6 text-gray-600 group-hover:text-indigo-600'*/}
+                                            {/*    />*/}
+                                            {/*</div>*/}
                                             <div className='flex-auto'>
-                                                <a
-                                                    href={item.href}
+                                                <Link
+                                                    to={`/quiz/${item.quiz_id}`}
                                                     className='block font-semibold text-gray-900'
                                                 >
-                                                    {item.name}
+                                                    {item.quiz_name}
                                                     <span className='absolute inset-0' />
-                                                </a>
-                                                <p className='mt-1 text-gray-600'>{item.description}</p>
+                                                </Link>
+                                                {/*<p className='mt-1 text-gray-600'>{item.description}</p>*/}
                                             </div>
                                         </div>
                                     ))}
@@ -156,7 +150,15 @@ export default function MainPage() {
                             Инструкция
                         </Link>
                     </PopoverGroup>
-                    <p>Приветствую вас {userEmailSelector}</p>
+                    <p className='text-2l'>Приветствую вас {userEmailSelector}</p>
+                    <div className='hidden lg:flex lg:flex-2 lg:justify-end'>
+                        <Link
+                            to='/logout'
+                            className='rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                        >
+                            Выйти
+                        </Link>
+                    </div>
                 </nav>
                 <Dialog
                     open={mobileMenuOpen}
@@ -166,17 +168,6 @@ export default function MainPage() {
                     <div className='fixed inset-0 z-10' />
                     <DialogPanel className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
                         <div className='flex items-center justify-between'>
-                            <a
-                                href='#'
-                                className='-m-1.5 p-1.5'
-                            >
-                                <span className='sr-only'>Your Company</span>
-                                <img
-                                    alt=''
-                                    src='https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600'
-                                    className='h-8 w-auto'
-                                />
-                            </a>
                             <button
                                 type='button'
                                 onClick={() => setMobileMenuOpen(false)}
@@ -204,18 +195,14 @@ export default function MainPage() {
                                             />
                                         </DisclosureButton>
                                         <DisclosurePanel className='mt-2 space-y-2'>
-                                            {[
-                                                ...products,
-                                                ...callsToAction,
-                                            ].map((item) => (
-                                                <DisclosureButton
-                                                    key={item.name}
-                                                    as='a'
-                                                    href={item.href}
+                                            {quizData.map((item: QuizResData) => (
+                                                <Link
+                                                    key={item.quiz_id}
+                                                    to={`/quiz/${item.quiz_id}`}
                                                     className='block rounded-lg py-2 pl-6 pr-3 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50'
                                                 >
-                                                    {item.name}
-                                                </DisclosureButton>
+                                                    {item.quiz_name}
+                                                </Link>
                                             ))}
                                         </DisclosurePanel>
                                     </Disclosure>
@@ -239,7 +226,7 @@ export default function MainPage() {
                                     </Link>
                                 </div>
                                 <div className='py-6'>
-                                    <p>Приветствую "Пользователь"</p>
+                                    <p>Приветствую {userEmailSelector}</p>
                                 </div>
                             </div>
                         </div>
@@ -249,4 +236,6 @@ export default function MainPage() {
             <Bento />
         </>
     );
-}
+};
+
+export default MainPage;

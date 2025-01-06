@@ -13,7 +13,6 @@ import {
     arrQuizDb,
     closeModal,
     isLoading,
-    openModal,
     quizUserName,
     SelectorUserId,
 } from '../../../../4_entities/templateSlice';
@@ -26,10 +25,10 @@ import {
     axiosAuthPostData,
     axiosGetData,
 } from '../../../api/axiosRequests';
-import { Button } from '../../Button/Button';
 import { FormCreateQuiz } from '../../FormCreateQuiz';
 import { Modal } from '../../Modal';
 import QuizView from '../../QuizView/ui/QuizView';
+import { Spinner } from '../../Spinner';
 
 export default function Bento() {
     const dispatch: AppDispatch = useDispatch();
@@ -58,6 +57,7 @@ export default function Bento() {
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const response = axiosAuthPostData(`/${userId}/create_quiz`, { quiz_name: nameQuiz });
+
         response.then((res) => {
             //TODO написать нормальную реализацию ответа от сервера и показать визуально что пошло нет так отработать это все
             if (res.status === 200) {
@@ -79,20 +79,14 @@ export default function Bento() {
     }, []);
 
     return (
-        <Suspense fallback='ЗАгрузка'>
+        <Suspense fallback={<Spinner />}>
             <>
                 {
-                    quizData.length > 0 && (
+                    quizData.length > 0 && loadData && (
                         <>
                             {
-                                quizData.map((quiz: any, index) => (
-                                    <QuizView
-                                        key={index}
-                                        nameQuiz={quiz.quiz_name}
-                                    />
-                                ))
+                                <QuizView quizList={quizData} />
                             }
-                            <Button>Да</Button>
                         </>
                     )
                 }
