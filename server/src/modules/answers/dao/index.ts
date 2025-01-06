@@ -22,7 +22,7 @@ class AnswerDao {
         return await this.answerDb.findAll({
             where: {
                 question_id: params.question_id,
-            }
+            },
         });
     }
 

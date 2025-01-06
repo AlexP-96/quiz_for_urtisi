@@ -5,9 +5,11 @@ interface IPostData {
     data: any;
     headers?: any;
 }
+
 //todo подумать над реализацией заголовков, чтобы их подставлять
 
-export const axiosGetData = async (endpoint: string) => {
+export const axiosGetData = async (endpoint: string, callback: () => void) => {
+    callback();
     return await axios.get(
         `http://localhost:4000/user${endpoint}`,
         {

@@ -1,6 +1,6 @@
 import { RootState } from '../../../1_app/providers/redux/store/store';
 
-
+//todo переименовать селектора в нормально читаемые и понятные имена
 export const SelectorUserLoad = (state: RootState) => state.user.load;
 export const SelectorUserId = (state: RootState) => state.user.user_id;
 export const SelectorUserEmail = (state: RootState) => state.user.email;

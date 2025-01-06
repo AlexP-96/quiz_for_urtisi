@@ -1,5 +1,3 @@
-import quizDb from '../../quiz/models';
-import userDb from '../../user/models';
 import {
     IQuestionCreate,
     IQuestionGetAll,

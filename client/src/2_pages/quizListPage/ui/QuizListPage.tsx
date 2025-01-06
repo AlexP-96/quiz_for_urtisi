@@ -1,36 +1,33 @@
-import React, {
-    Suspense,
-    useEffect,
-} from 'react';
+import React, { useEffect } from 'react';
 import {
     useDispatch,
     useSelector,
 } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '../../../../1_app/providers/redux/store/store';
-import { FirstQuiz } from '../../../../2_pages/firstQuiz';
+import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
     arrQuizDb,
     closeModal,
     isLoading,
     quizUserName,
-    SelectorUserId,
-} from '../../../../4_entities/templateSlice';
+} from '../../../4_entities/templateSlice';
 import {
     SelectorUserArrQuizzes,
+    SelectorUserId,
     SelectorUserLoad,
     SelectorUserQuiz,
-} from '../../../../4_entities/templateSlice/model/selectors';
+} from '../../../4_entities/templateSlice/model/selectors';
 import {
     axiosAuthPostData,
     axiosGetData,
-} from '../../../api/axiosRequests';
-import { FormCreateQuiz } from '../../FormCreateQuiz';
-import { Modal } from '../../Modal';
-import QuizView from '../../QuizView/ui/QuizView';
-import { Spinner } from '../../Spinner';
+} from '../../../6_shared/api/axiosRequests';
+import { FormCreateQuiz } from '../../../6_shared/ui/FormCreateQuiz';
+import { Modal } from '../../../6_shared/ui/Modal';
+import QuizView from '../../../6_shared/ui/QuizzesView/ui/QuizView';
+import { Spinner } from '../../../6_shared/ui/Spinner';
+import { FirstQuiz } from '../../firstQuizPage';
 
-export default function Bento() {
+const QuizListPage = () => {
     const dispatch: AppDispatch = useDispatch();
 
     const nameQuiz = useSelector(SelectorUserQuiz);
@@ -41,16 +38,20 @@ export default function Bento() {
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-        axiosGetData(`/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`)
-            .then(res => {
+        axiosGetData(
+            `/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`,
+            () => {
                 dispatch(isLoading(true));
+            },
+        )
+            .then(res => {
+                dispatch(isLoading(false));
                 dispatch(arrQuizDb(res.data.data));
             })
             .catch(err => {
                 //todo обработать визуально ошибку и показать визуально что пошло нет так отработать это все
                 navigate('/login');
                 dispatch(isLoading(false));
-                console.log('err', err);
             });
     };
 
@@ -79,26 +80,33 @@ export default function Bento() {
     }, []);
 
     return (
-        <Suspense fallback={<Spinner />}>
-            <>
-                {
-                    quizData.length > 0 && loadData && (
-                        <>
-                            {
-                                <QuizView quizList={quizData} />
-                            }
-                        </>
-                    )
-                }
-                <Modal>
-                    <FormCreateQuiz submitForm={submitData} />
-                </Modal>
-                {
-                    quizData.length === 0 && loadData && (
-                        <FirstQuiz />
-                    )
-                }
-            </>
-        </Suspense>
+        <>
+            {
+                loadData
+                    ? <Spinner />
+                    :
+                    <>
+                        {
+                            quizData.length > 0 && (
+                                <>
+                                    {
+                                        <QuizView quizList={quizData} />
+                                    }
+                                </>
+                            )
+                        }
+                        <Modal>
+                            <FormCreateQuiz submitForm={submitData} />
+                        </Modal>
+                        {
+                            quizData.length === 0 && (
+                                <FirstQuiz />
+                            )
+                        }
+                    </>
+            }
+        </>
     );
-}
+};
+
+export default QuizListPage;

@@ -1,3 +1,5 @@
+import answerDb from '../../answers/models';
+import questionDb from '../../questions/models';
 import {
     IQuizCreate,
     IQuizUpdate,
@@ -21,6 +23,18 @@ class QuizDao {
             where: {
                 user_id: params,
             },
+            include: [
+                {
+                    model: questionDb,
+                    as: 'questions',
+                    include: [
+                        {
+                            model: answerDb,
+                            as: 'answers',
+                        },
+                    ],
+                },
+            ],
         });
     }
 

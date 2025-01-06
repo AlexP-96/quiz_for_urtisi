@@ -1,7 +1,8 @@
 import { RouteProps } from 'react-router-dom';
 import { HomePage } from '2_pages/homePage';
 import { LoginPage } from '../../../2_pages/loginPage';
-import { MainMenu } from '../../../2_pages/mainPage';
+import { QuizListPage } from '../../../2_pages/quizListPage';
+import { QuizPage } from '../../../2_pages/quizPage';
 import { RegisterPage } from '../../../2_pages/registerPage';
 
 export enum AppRoutes {
@@ -45,6 +46,6 @@ export const routeConfig: Record<AppRoutes, RouteProps> = {
     },
     [AppRoutes.MAIN_MENU]: {
         path: RoutePath.main_menu,
-        element: <MainMenu />,
+        element: <QuizListPage />,
     },
 };

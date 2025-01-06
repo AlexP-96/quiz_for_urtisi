@@ -11,7 +11,7 @@ interface UserState {
     arrQuestionDb: [];
     arrAnswersDb: [];
 }
-
+//todo убрать лишние ключи из стэйта и сделать меньше редюсеров
 const initialState: UserState = {
     load: false,
     user_id: null,
