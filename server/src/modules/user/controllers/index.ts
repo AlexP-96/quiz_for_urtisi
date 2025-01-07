@@ -27,9 +27,8 @@ class UserController {
                 data,
                 error,
             } = await this.userService.register(payload);
-
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -59,7 +58,7 @@ class UserController {
             } = await this.userService.login(params);
 
             if (error) {
-                return res.status(404)
+                return res.status(401)
                     .send({
                         data,
                         error,

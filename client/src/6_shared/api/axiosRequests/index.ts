@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 interface IPostData {
     endpoint: string;
@@ -22,19 +21,16 @@ export const axiosGetData = async (endpoint: string, callback: () => void) => {
     );
 };
 
-export const axiosPostData = (endpoint: string, data: any, headers?: any) => {
+export const axiosPostData = async (endpoint: string, data: any, headers?: any) => {
     try {
-        return axios({
+        return await axios({
             method: 'post',
             url: `http://localhost:4000${endpoint}`,
             data: data,
             headers,
         });
-
     } catch (error) {
-        console.log('pidor')
-        console.log(error);
-        return error;
+        return error.response;
     }
 };
 

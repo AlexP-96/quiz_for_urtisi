@@ -1,12 +1,20 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../1_app/providers/redux/store/store';
-import { openModal } from '../../../4_entities/templateSlice';
-import { Button } from '../../../6_shared/ui/Button/Button';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import { AppDispatch } from '1_app/providers/redux/store/store';
+import { openModal } from '4_entities/templateSlice';
+import { Button } from '6_shared/ui/Button/Button';
+import {SelectorUserArrQuizzes} from "4_entities/templateSlice/model/selectors";
+import {useNavigate} from "react-router-dom";
 
 const FirstQuiz = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate()
+    const existQuizzes = useSelector(SelectorUserArrQuizzes);
 
+    useEffect(() => {
+        //todo написать реализацию при добавлении первого квиза, чтобы сразупоказывалься компонент квизов, а данный компонент уничтожился
+        navigate('/main_menu')
+    }, [existQuizzes]);
     return (
         <div className='bg-gray-50 py-24 sm:py-32'>
             <div className='mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8'>

@@ -1,5 +1,4 @@
 import { Button } from '@headlessui/react';
-import { Link } from 'react-router-dom';
 import QuizPage from '../../../../2_pages/quizPage/ui/QuizPage';
 
 //todo сложить нормально типы и интерфейсы
@@ -49,9 +48,9 @@ const QuizView = (props: PropsQuizView) => {
                         >
                             <path
                                 stroke='currentColor'
-                                stroke-linecap='round'
-                                stroke-linejoin='round'
-                                stroke-width='2'
+                                strokeLinejoin='round'
+                                strokeLinecap='round'
+                                strokeWidth='2'
                                 d='M1 5h12m0 0L9 1m4 4L9 9'
                             />
                         </svg>

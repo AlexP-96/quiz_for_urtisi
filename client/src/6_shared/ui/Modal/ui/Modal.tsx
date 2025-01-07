@@ -10,8 +10,8 @@ import {
     useDispatch,
     useSelector,
 } from 'react-redux';
-import { closeModal } from '../../../../4_entities/templateSlice';
-import { SelectorModalOpen } from '../../../../4_entities/templateSlice/model/selectors';
+import { closeModal } from '4_entities/templateSlice';
+import { SelectorModalOpen } from '4_entities/templateSlice/model/selectors';
 import { SkeletonImage } from '../../Skeleton';
 
 interface ModalProps {

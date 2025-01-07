@@ -6,9 +6,9 @@ import {
     Link,
     useNavigate,
 } from 'react-router-dom';
-import { Button } from '../../../6_shared/ui/Button/Button';
-import { Input } from '../../../6_shared/ui/Input/Input';
-import { Label } from '../../../6_shared/ui/Label/Label';
+import { Button } from '6_shared/ui/Button/Button';
+import { Input } from '6_shared/ui/Input/Input';
+import { Label } from '6_shared/ui/Label/Label';
 import axios, { AxiosResponse } from 'axios';
 
 interface DataRegistration {

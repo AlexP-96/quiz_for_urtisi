@@ -31,7 +31,7 @@ class UserDao {
     async findOne(params: IEmail) {
         const response = await this.userDb.findOne({where: {email: params.email}});
         if (response === null) return {error: 'Данный пользователь не зарегистрирован'}
-        return response;
+        return await this.userDb.findOne({where: {email: params.email}});
     }
 
     async create(params: IUserLoginRegister) {

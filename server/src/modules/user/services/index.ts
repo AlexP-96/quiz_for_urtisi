@@ -75,10 +75,10 @@ class UserService {
                     error: 'Пароль должен содержать не менее чем 6 символов',
                 };
             }
-
+            //todo сделать типизацию для ответов, чтобы было понятно какие данные приходят, не только здесь
             const matchEmail = await this.userDao.findOne(params);
-
-            if (!matchEmail) {
+            console.log('matchEmail', matchEmail)
+            if (!matchEmail.data) {
                 await bcrypt.hash(String(params.password), 10)
                     .then(async (hash) => {
                         await this.userDao.create({
