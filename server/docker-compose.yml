@@ -20,7 +20,8 @@ services:
     depends_on:
       - db
     environment:
-      PMA_HOST: db
+      PMA_HOST: "192.168.10.59"
+      PMA_PORT: "3307"
       MYSQL_ROOT_PASSWORD: 123qweASD
     ports:
       - "8081:80"

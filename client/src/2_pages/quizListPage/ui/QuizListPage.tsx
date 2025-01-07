@@ -4,24 +4,24 @@ import {
     useSelector,
 } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '../../../1_app/providers/redux/store/store';
+import { AppDispatch } from '1_app/providers/redux/store/store';
 import {
     arrQuizDb,
     closeModal,
     isLoading,
     quizUserName,
-} from '../../../4_entities/templateSlice';
+} from '4_entities/templateSlice';
 import {
     SelectorUserArrQuizzes,
     SelectorUserId,
     SelectorUserLoad,
     SelectorUserQuiz,
-} from '../../../4_entities/templateSlice/model/selectors';
+} from '4_entities/templateSlice/model/selectors';
 import {
     axiosAuthPostData,
     axiosGetData,
-} from '../../../6_shared/api/axiosRequests';
-import { FormCreateQuiz } from '../../../6_shared/ui/FormCreateQuiz';
+} from '6_shared/api/axiosRequests';
+import FormCreateQuiz from '../../../6_shared/ui/FormCreateQuiz/ui/FormCreateQuiz';
 import { Modal } from '../../../6_shared/ui/Modal';
 import QuizView from '../../../6_shared/ui/QuizzesView/ui/QuizView';
 import { Spinner } from '../../../6_shared/ui/Spinner';

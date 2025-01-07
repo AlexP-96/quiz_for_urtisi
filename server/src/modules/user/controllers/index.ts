@@ -59,7 +59,7 @@ class UserController {
             } = await this.userService.login(params);
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,

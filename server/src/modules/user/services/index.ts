@@ -12,7 +12,7 @@ dotenv.config();
 class UserService {
     userDao: any;
 
-    constructor({ userDao }: any) {
+    constructor({userDao}: any) {
         this.userDao = userDao;
 
         this.getAllData = this.getAllData.bind(this);
@@ -25,7 +25,10 @@ class UserService {
                 password,
                 email,
                 user_id,
+                error
             } = await this.userDao.findOne(params);
+
+            if (error) return {data: null, error}
 
             const match = await bcrypt.compare(String(params.password), password);
 
@@ -34,7 +37,7 @@ class UserService {
                         email,
                         user_id,
                     }, String(process.env.JWT_SECRET),
-                    { expiresIn: process.env.JWT_EXPIRES_IN },
+                    {expiresIn: process.env.JWT_EXPIRES_IN},
                 );
                 await this.userDao.createTokenForUser({
                     email: params.email,
@@ -52,8 +55,8 @@ class UserService {
                 };
             }
             return {
-                data: 'Неверный пароль',
-                error: null,
+                data: null,
+                error: 'Неверный пароль',
             };
 
         } catch (error) {

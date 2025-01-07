@@ -1,7 +1,7 @@
-import webpack from 'webpack';
+import * as webpack from 'webpack';
 import {buildWebpackConfig} from "./config/bulid/buildWebpackConfig";
 import {BuildEnv, BuildPath} from "./config/bulid/types/config";
-import path from "path";
+import * as path from "path";
 
 export default (env: BuildEnv) => {
     const paths: BuildPath = {

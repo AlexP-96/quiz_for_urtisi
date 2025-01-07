@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import React, { useEffect } from 'react';
+import {AxiosResponse} from 'axios';
+import React, {useEffect} from 'react';
 import {
     useDispatch,
     useSelector,
@@ -8,16 +8,17 @@ import {
     Link,
     useNavigate,
 } from 'react-router-dom';
-import { AppDispatch } from '../../../1_app/providers/redux/store/store';
+import {AppDispatch} from '1_app/providers/redux/store/store';
 import {
     emailUser,
-    SelectorUserId,
     userId,
-} from '../../../4_entities/templateSlice';
-import { axiosPostData } from '../../../6_shared/api/axiosRequests';
-import { Button } from '../../../6_shared/ui/Button/Button';
-import { Input } from '../../../6_shared/ui/Input/Input';
-import { Label } from '../../../6_shared/ui/Label/Label';
+} from '4_entities/templateSlice';
+import {axiosPostData} from '6_shared/api/axiosRequests';
+import {Button} from '6_shared/ui/Button/Button';
+import {Input} from '6_shared/ui/Input/Input';
+import {Label} from '6_shared/ui/Label/Label';
+import {SelectorUserError} from "4_entities/templateSlice/model/selectors";
+import {errorUser} from "4_entities/templateSlice/slice/userSlice";
 
 interface reqData {
     email: string;
@@ -30,6 +31,10 @@ interface resDataLogin {
     token: string;
 }
 
+interface resErrorLogin {
+    error: string
+}
+
 const LoginPage = () => {
     const [data, setData] = React.useState<reqData>({
         email: '',
@@ -37,14 +42,14 @@ const LoginPage = () => {
     });
 
     const dispatch = useDispatch<AppDispatch>();
-    const selector = useSelector(SelectorUserId);
+    const errorLogin = useSelector(SelectorUserError);
 
     const navigate = useNavigate();
 
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const response: AxiosResponse = await axiosPostData('/login', data);
-
+        if(response.status === 404) console.log('her')
         if (response.status === 200) {
             const {
                 user_id,
@@ -65,12 +70,18 @@ const LoginPage = () => {
             if (user_id && email) {
                 navigate('/main_menu');
             }
+        } else {
+            const {
+                error
+            }: resErrorLogin = response.data.error;
+            console.log(11243123421321321)
+            dispatch(errorUser(error))
         }
     };
 
     useEffect(() => {
         // dispatch(userId('223'));
-    }, []);
+    }, [errorLogin]);
 
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>

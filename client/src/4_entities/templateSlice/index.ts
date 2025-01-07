@@ -7,8 +7,6 @@ import
     answersUser,
     questionUserName,
     arrQuizDb,
-    arrQuestionDb,
-    arrAnswersDb,
     isLoading
 } from './slice/userSlice';
 import {
@@ -17,7 +15,7 @@ import {
     closeModal,
 } from './slice/modalSlice';
 
-import { SelectorUserId } from './model/selectors';
+import {SelectorUserId} from './model/selectors';
 
 export {
     userReducer,
@@ -30,8 +28,6 @@ export {
     quizUserName,
     answersUser,
     questionUserName,
-    arrQuestionDb,
-    arrQuizDb   ,
-    arrAnswersDb,
+    arrQuizDb,
     isLoading
 };

@@ -1,27 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 interface UserState {
     load: boolean;
+    errorUser: string | null;
     user_id: string | null;
     email: string;
     quiz: string;
     question: string;
     answers: string;
     arrQuizDb: [];
-    arrQuestionDb: [];
-    arrAnswersDb: [];
 }
+
 //todo убрать лишние ключи из стэйта и сделать меньше редюсеров
 const initialState: UserState = {
     load: false,
+    errorUser: null,
     user_id: null,
     email: '',
     quiz: '',
     answers: '',
     question: '',
-    arrAnswersDb: [],
     arrQuizDb: [],
-    arrQuestionDb: [],
 };
 
 const userSlice = createSlice({
@@ -49,12 +48,9 @@ const userSlice = createSlice({
         arrQuizDb: (state: UserState, action: { payload: [] }) => {
             state.arrQuizDb = action.payload;
         },
-        arrQuestionDb: (state: UserState, action: { payload: [] }) => {
-            state.arrQuestionDb = action.payload;
-        },
-        arrAnswersDb: (state: UserState, action: { payload: [] }) => {
-            state.arrAnswersDb = action.payload;
-        },
+        errorUser: (state: UserState, action: { payload: string }) => {
+            state.errorUser = action.payload
+        }
     },
 });
 
@@ -65,9 +61,8 @@ export const {
     questionUserName,
     answersUser,
     arrQuizDb,
-    arrAnswersDb,
-    arrQuestionDb,
-    isLoading
+    isLoading,
+    errorUser
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

@@ -1,5 +1,5 @@
 import {BuildOptions} from "./types/config";
-import webpack from "webpack";
+import * as webpack from "webpack";
 import {buildLoaders} from "./buildLoaders";
 import {buildResolve} from "./bulidResolve";
 import {buildPlugins} from "./buildPlugins";

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 interface IPostData {
     endpoint: string;
@@ -28,7 +30,9 @@ export const axiosPostData = (endpoint: string, data: any, headers?: any) => {
             data: data,
             headers,
         });
+
     } catch (error) {
+        console.log('pidor')
         console.log(error);
         return error;
     }

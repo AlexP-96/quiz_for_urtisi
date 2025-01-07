@@ -3,7 +3,7 @@ import {
     IUserLoginParams,
     IUserLoginRegister,
 } from '../types';
-import { IEmail } from './types';
+import {IEmail} from './types';
 
 class UserDao {
     userDb: any;
@@ -12,11 +12,11 @@ class UserDao {
     answerDb: any;
 
     constructor({
-        userDb,
-        quizDb,
-        questionDb,
-        answerDb,
-    }: any) {
+                    userDb,
+                    quizDb,
+                    questionDb,
+                    answerDb,
+                }: any) {
         this.userDb = userDb;
         this.quizDb = quizDb;
         this.questionDb = questionDb;
@@ -29,7 +29,9 @@ class UserDao {
     }
 
     async findOne(params: IEmail) {
-        return await this.userDb.findOne({ where: { email: params.email } });
+        const response = await this.userDb.findOne({where: {email: params.email}});
+        if (response === null) return {error: 'Данный пользователь не зарегистрирован'}
+        return response;
     }
 
     async create(params: IUserLoginRegister) {
@@ -38,21 +40,21 @@ class UserDao {
 
     async createTokenForUser(params: IUserLoginParams) {
         return await this.userDb.update(
-            { token: params.token },
-            { where: { email: params.email } },
+            {token: params.token},
+            {where: {email: params.email}},
         );
     }
 
     async deleteTokenForUser(email: string) {
         return await this.userDb.update(
-            { token: '0' },
-            { where: { email: email } },
+            {token: '0'},
+            {where: {email: email}},
         );
     }
 
     async findAll(user_id: IUserGetAll) {
         return await this.userDb.findOne({
-            where: { user_id: user_id },
+            where: {user_id: user_id},
             attributes: [
                 'user_id',
                 'email',
