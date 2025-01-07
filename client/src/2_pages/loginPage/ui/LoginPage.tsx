@@ -33,6 +33,13 @@ interface resDataLogin {
     token: string;
 }
 
+interface resDataLoginLocal {
+    userIdLocal: string,
+    tokenLocal: string,
+    emailLocal: string,
+}
+
+
 interface resErrorLogin {
     error: string
 }
@@ -71,11 +78,22 @@ const LoginPage = () => {
                     token,
                 }),
             );
-            dispatch(emailUser(email));
-            dispatch(userId(user_id));
+
+            const {
+                userIdLocal,
+                emailLocal
+            }: resDataLoginLocal = JSON.parse(localStorage.getItem('data_user'));
+
+            dispatch(emailUser(userIdLocal));
+            dispatch(userId(emailLocal));
+
             if (user_id && email) {
                 navigate('/main_menu');
             }
+        }
+
+        if (response.status === 403) {
+            console.log(403)
         }
     };
 

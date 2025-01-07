@@ -34,7 +34,7 @@ class AnswerController {
             });
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -69,7 +69,7 @@ class AnswerController {
             });
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -103,7 +103,7 @@ class AnswerController {
             });
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -134,7 +134,7 @@ class AnswerController {
             } = await this.answerService.delete(answer_id);
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,

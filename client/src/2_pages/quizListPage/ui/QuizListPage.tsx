@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
     useDispatch,
     useSelector,
 } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '1_app/providers/redux/store/store';
+import {useNavigate} from 'react-router-dom';
+import {AppDispatch} from '1_app/providers/redux/store/store';
 import {
     arrQuizDb,
-    closeModal,
+    closeModal, emailUser,
     isLoading,
-    quizUserName,
+    quizUserName, userId,
 } from '4_entities/templateSlice';
 import {
     SelectorUserArrQuizzes,
@@ -22,42 +22,52 @@ import {
     axiosGetData,
 } from '6_shared/api/axiosRequests';
 import FormCreateQuiz from '../../../6_shared/ui/FormCreateQuiz/ui/FormCreateQuiz';
-import { Modal } from '../../../6_shared/ui/Modal';
+import {Modal} from '../../../6_shared/ui/Modal';
 import QuizView from '../../../6_shared/ui/QuizzesView/ui/QuizView';
-import { Spinner } from '../../../6_shared/ui/Spinner';
-import { FirstQuiz } from '../../firstQuizPage';
+import {Spinner} from '../../../6_shared/ui/Spinner';
+import {FirstQuiz} from '../../firstQuizPage';
 
 const QuizListPage = () => {
     const dispatch: AppDispatch = useDispatch();
 
-    const nameQuiz = useSelector(SelectorUserQuiz);
-    const userId = useSelector(SelectorUserId);
-    const quizData = useSelector(SelectorUserArrQuizzes);
-    const loadData = useSelector(SelectorUserLoad);
+    const nameQuizSelector = useSelector(SelectorUserQuiz);
+    const userIdSelector = useSelector(SelectorUserId);
+    const quizDataSelector = useSelector(SelectorUserArrQuizzes);
+    const loadDataSelector = useSelector(SelectorUserLoad);
 
     const navigate = useNavigate();
 
-    const getAllQuiz = () => {
-        axiosGetData(
+    const getAllQuiz = async () => {
+        const response = await axiosGetData(
             `/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`,
             () => {
                 dispatch(isLoading(true));
             },
         )
-            .then(res => {
-                dispatch(isLoading(false));
-                dispatch(arrQuizDb(res.data.data));
-            })
-            .catch(err => {
-                //todo обработать визуально ошибку и показать визуально что пошло нет так отработать это все
-                navigate('/login');
-                dispatch(isLoading(false));
-            });
+        //todo обработать визуально ошибку и показать визуально что пошло нет так отработать это все
+        if (response.status === 200) {
+            dispatch(isLoading(false));
+            console.log('da')
+            dispatch(arrQuizDb(response.data.data));
+        }
+
+        if (response.status === 403) {
+            console.log('net')
+            localStorage.setItem('data_user', JSON.stringify({
+                email: '',
+                user_id: '',
+                token: '',
+            }))
+            dispatch(userId(''))
+            dispatch(emailUser(''))
+            navigate('/login');
+            dispatch(isLoading(false));
+        }
     };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = axiosAuthPostData(`/${userId}/create_quiz`, { quiz_name: nameQuiz });
+        const response = axiosAuthPostData(`/${userIdSelector}/create_quiz`, {quiz_name: nameQuizSelector});
 
         response.then((res) => {
             //TODO написать нормальную реализацию ответа от сервера и показать визуально что пошло нет так отработать это все
@@ -82,25 +92,25 @@ const QuizListPage = () => {
     return (
         <>
             {
-                loadData
-                    ? <Spinner />
+                loadDataSelector
+                    ? <Spinner/>
                     :
                     <>
                         {
-                            quizData.length > 0 && (
+                            quizDataSelector.length > 0 && (
                                 <>
                                     {
-                                        <QuizView quizList={quizData} />
+                                        <QuizView quizList={quizDataSelector}/>
                                     }
                                 </>
                             )
                         }
                         <Modal>
-                            <FormCreateQuiz submitForm={submitData} />
+                            <FormCreateQuiz submitForm={submitData}/>
                         </Modal>
                         {
-                            quizData.length === 0 && (
-                                <FirstQuiz />
+                            quizDataSelector.length === 0 && (
+                                <FirstQuiz/>
                             )
                         }
                     </>

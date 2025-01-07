@@ -11,14 +11,20 @@ interface IPostData {
 
 export const axiosGetData = async (endpoint: string, callback: () => void) => {
     callback();
-    return await axios.get(
-        `http://localhost:4000/user${endpoint}`,
-        {
-            headers: {
-                Authorization: JSON.parse(localStorage.getItem('data_user')).token,
+    try {
+        return await axios.get(
+            `http://localhost:4000/user${endpoint}`,
+            {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem('data_user')).token,
+                },
             },
-        },
-    );
+        );
+    } catch (error) {
+        //  .setItem('data_user', JSON.stringify({email: '', token: '', user_id: ''}))
+        return error.response
+    }
+
 };
 
 export const axiosPostData = async (endpoint: string, data: any, headers?: any) => {

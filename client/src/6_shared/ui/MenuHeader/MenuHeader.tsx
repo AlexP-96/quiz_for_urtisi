@@ -52,9 +52,9 @@ export default function MenuHeader() {
     const dispatch = useDispatch();
 
     const userEmailSelector = useSelector(SelectorUserEmail);
-    const quizData = useSelector(SelectorUserArrQuizzes);
-    const isUserId = useSelector(SelectorUserId);
-    const isUserEmail = useSelector(SelectorUserEmail);
+    const quizDataSelector = useSelector(SelectorUserArrQuizzes);
+    const isUserIdSelector = useSelector(SelectorUserId);
+    const isUserEmailSelector = useSelector(SelectorUserEmail);
 
     const navigate = useNavigate();
 
@@ -73,15 +73,15 @@ export default function MenuHeader() {
 
     useEffect(
         () => {
-            if (isUserEmail && isUserId) {
+            if (isUserEmailSelector && isUserIdSelector) {
                 navigate('/main_menu');
             } else {
                 navigate('/');
             }
         },
         [
-            isUserEmail,
-            isUserId,
+            isUserEmailSelector,
+            isUserIdSelector,
         ],
     );
     const handlerLogout = () => {
@@ -94,10 +94,11 @@ export default function MenuHeader() {
                 Вы действительно хотите выйти?
                 <Button
                     className='rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-                    Да</Button>
+                    Да
+                </Button>
             </Modal>
             <header className='bg-white'>
-                {!isUserEmail
+                {!isUserEmailSelector
                     ?
                     <>
                         <nav
@@ -204,7 +205,7 @@ export default function MenuHeader() {
                                             className='absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in'
                                         >
                                             <div className='p-4'>
-                                                {quizData.map((item: QuizResData) => (
+                                                {quizDataSelector.map((item: QuizResData) => (
                                                     <div
                                                         key={item.quiz_id}
                                                         className='group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50'
@@ -290,7 +291,7 @@ export default function MenuHeader() {
                                                         />
                                                     </DisclosureButton>
                                                     <DisclosurePanel className='mt-2 space-y-2'>
-                                                        {quizData.map((item: QuizResData) => (
+                                                        {quizDataSelector.map((item: QuizResData) => (
                                                             <Link
                                                                 key={item.quiz_id}
                                                                 to={`/quiz/${item.quiz_id}`}

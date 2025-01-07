@@ -15,7 +15,7 @@ const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction
         const jwtToken: string | undefined = req.headers['authorization']?.split(' ')[1];
 
         if (jwtToken === undefined) return res.status(403).send(new ResponseDTO(403, STATUS_CODES['403'], null));
-
+        //todo сделать типизацию или найти готовые типы
         jwt.verify(jwtToken, String(process.env.JWT_SECRET),
             (err: any, decoded: any) => {
                 if (decoded) {

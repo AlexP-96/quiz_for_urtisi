@@ -75,7 +75,7 @@ class QuizController {
             } = await this.quizService.findOne(quiz_id);
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -110,7 +110,7 @@ class QuizController {
             });
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -144,7 +144,7 @@ class QuizController {
             });
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -175,7 +175,7 @@ class QuizController {
             } = await this.quizService.delete(quiz_id);
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,

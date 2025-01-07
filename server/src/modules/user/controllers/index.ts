@@ -89,7 +89,7 @@ class UserController {
             } = await this.userService.logout(email);
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data,
                         error,
@@ -120,7 +120,7 @@ class UserController {
             } = await this.userService.getAllData(user_id);
 
             if (error) {
-                return res.status(400)
+                return res.status(404)
                     .send({
                         data: null,
                         error,
