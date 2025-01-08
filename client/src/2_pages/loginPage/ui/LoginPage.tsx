@@ -1,5 +1,5 @@
 import {AxiosResponse} from 'axios';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     useDispatch,
     useSelector,
@@ -49,7 +49,7 @@ const LoginPage = () => {
         email: '',
         password: '',
     });
-
+    const [isVisibleModal, setIsVisibleModal] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const errorLogin = useSelector(SelectorUserError);
 
@@ -69,6 +69,9 @@ const LoginPage = () => {
                 token,
                 email,
             }: resDataLogin = response.data.data;
+            console.log('login')
+            dispatch(emailUser(email));
+            dispatch(userId(user_id));
 
             localStorage.setItem(
                 'data_user',
@@ -78,14 +81,6 @@ const LoginPage = () => {
                     token,
                 }),
             );
-
-            const {
-                userIdLocal,
-                emailLocal
-            }: resDataLoginLocal = JSON.parse(localStorage.getItem('data_user'));
-
-            dispatch(emailUser(userIdLocal));
-            dispatch(userId(emailLocal));
 
             if (user_id && email) {
                 navigate('/main_menu');
@@ -107,20 +102,20 @@ const LoginPage = () => {
 
     return (
         <>
-            <Modal>
-                Пользователь не зарегестрирован, пройдите регстрацию
-                <Link
-                    to='/register'
-                >
-                    {/*todo сделать красивую стилизацию для не существующего пользователя*/}
-                    <Button
-                        className={'flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'}
-                        eventClick={handlerCloseModal}
-                    >
-                        Перейти
-                    </Button>
-                </Link>
-            </Modal>
+            {/*<Modal >*/}
+            {/*    Пользователь не зарегестрирован, пройдите регстрацию*/}
+            {/*    <Link*/}
+            {/*        to='/register'*/}
+            {/*    >*/}
+            {/*        /!*todo сделать красивую стилизацию для не существующего пользователя*!/*/}
+            {/*        <Button*/}
+            {/*            className={'flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'}*/}
+            {/*            eventClick={handlerCloseModal}*/}
+            {/*        >*/}
+            {/*            Перейти*/}
+            {/*        </Button>*/}
+            {/*    </Link>*/}
+            {/*</Modal>*/}
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>

@@ -3,9 +3,10 @@ import {
     useDispatch,
     useSelector,
 } from 'react-redux';
-import { quizUserName } from '../../../../4_entities/templateSlice';
-import { SelectorUserQuiz } from '../../../../4_entities/templateSlice/model/selectors';
+import {isLoading, quizUserName} from '4_entities/templateSlice';
+import { SelectorUserQuiz } from '4_entities/templateSlice/model/selectors';
 import { Input } from '../../Input/Input';
+import {axiosGetData} from "6_shared/api/axiosRequests";
 
 const FormCreateQuiz = ({
     submitForm,

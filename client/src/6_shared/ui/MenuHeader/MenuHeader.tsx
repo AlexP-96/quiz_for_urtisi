@@ -29,9 +29,8 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import {
-    emailUser, openModal,
-    SelectorUserId,
-    userId,
+    emailUser,
+    openModal, userId,
 } from '4_entities/templateSlice';
 import {
     SelectorUserArrQuizzes,
@@ -40,6 +39,7 @@ import {
 import {Button} from '../Button/Button';
 import {QuizResData} from '../QuizzesView/ui/QuizView';
 import {Modal} from "6_shared/ui/Modal";
+import {AppDispatch} from "1_app/providers/redux/store/store";
 
 interface IUserData {
     user_id: string;
@@ -49,54 +49,37 @@ interface IUserData {
 
 export default function MenuHeader() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const dispatch = useDispatch();
-
+    const [isVisibleModal, setIsVisibleModal] = useState(false);
+    const dispatch: AppDispatch = useDispatch();
     const userEmailSelector = useSelector(SelectorUserEmail);
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
-    const isUserIdSelector = useSelector(SelectorUserId);
     const isUserEmailSelector = useSelector(SelectorUserEmail);
-
+    console.log('quizDataSelector',quizDataSelector)
     const navigate = useNavigate();
-
-    const token: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {
-        email: '',
-        user_id: '',
-        token: '',
-    };
+    const dataUserStorage: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {email: '', token: '', user_id: ''}
 
     useEffect(() => {
-        if (token.token) {
-            dispatch(userId(token.user_id));
-            dispatch(emailUser(token.email));
-        }
-    }, []);
+        if (dataUserStorage.email) dispatch(emailUser(dataUserStorage.email))
+        if (dataUserStorage.user_id) dispatch(userId(dataUserStorage.user_id))
+        if (isUserEmailSelector) navigate('/main_menu');
 
-    useEffect(
-        () => {
-            if (isUserEmailSelector && isUserIdSelector) {
-                navigate('/main_menu');
-            } else {
-                navigate('/');
-            }
-        },
-        [
-            isUserEmailSelector,
-            isUserIdSelector,
-        ],
-    );
+    }, []);
     const handlerLogout = () => {
-        dispatch(openModal())
+        setIsVisibleModal(true)
     }
-    //todo сделать мродальное окно глобальным и единым, попробовать положить в главный компонент и сделать е хуком
+    //todo сделать модальное окно глобальным и единым, попробовать положить в главный компонент и сделать е хуком
     return (
         <>
-            <Modal>
-                Вы действительно хотите выйти?
-                <Button
-                    className='rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-                    Да
-                </Button>
-            </Modal>
+            {
+                isVisibleModal &&
+                <Modal visible={isVisibleModal} handlerClose={() => setIsVisibleModal(false)}>
+                    Вы действительно хотите выйти?
+                    <Button
+                        className='rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+                        Да
+                    </Button>
+                </Modal>
+            }
             <header className='bg-white'>
                 {!isUserEmailSelector
                     ?

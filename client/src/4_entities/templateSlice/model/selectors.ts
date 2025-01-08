@@ -1,4 +1,4 @@
-import { RootState } from '../../../1_app/providers/redux/store/store';
+import { RootState } from '1_app/providers/redux/store/store';
 
 //todo переименовать селектора в нормально читаемые и понятные имена
 export const SelectorUserLoad = (state: RootState) => state.user.load;

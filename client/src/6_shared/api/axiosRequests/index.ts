@@ -9,7 +9,7 @@ interface IPostData {
 
 //todo подумать над реализацией заголовков, чтобы их подставлять
 
-export const axiosGetData = async (endpoint: string, callback: () => void) => {
+export const axiosGetData = async (endpoint: string, callback?: () => void) => {
     callback();
     try {
         return await axios.get(

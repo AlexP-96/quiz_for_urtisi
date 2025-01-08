@@ -1,22 +1,21 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface UserState {
     load: boolean;
     errorUser: string | null;
     user_id: string | null;
-    email: string;
+    email: string | null;
     quiz: string;
     question: string;
     answers: string;
     arrQuizDb: [];
 }
 
-//todo убрать лишние ключи из стэйта и сделать меньше редюсеров
 const initialState: UserState = {
     load: false,
     errorUser: null,
     user_id: null,
-    email: '',
+    email: null,
     quiz: '',
     answers: '',
     question: '',
@@ -27,28 +26,28 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        isLoading: (state: UserState, action: { payload: boolean }) => {
+        isLoading: (state: UserState, action: PayloadAction<boolean>) => {
             state.load = action.payload;
         },
-        userId: (state: UserState, action: { payload: string }) => {
+        userId: (state: UserState, action: PayloadAction<string>) => {
             state.user_id = action.payload;
         },
-        emailUser: (state: UserState, action: { payload: string }) => {
+        emailUser: (state: UserState, action: PayloadAction<string>) => {
             state.email = action.payload;
         },
-        quizUserName: (state: UserState, action: { payload: string }) => {
+        quizUserName: (state: UserState, action: PayloadAction<string>) => {
             state.quiz = action.payload;
         },
-        questionUserName: (state: UserState, action: { payload: string }) => {
+        questionUserName: (state: UserState, action: PayloadAction<string>) => {
             state.question = action.payload;
         },
-        answersUser: (state: UserState, action: { payload: string }) => {
+        answersUser: (state: UserState, action: PayloadAction<string>) => {
             state.answers = action.payload;
         },
-        arrQuizDb: (state: UserState, action: { payload: [] }) => {
+        arrQuizDb: (state: UserState, action: PayloadAction<[]>) => {
             state.arrQuizDb = action.payload;
         },
-        errorUser: (state: UserState, action: { payload: string }) => {
+        errorUser: (state: UserState, action: PayloadAction<string>) => {
             state.errorUser = action.payload
         }
     },

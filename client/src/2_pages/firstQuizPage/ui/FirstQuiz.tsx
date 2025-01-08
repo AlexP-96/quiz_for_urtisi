@@ -7,15 +7,12 @@ import {SelectorUserArrQuizzes} from "4_entities/templateSlice/model/selectors";
 import {useNavigate} from "react-router-dom";
 
 const FirstQuiz = () => {
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate()
     const existQuizzes = useSelector(SelectorUserArrQuizzes);
 
     useEffect(() => {
-        //todo написать реализацию при добавлении первого квиза, чтобы сразупоказывалься компонент квизов, а данный компонент уничтожился
-        if (existQuizzes.length > 0) {
-            navigate('/main_menu')
-        }
+        if (existQuizzes.length > 0) navigate('/main_menu')
     }, [existQuizzes]);
     return (
         <div className='bg-gray-50 py-24 sm:py-32'>

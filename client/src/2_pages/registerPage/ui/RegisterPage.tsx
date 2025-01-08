@@ -46,9 +46,7 @@ function RegisterPage() {
     };
 
     useEffect(() => {
-        if (resData.data !== null) {
-            navigate('/login');
-        }
+        if (resData.data !== null) navigate('/login');
     }, [resData.data]);
 
     return (

@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     useDispatch,
     useSelector,
 } from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {AppDispatch} from '1_app/providers/redux/store/store';
+import {AppDispatch, RootState} from '1_app/providers/redux/store/store';
 import {
     arrQuizDb,
     closeModal, emailUser,
@@ -26,9 +26,13 @@ import {Modal} from '../../../6_shared/ui/Modal';
 import QuizView from '../../../6_shared/ui/QuizzesView/ui/QuizView';
 import {Spinner} from '../../../6_shared/ui/Spinner';
 import {FirstQuiz} from '../../firstQuizPage';
+import {ThunkAction} from "redux-thunk";
+import {UnknownAction} from "@reduxjs/toolkit";
+import {Button} from "@headlessui/react";
 
 const QuizListPage = () => {
     const dispatch: AppDispatch = useDispatch();
+    const [isVisibleModal, setIsVisibleModal] = useState(false);
 
     const nameQuizSelector = useSelector(SelectorUserQuiz);
     const userIdSelector = useSelector(SelectorUserId);
@@ -37,32 +41,28 @@ const QuizListPage = () => {
 
     const navigate = useNavigate();
 
-    const getAllQuiz = async () => {
-        const response = await axiosGetData(
+    const getAllQuiz = () => {
+        axiosGetData(
             `/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`,
-            () => {
-                dispatch(isLoading(true));
-            },
-        )
-        //todo обработать визуально ошибку и показать визуально что пошло нет так отработать это все
-        if (response.status === 200) {
+            () => dispatch(isLoading(true)),
+        ).then(response => {
             dispatch(isLoading(false));
             console.log('da')
             dispatch(arrQuizDb(response.data.data));
-        }
-
-        if (response.status === 403) {
-            console.log('net')
-            localStorage.setItem('data_user', JSON.stringify({
-                email: '',
-                user_id: '',
-                token: '',
-            }))
+        }).catch(error => {
+            localStorage.setItem(
+                'data_user',
+                JSON.stringify({
+                    user_id: '',
+                    email: '',
+                    token: '',
+                }),
+            );
             dispatch(userId(''))
             dispatch(emailUser(''))
             navigate('/login');
             dispatch(isLoading(false));
-        }
+        })
     };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -73,19 +73,28 @@ const QuizListPage = () => {
             //TODO написать нормальную реализацию ответа от сервера и показать визуально что пошло нет так отработать это все
             if (res.status === 200) {
                 //todo убрать логи
-                console.log('resTrue', res);
+                getAllQuiz()
+                console.log('Был успешный запрос на создание новго квиза', res);
             }
             if (res.status === 403) {
                 navigate('/login');
                 //todo убрать логи
-                console.log('resError', res);
+                console.log('Был успешный запрос на создание новго квиза', res)
             }
         });
         dispatch(quizUserName(''));
         dispatch(closeModal());
     };
 
+    const handlerLogout = () => {
+        setIsVisibleModal(true)
+    }
+
     useEffect(() => {
+        console.log('quizDataSelectorUseEffect', quizDataSelector)
+        if(quizDataSelector.length > 0) {
+            console.log('quizDataSelector_что-то_есть',quizDataSelector)
+        }
         getAllQuiz();
     }, []);
 
@@ -100,12 +109,22 @@ const QuizListPage = () => {
                             quizDataSelector.length > 0 && (
                                 <>
                                     {
-                                        <QuizView quizList={quizDataSelector}/>
+                                        <>
+                                            <QuizView quizList={quizDataSelector}/>
+                                            <div
+                                                className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8'>
+                                                <Button
+                                                    onClick={handlerLogout}
+                                                    className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+                                                    Создать новый квиз
+                                                </Button>
+                                            </div>
+                                        </>
                                     }
                                 </>
                             )
                         }
-                        <Modal>
+                        <Modal visible={isVisibleModal} handlerClose={() => setIsVisibleModal(false)}>
                             <FormCreateQuiz submitForm={submitData}/>
                         </Modal>
                         {
