@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {Simulate} from "react-dom/test-utils";
+import { getLSUser } from '../../lib/helpers/localStorage/localStorage';
 
 interface IPostData {
     endpoint: string;
@@ -16,24 +16,22 @@ export const axiosGetData = async (endpoint: string, load?: () => void) => {
             `http://localhost:4000/user${endpoint}`,
             {
                 headers: {
-                    Authorization: JSON.parse(localStorage.getItem('data_user')).token,
+                    Authorization: getLSUser().token,
                 },
             },
         );
     } catch (error) {
-        //  .setItem('data_user', JSON.stringify({email: '', token: '', user_id: ''}))
-        return error.response
+        return error.response;
     }
 
 };
 
-export const axiosPostData = async (endpoint: string, data: any, headers?: any) => {
+export const axiosPostData = async (endpoint: string, data: any) => {
     try {
         return await axios({
             method: 'post',
             url: `http://localhost:4000${endpoint}`,
             data: data,
-            headers,
         });
     } catch (error) {
         return error.response;
@@ -47,7 +45,7 @@ export const axiosAuthPostData = async (endpoint: string, data: any, headers?: a
             url: `http://localhost:4000/user${endpoint}`,
             data,
             headers: {
-                Authorization: JSON.parse(localStorage.getItem('data_user')).token,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {

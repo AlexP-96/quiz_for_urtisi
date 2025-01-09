@@ -6,12 +6,6 @@ import {
     DialogBackdrop,
     DialogPanel,
 } from '@headlessui/react';
-import {
-    useDispatch,
-    useSelector,
-} from 'react-redux';
-import { closeModal } from '4_entities/templateSlice';
-import { SelectorModalOpen } from '4_entities/templateSlice/model/selectors';
 import { SkeletonImage } from '../../Skeleton';
 import Portal from "6_shared/ui/Portal/Portal";
 
@@ -27,9 +21,6 @@ const Modal = ({
     visible
 
 }: ModalProps) => {
-    const selector = useSelector(SelectorModalOpen);
-    // const dispatch = useDispatch();
-
     return (
         <Portal>
             <Suspense fallback={<SkeletonImage />}>

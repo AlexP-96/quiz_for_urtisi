@@ -1,4 +1,7 @@
-import {AxiosResponse} from 'axios';
+import {
+    AxiosError,
+    AxiosResponse,
+} from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
     useDispatch,
@@ -15,7 +18,8 @@ import {
     userId,
 } from '4_entities/templateSlice';
 import {axiosPostData} from '6_shared/api/axiosRequests';
-import {Button} from '6_shared/ui/Button/Button';
+import { setLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
+import {Button} from '../../../6_shared/ui/Buttons/Button';
 import {Input} from '6_shared/ui/Input/Input';
 import {Label} from '6_shared/ui/Label/Label';
 import {SelectorUserError} from "4_entities/templateSlice/model/selectors";
@@ -39,7 +43,6 @@ interface resDataLoginLocal {
     emailLocal: string,
 }
 
-
 interface resErrorLogin {
     error: string
 }
@@ -55,41 +58,43 @@ const LoginPage = () => {
 
     const navigate = useNavigate();
 
-    const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response: AxiosResponse = await axiosPostData('/login', data);
-        if (response.status === 401) {
-            dispatch(errorUser(response.data.error));
-            dispatch(openModal())
-            return;
-        }
-        if (response.status === 200) {
-            const {
-                user_id,
-                token,
-                email,
-            }: resDataLogin = response.data.data;
-            console.log('login')
-            dispatch(emailUser(email));
-            dispatch(userId(user_id));
+        axiosPostData('/login', data)
+            .then((response: AxiosResponse) => {
+                if (response.status === 401) {
+                    dispatch(errorUser(response.data.error));
+                    dispatch(openModal())
+                    return;
+                }
+                if (response.status === 200) {
+                    const {
+                        user_id,
+                        token,
+                        email,
+                    }: resDataLogin = response.data.data;
 
-            localStorage.setItem(
-                'data_user',
-                JSON.stringify({
-                    user_id,
-                    email,
-                    token,
-                }),
-            );
+                    console.log('login')
 
-            if (user_id && email) {
-                navigate('/main_menu');
-            }
-        }
+                    dispatch(emailUser(email));
+                    dispatch(userId(user_id));
 
-        if (response.status === 403) {
-            console.log(403)
-        }
+                    setLSUser({email, token, user_id})
+                    console.log();
+
+                    if (user_id && email) {
+                        navigate('/main_menu');
+                    }
+                }
+
+                if (response.status === 403) {
+                    console.log(403)
+                }
+            })
+            .catch((error: AxiosError) => {
+
+            });
+        ;
     };
 
     const handlerCloseModal = () => {
@@ -107,13 +112,13 @@ const LoginPage = () => {
             {/*    <Link*/}
             {/*        to='/register'*/}
             {/*    >*/}
-            {/*        /!*todo сделать красивую стилизацию для не существующего пользователя*!/*/}
-            {/*        <Button*/}
+            {/*        /!*todo сделать красивую стилизацию для не зарегестрированного пользователя*!/*/}
+            {/*        <Buttons*/}
             {/*            className={'flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'}*/}
             {/*            eventClick={handlerCloseModal}*/}
             {/*        >*/}
             {/*            Перейти*/}
-            {/*        </Button>*/}
+            {/*        </Buttons>*/}
             {/*    </Link>*/}
             {/*</Modal>*/}
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>

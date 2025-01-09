@@ -14,7 +14,6 @@ import {
 } from '1_app/providers/redux/store/store';
 import {
     arrQuizDb,
-    closeModal,
     emailUser,
     isLoading,
     quizUserName,
@@ -30,20 +29,21 @@ import {
     axiosAuthPostData,
     axiosGetData,
 } from '6_shared/api/axiosRequests';
+import {
+    getLSUser,
+    setLSUserNull,
+} from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import FormCreate from '../../../6_shared/ui/FormCreateQuiz/ui/FormCreate';
 import { Modal } from '../../../6_shared/ui/Modal';
 import QuizView from '../../../6_shared/ui/QuizzesView/ui/QuizView';
 import { Spinner } from '../../../6_shared/ui/Spinner';
 import { FirstQuiz } from '../../firstQuizPage';
-import { ThunkAction } from 'redux-thunk';
-import { UnknownAction } from '@reduxjs/toolkit';
 import { Button } from '@headlessui/react';
 import { errorUser } from '4_entities/templateSlice/slice/userSlice';
 import {
     AxiosError,
     AxiosResponse,
 } from 'axios';
-import error = Simulate.error;
 
 const QuizListPage = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -58,21 +58,14 @@ const QuizListPage = () => {
 
     const getAllQuiz = () => {
         axiosGetData(
-            `/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`,
+            `/${getLSUser().user_id}/quiz_all`,
             () => dispatch(isLoading(true)),
         ).then((response: AxiosResponse) => {
             dispatch(isLoading(false));
 
             if (response.status === 403) {
                 dispatch(errorUser(response.data.response.data));
-                localStorage.setItem(
-                    'data_user',
-                    JSON.stringify({
-                        user_id: '',
-                        email: '',
-                        token: '',
-                    }),
-                );
+                setLSUserNull();
                 dispatch(userId(''));
                 dispatch(emailUser(''));
                 navigate('/login');
@@ -81,14 +74,7 @@ const QuizListPage = () => {
             dispatch(arrQuizDb(response.data.data));
         }).catch(error => {
             console.log('error', error);
-            localStorage.setItem(
-                'data_user',
-                JSON.stringify({
-                    user_id: '',
-                    email: '',
-                    token: '',
-                }),
-            );
+            setLSUserNull();
             dispatch(userId(''));
             dispatch(emailUser(''));
             navigate('/login');

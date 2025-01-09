@@ -1,12 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import {
-    useDispatch,
-    useSelector,
-} from 'react-redux';
-import {isLoading, quizUserName} from '4_entities/templateSlice';
-import { SelectorUserQuiz } from '4_entities/templateSlice/model/selectors';
 import { Input } from '../../Input/Input';
-import {axiosGetData} from "6_shared/api/axiosRequests";
 
 type PropsForm = {
     submitForm(event: React.FormEvent<HTMLFormElement>): void;
@@ -21,9 +14,6 @@ const FormCreate = ({
     dispatchInput,
     valueInput
 }: PropsForm) => {
-    // const dispatch = useDispatch();
-    // const nameQuiz = useSelector(SelectorUserQuiz);
-
     return (
         <form
             method='post'

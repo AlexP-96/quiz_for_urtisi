@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import ButtonColor from '../../../6_shared/ui/Buttons/ui/ButtonColor';
+import ButtonExtraSmall from '../../../6_shared/ui/Buttons/ui/ButtonExtraSmall';
 
 interface IQuizzesData {
     quiz_id: number;
@@ -23,6 +25,7 @@ interface IAnswerData {
     question_id: number;
     type: string;
 }
+
 //todo сделать нормальный нейминг для страниц потому что данный компонент это отвечает только за визуал карточки квиза
 interface QuizPageProps {
     quizId: number;
@@ -44,11 +47,15 @@ const CardViewQuiz: FC<QuizPageProps> = ({
                             quiz.questions.map((question: IQuestionData) => {
                                 return (
                                     <div key={question.question_id}>
-                                        {question.question_name}
+                                        <ButtonExtraSmall title={question.question_name} />
                                         {question.answers.map((answer: IAnswerData) => {
                                             return (
                                                 <div key={answer.answer_id}>
-                                                    {answer.answer_name}
+                                                    <ButtonColor
+                                                        title={answer.answer_name}
+                                                        color={'yellow'}
+                                                        className={'ml-3'}
+                                                    />
                                                 </div>
                                             );
                                         })}

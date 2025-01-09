@@ -1,22 +1,40 @@
 import React, { FC } from 'react';
 
 interface PropsAccordion {
-    title: string;
+    title?: string;
     children?: React.ReactNode;
     id?: string | number;
+    firstIndex?: number;
+    questionId?: string | number;
+    openModal?: () => void;
 }
 
-const Accordion: FC<PropsAccordion> = ({
-    title,
-    children,
-    id,
-}) => {
+const Accordion: FC<PropsAccordion> = (props) => {
+    const {
+        title,
+        children,
+        id,
+        firstIndex,
+        openModal,
+    } = props;
+
+    const handlerClick = () => {
+        if (props.openModal) {
+            //todo нужно понять как типизировать пропсы которые возвращаются от дочернего к родителю
+            //@ts-ignore
+            props.openModal({
+                questionId: props.id,
+            });
+        }
+    };
     return (
         <>
             <h2 id={`accordion-collapse-heading-${id}`}>
                 <button
                     type='button'
-                    className='flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3'
+                    className={`flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 ${firstIndex === 0
+                        ? 'rounded-t-xl'
+                        : ''} focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3`}
                     data-accordion-target={`#accordion-collapse-body-${id}`}
                     aria-expanded='true'
                     aria-controls={`accordion-collapse-body-${id}`}
@@ -47,9 +65,15 @@ const Accordion: FC<PropsAccordion> = ({
                 <div className='p-5 border border-b-0 border-gray-200 dark:border-gray-700'>
                     {children}
                     <button
-                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                        onClick={handlerClick}
+                        className='focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800'
                     >
                         Создать ответ
+                    </button>
+                    <button
+                        className='focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'
+                    >
+                        Удалить ответ
                     </button>
                 </div>
             </div>

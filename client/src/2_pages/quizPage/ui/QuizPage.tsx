@@ -1,4 +1,5 @@
 import React, {
+    FC,
     useEffect,
     useState,
 } from 'react';
@@ -11,6 +12,7 @@ import {
     useSelector,
 } from 'react-redux';
 import {
+    SelectorUserAnswers,
     SelectorUserArrQuizzes,
     SelectorUserId,
     SelectorUserQuestions,
@@ -26,6 +28,7 @@ import {
 } from 'axios';
 import FormCreate from '6_shared/ui/FormCreateQuiz/ui/FormCreate';
 import {
+    answersUser,
     arrQuizDb,
     emailUser,
     isLoading,
@@ -34,6 +37,10 @@ import {
 } from '4_entities/templateSlice';
 import { errorUser } from '4_entities/templateSlice/slice/userSlice';
 import {
+    getLSUser,
+    setLSUserNull,
+} from '../../../6_shared/lib/helpers/localStorage/localStorage';
+import {
     Accordion,
     AccordionWrapper,
 } from '../../../6_shared/ui/Accordion';
@@ -41,6 +48,7 @@ import {
     ListGroupBody,
     ListGroupWrapper,
 } from '../../../6_shared/ui/ListGroup';
+import loginPage from '../../loginPage/ui/LoginPage';
 
 interface IQuizId {
     quiz_id: number;
@@ -64,24 +72,27 @@ interface IAnswerData {
     type: string;
 }
 
-const QuizPage = () => {
+const QuizPage: FC = () => {
     const { quiz_id } = useParams();
 
     const navigate = useNavigate();
 
-    const [isVisibleModal, setIsVisibleModal] = useState(false);
+    const [isVisibleModalQuestion, setIsVisibleModalQuestion] = useState(false);
+    const [isVisibleModalAnswer, setIsVisibleModalAnswer] = useState(false);
+    const [questionId, setQuestionId] = useState<null | number>(null);
 
     const dispatch = useDispatch();
 
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
     const userIdSelector = useSelector(SelectorUserId);
     const questionNameSelector = useSelector(SelectorUserQuestions);
+    const answerNameSelector = useSelector(SelectorUserAnswers);
 
     const currentQuiz = quizDataSelector.filter((quiz: IQuizId) => quiz.quiz_id === Number(quiz_id));
-
-    //todo сделать одновление данных в локальном хранилище отдельной функцией
+    //todo сделать обновление данных в локальном хранилище отдельной функцией
     const getAllQuiz = () => {
-        axiosGetData(`/${JSON.parse(localStorage.getItem('data_user')).user_id}/quiz_all`, () => {
+        console.log(`/${getLSUser().user_id}/quiz_all`);
+        axiosGetData(`/${getLSUser().user_id}/quiz_all`, () => {
             dispatch(isLoading(true));
         })
             .then((response: AxiosResponse) => {
@@ -89,14 +100,7 @@ const QuizPage = () => {
 
                 if (response.status === 403) {
                     dispatch(errorUser(response.data.response.data));
-                    localStorage.setItem(
-                        'data_user',
-                        JSON.stringify({
-                            user_id: '',
-                            email: '',
-                            token: '',
-                        }),
-                    );
+                    setLSUserNull();
                     dispatch(userId(''));
                     dispatch(emailUser(''));
                     navigate('/login');
@@ -106,11 +110,11 @@ const QuizPage = () => {
                 dispatch(arrQuizDb(response.data.data));
             })
             .catch((error: AxiosError) => {
-                console.log('errorQUiz_PAge', error);
+                console.log('errorQuiz_PAge', error);
                 navigate('/login');
             });
     };
-
+    ///:user_id/quiz/:quiz_id/questions/:question_id/answer_create
     const submitQuestion = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         axiosAuthPostData(
@@ -126,7 +130,31 @@ const QuizPage = () => {
                     console.log('Был успешный запрос на создание новго квиза', response);
                 }
                 dispatch(questionUserName(''));
-                setIsVisibleModal(false);
+                setIsVisibleModalQuestion(false);
+            })
+            .catch((error: AxiosError) => {
+                dispatch(questionUserName(''));
+                console.log('Клиентская ошибка', error);
+            });
+    };
+    //todo обработать на севрере если пустой ответ
+
+    const submitAnswer = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        axiosAuthPostData(
+            `/${userIdSelector}/quiz/${quiz_id}/questions/${questionId}/answer_create`,
+            { answer_name: answerNameSelector },
+        )
+            .then((response: AxiosResponse) => {
+                if (response.status === 200) {
+                    getAllQuiz();
+                }
+                if (response.status === 403) {
+                    navigate('/login');
+                    console.log('Был успешный запрос на создание новго квиза', response);
+                }
+                dispatch(questionUserName(''));
+                setIsVisibleModalAnswer(false);
             })
             .catch((error: AxiosError) => {
                 dispatch(questionUserName(''));
@@ -134,24 +162,48 @@ const QuizPage = () => {
             });
     };
 
+    //todo обработать баг при создании нового вопроса, чтобы внутри сразу создалась кнопка "создать ответ"
+    const handlerCloseModal = () => {
+        setIsVisibleModalQuestion(false);
+        setIsVisibleModalAnswer(false);
+        setQuestionId(null);
+    };
+
+    const openModalCreateQuestion = () => {
+        setIsVisibleModalQuestion(true);
+    };
+    const openModalCreateAnswer = (childProps?: { questionId: number }) => {
+        setIsVisibleModalAnswer(true);
+        setQuestionId(childProps.questionId);
+    };
+
     useEffect(() => {
-        if (quizDataSelector.length === 0) {
-            getAllQuiz();
-        }
+        getAllQuiz();
     }, []);
 
     return (
         <div className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8'>
             <Modal
-                visible={isVisibleModal}
-                handlerClose={() => setIsVisibleModal(false)}
+                visible={isVisibleModalQuestion || isVisibleModalAnswer}
+                handlerClose={handlerCloseModal}
             >
-                <FormCreate
-                    title='Введите ваш вопрос'
-                    submitForm={submitQuestion}
-                    valueInput={questionNameSelector}
-                    dispatchInput={(e) => dispatch(questionUserName(e.target.value))}
-                />
+                {isVisibleModalQuestion &&
+                    <FormCreate
+                        title='Введите ваш вопрос'
+                        submitForm={submitQuestion}
+                        valueInput={questionNameSelector}
+                        dispatchInput={(e) => dispatch(questionUserName(e.target.value))}
+                    />
+                }
+                {
+                    isVisibleModalAnswer &&
+                    <FormCreate
+                        title='Введите ваш ответ'
+                        submitForm={submitAnswer}
+                        valueInput={answerNameSelector}
+                        dispatchInput={(e) => dispatch(answersUser(e.target.value))}
+                    />
+                }
             </Modal>
             {
                 currentQuiz.map((quiz: IQuizData) => {
@@ -164,34 +216,37 @@ const QuizPage = () => {
                         {
                             quiz.questions.length === 0
                                 ? <p
-                                    onClick={() => setIsVisibleModal(true)}
+                                    onClick={openModalCreateQuestion}
                                 >
                                     Вопросов нет, создайте первый</p>
                                 : null
                         }
                         <AccordionWrapper>
-                            {quiz.questions.map((question: IQuestionData) => {
+                            {quiz.questions.map((question: IQuestionData, index) => {
                                 return (
                                     <Accordion
                                         key={question.question_id}
                                         title={question.question_name}
                                         id={question.question_id}
+                                        firstIndex={index}
+                                        openModal={openModalCreateAnswer}
                                     >
-                                        {question.answers.map((answer: IAnswerData) => {
-
-                                            return (
-                                                <ListGroupWrapper key={answer.answer_id}>
-                                                    <ListGroupBody title={answer.answer_name}/>
-                                                </ListGroupWrapper>
-                                            )
-                                                ;
-                                        })}
+                                        <ListGroupWrapper>
+                                            {question.answers.map((answer: IAnswerData) => {
+                                                return (
+                                                    <ListGroupBody
+                                                        key={answer.answer_id}
+                                                        title={answer.answer_name}
+                                                    />
+                                                );
+                                            })}
+                                        </ListGroupWrapper>
                                     </Accordion>
                                 );
                             })}
                         </AccordionWrapper>
                         <button
-                            onClick={() => setIsVisibleModal(true)}
+                            onClick={openModalCreateQuestion}
                             className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                         >Добавить вопрос
                         </button>

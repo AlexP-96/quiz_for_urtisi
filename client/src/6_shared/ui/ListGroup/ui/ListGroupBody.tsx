@@ -7,7 +7,9 @@ interface PropsListGroupBody {
 const ListGroupBody: FC<PropsListGroupBody> = ({ title }) => {
     return (
         <li className='w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600'>
-            <div>{title}</div>
+            <div
+                className='w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600'
+            >{title}</div>
             <button
                 className='focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900'
             >

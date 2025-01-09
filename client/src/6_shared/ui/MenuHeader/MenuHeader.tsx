@@ -30,13 +30,14 @@ import {
 } from 'react-router-dom';
 import {
     emailUser,
-    openModal, userId,
+    userId,
 } from '4_entities/templateSlice';
 import {
     SelectorUserArrQuizzes,
     SelectorUserEmail,
 } from '4_entities/templateSlice/model/selectors';
-import {Button} from '../Button/Button';
+import { getLSUser } from '../../lib/helpers/localStorage/localStorage';
+import {Button} from '../Buttons/Button';
 import {QuizResData} from '../QuizzesView/ui/QuizView';
 import {Modal} from "6_shared/ui/Modal";
 import {AppDispatch} from "1_app/providers/redux/store/store";
@@ -50,22 +51,30 @@ interface IUserData {
 export default function MenuHeader() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isVisibleModal, setIsVisibleModal] = useState(false);
+
     const dispatch: AppDispatch = useDispatch();
+
     const userEmailSelector = useSelector(SelectorUserEmail);
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
     const isUserEmailSelector = useSelector(SelectorUserEmail);
+
     const navigate = useNavigate();
+
     const dataUserStorage: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {email: '', token: '', user_id: ''}
+    console.log('это MenuHeader dataUserStorage',dataUserStorage);
+
+    //todo здесь баг, который нужно исправить, а конкретно при протухании токена меню остается прежним, потому что сначала данные из LS попадают в редакс, а после удаляются из LS
 
     useEffect(() => {
         if (dataUserStorage.email) dispatch(emailUser(dataUserStorage.email))
         if (dataUserStorage.user_id) dispatch(userId(dataUserStorage.user_id))
         if (quizDataSelector.length > 0) navigate('/main_menu');
     }, []);
+
     const handlerLogout = () => {
         setIsVisibleModal(true)
     }
-    //todo сделать модальное окно глобальным и единым, попробовать положить в главный компонент и сделать е хуком
+
     return (
         <>
             {

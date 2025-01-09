@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch} from '1_app/providers/redux/store/store';
 import {openModal} from '4_entities/templateSlice';
-import {Button} from '6_shared/ui/Button/Button';
+import {Button} from '../../../6_shared/ui/Buttons/Button';
 import {SelectorUserArrQuizzes} from "4_entities/templateSlice/model/selectors";
 import {useNavigate} from "react-router-dom";
 

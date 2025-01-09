@@ -4,14 +4,14 @@ import Container from '6_shared/ui/Container/Container';
 const Home = () => {
     useEffect(() => {
         console.log('Первый рендер главного компонента')
-        localStorage.setItem(
-            'data_user',
-            JSON.stringify({
-                user_id: '',
-                email: '',
-                token: '',
-            }),
-        )
+        // localStorage.setItem(
+        //     'data_user',
+        //     JSON.stringify({
+        //         user_id: '',
+        //         email: '',
+        //         token: '',
+        //     }),
+        // )
     }, []);
     return (
         <Container>

@@ -1,7 +1,7 @@
 import { Button } from '@headlessui/react';
 import CardViewQuiz from '2_pages/cardViewQuiz/ui/CardViewQuiz';
-import {Link} from "react-router-dom";
-import {AppLink} from "6_shared/ui/AppLink/AppLink";
+import { Link } from 'react-router-dom';
+import { AppLink } from '6_shared/ui/AppLink/AppLink';
 
 //todo сложить нормально типы и интерфейсы
 
@@ -16,9 +16,7 @@ export interface QuizResData {
 
 const QuizView = (props: PropsQuizView) => {
     const { quizList } = props;
-    const openQuiz = () => {
 
-    }
     return (
         <div className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8'>
             {quizList.map((quiz: QuizResData) => (
@@ -37,7 +35,7 @@ const QuizView = (props: PropsQuizView) => {
                     }
                     <AppLink
                         to={`/quiz/${quiz.quiz_id}`}
-                        className='inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                        className='inline-flex items-center px-3 py-2 text-sm mt-5 font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800'
                     >
                         Редактировать
                         <svg
