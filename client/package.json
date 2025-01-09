@@ -25,6 +25,7 @@
         "@types/webpack-dev-server": "^4.7.2",
         "autoprefixer": "^10.4.20",
         "css-loader": "^7.1.1",
+        "flowbite": "^2.5.2",
         "flowbite-react": "^0.10.2",
         "html-webpack-plugin": "^5.6.0",
         "mini-css-extract-plugin": "^2.9.0",

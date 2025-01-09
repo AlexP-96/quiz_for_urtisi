@@ -4,6 +4,7 @@ import {
     Routes,
 } from 'react-router-dom';
 import { routeConfig } from '6_shared/config/routeConfig/routeConfig';
+import {QuizPage} from "2_pages/quizPage";
 
 const AppRouter = () => {
     return (

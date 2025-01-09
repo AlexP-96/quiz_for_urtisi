@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import {
     useDispatch,
     useSelector,
@@ -8,25 +8,35 @@ import { SelectorUserQuiz } from '4_entities/templateSlice/model/selectors';
 import { Input } from '../../Input/Input';
 import {axiosGetData} from "6_shared/api/axiosRequests";
 
-const FormCreateQuiz = ({
+type PropsForm = {
+    submitForm(event: React.FormEvent<HTMLFormElement>): void;
+    title: string;
+    dispatchInput(event: ChangeEvent<HTMLInputElement>): void;
+    valueInput: string
+}
+
+const FormCreate = ({
     submitForm,
-}: any) => {
-    const dispatch = useDispatch();
-    const nameQuiz = useSelector(SelectorUserQuiz);
+    title,
+    dispatchInput,
+    valueInput
+}: PropsForm) => {
+    // const dispatch = useDispatch();
+    // const nameQuiz = useSelector(SelectorUserQuiz);
 
     return (
         <form
             method='post'
             onSubmit={submitForm}
         >
-            <h2 className='pb-6'>Введите название вашего Квиза</h2>
+            <h2 className='pb-6'>{title}</h2>
             <div className='flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600'>
                 <Input
                     id='user_quiz'
                     name='user_quiz'
-                    handleChange={e => dispatch(quizUserName(e.target.value))}
+                    handleChange={dispatchInput}
                     type='text'
-                    value={nameQuiz}
+                    value={valueInput}
                     placeholder='Quiz'
                     className='block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6'
                 />
@@ -41,4 +51,4 @@ const FormCreateQuiz = ({
     );
 };
 
-export default FormCreateQuiz;
+export default FormCreate;

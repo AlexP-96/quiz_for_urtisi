@@ -1,3 +1,5 @@
-import QuizPage from './ui/QuizPage';
+import QuizPage from "./ui/QuizPage";
 
-export { QuizPage };
+export {
+    QuizPage
+}

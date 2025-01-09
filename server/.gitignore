@@ -1,5 +1,6 @@
 /node_modules
 .idea
+.docker-compose.yml
 /mysql_data
 /__test__
 .env

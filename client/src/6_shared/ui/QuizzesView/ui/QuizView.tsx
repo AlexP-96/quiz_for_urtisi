@@ -1,5 +1,7 @@
 import { Button } from '@headlessui/react';
-import QuizPage from '../../../../2_pages/quizPage/ui/QuizPage';
+import CardViewQuiz from '2_pages/cardViewQuiz/ui/CardViewQuiz';
+import {Link} from "react-router-dom";
+import {AppLink} from "6_shared/ui/AppLink/AppLink";
 
 //todo сложить нормально типы и интерфейсы
 
@@ -14,7 +16,9 @@ export interface QuizResData {
 
 const QuizView = (props: PropsQuizView) => {
     const { quizList } = props;
+    const openQuiz = () => {
 
+    }
     return (
         <div className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8'>
             {quizList.map((quiz: QuizResData) => (
@@ -26,16 +30,13 @@ const QuizView = (props: PropsQuizView) => {
                         {quiz.quiz_name}
                     </h5>
                     {
-                        <QuizPage
-                            quiz_id={quiz.quiz_id}
-                            quiz_data={quizList}
+                        <CardViewQuiz
+                            quizId={quiz.quiz_id}
+                            quizData={quizList}
                         />
                     }
-                    {/*<p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>Here are the biggest enterprise*/}
-                    {/*    technology*/}
-                    {/*    acquisitions of 2021 so far, in reverse chronological order.*/}
-                    {/*</p>*/}
-                    <Button
+                    <AppLink
+                        to={`/quiz/${quiz.quiz_id}`}
                         className='inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                     >
                         Редактировать
@@ -54,7 +55,7 @@ const QuizView = (props: PropsQuizView) => {
                                 d='M1 5h12m0 0L9 1m4 4L9 9'
                             />
                         </svg>
-                    </Button>
+                    </AppLink>
                 </div>
             ))}
         </div>

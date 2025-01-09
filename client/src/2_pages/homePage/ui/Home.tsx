@@ -1,7 +1,18 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Container from '6_shared/ui/Container/Container';
 
 const Home = () => {
+    useEffect(() => {
+        console.log('Первый рендер главного компонента')
+        localStorage.setItem(
+            'data_user',
+            JSON.stringify({
+                user_id: '',
+                email: '',
+                token: '',
+            }),
+        )
+    }, []);
     return (
         <Container>
             <h1 className='pb-10 font-extrabold'>

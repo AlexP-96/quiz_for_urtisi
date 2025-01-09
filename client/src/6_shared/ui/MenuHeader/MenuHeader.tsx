@@ -54,15 +54,13 @@ export default function MenuHeader() {
     const userEmailSelector = useSelector(SelectorUserEmail);
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
     const isUserEmailSelector = useSelector(SelectorUserEmail);
-    console.log('quizDataSelector',quizDataSelector)
     const navigate = useNavigate();
     const dataUserStorage: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {email: '', token: '', user_id: ''}
 
     useEffect(() => {
         if (dataUserStorage.email) dispatch(emailUser(dataUserStorage.email))
         if (dataUserStorage.user_id) dispatch(userId(dataUserStorage.user_id))
-        if (isUserEmailSelector) navigate('/main_menu');
-
+        if (quizDataSelector.length > 0) navigate('/main_menu');
     }, []);
     const handlerLogout = () => {
         setIsVisibleModal(true)
