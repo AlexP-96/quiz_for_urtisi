@@ -34,8 +34,8 @@ import {
     setLSUserNull,
 } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import FormCreate from '../../../6_shared/ui/FormCreateQuiz/ui/FormCreate';
-import { Modal } from '../../../6_shared/ui/Modal';
-import QuizView from '../../../6_shared/ui/QuizzesView/ui/QuizView';
+import { Modal } from '../../../6_shared/ui/Modals';
+import QuizItemWrapper from '../../../6_shared/ui/Quizzes/ui/QuizItemWrapper';
 import { Spinner } from '../../../6_shared/ui/Spinner';
 import { FirstQuiz } from '../../firstQuizPage';
 import { Button } from '@headlessui/react';
@@ -123,15 +123,15 @@ const QuizListPage = () => {
                                 <>
                                     {
                                         <>
-                                            <QuizView quizList={quizDataSelector} />
+                                            <QuizItemWrapper quizList={quizDataSelector} />
                                             <div
-                                                className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8'
+                                                className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8'
                                             >
                                                 <Button
                                                     onClick={handlerLogout}
                                                     className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                                                 >
-                                                    Создать новый квиз
+                                                    Создать новый Quiz
                                                 </Button>
                                             </div>
                                         </>

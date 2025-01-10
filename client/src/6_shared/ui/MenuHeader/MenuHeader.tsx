@@ -38,8 +38,8 @@ import {
 } from '4_entities/templateSlice/model/selectors';
 import { getLSUser } from '../../lib/helpers/localStorage/localStorage';
 import {Button} from '../Buttons/Button';
-import {QuizResData} from '../QuizzesView/ui/QuizView';
-import {Modal} from "6_shared/ui/Modal";
+import {QuizResData} from '../Quizzes/ui/QuizItemWrapper';
+import {Modal} from "6_shared/ui/Modals";
 import {AppDispatch} from "1_app/providers/redux/store/store";
 
 interface IUserData {

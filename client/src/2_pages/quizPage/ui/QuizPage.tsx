@@ -17,7 +17,7 @@ import {
     SelectorUserId,
     SelectorUserQuestions,
 } from '4_entities/templateSlice/model/selectors';
-import { Modal } from '6_shared/ui/Modal';
+import { Modal } from '6_shared/ui/Modals';
 import {
     axiosAuthPostData,
     axiosGetData,
@@ -48,7 +48,6 @@ import {
     ListGroupBody,
     ListGroupWrapper,
 } from '../../../6_shared/ui/ListGroup';
-import loginPage from '../../loginPage/ui/LoginPage';
 
 interface IQuizId {
     quiz_id: number;
@@ -137,7 +136,7 @@ const QuizPage: FC = () => {
                 console.log('Клиентская ошибка', error);
             });
     };
-    //todo обработать на севрере если пустой ответ
+    //todo обработать на сервере если пустой ответ
 
     const submitAnswer = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -162,7 +161,6 @@ const QuizPage: FC = () => {
             });
     };
 
-    //todo обработать баг при создании нового вопроса, чтобы внутри сразу создалась кнопка "создать ответ"
     const handlerCloseModal = () => {
         setIsVisibleModalQuestion(false);
         setIsVisibleModalAnswer(false);

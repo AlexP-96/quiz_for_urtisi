@@ -1,5 +1,5 @@
 import { Button } from '@headlessui/react';
-import CardViewQuiz from '2_pages/cardViewQuiz/ui/CardViewQuiz';
+import QuizItemBody from './QuizItemBody';
 import { Link } from 'react-router-dom';
 import { AppLink } from '6_shared/ui/AppLink/AppLink';
 
@@ -14,7 +14,7 @@ export interface QuizResData {
     quiz_name: string;
 }
 
-const QuizView = (props: PropsQuizView) => {
+const QuizItemWrapper = (props: PropsQuizView) => {
     const { quizList } = props;
 
     return (
@@ -28,7 +28,7 @@ const QuizView = (props: PropsQuizView) => {
                         {quiz.quiz_name}
                     </h5>
                     {
-                        <CardViewQuiz
+                        <QuizItemBody
                             quizId={quiz.quiz_id}
                             quizData={quizList}
                         />
@@ -61,4 +61,4 @@ const QuizView = (props: PropsQuizView) => {
 
 };
 
-export default QuizView;
+export default QuizItemWrapper;

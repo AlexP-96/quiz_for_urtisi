@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import BtnPopUpOpenModal from '../../Buttons/ui/BtnPopUpOpenModal';
+import PopUpModal from '../../Modals/ui/PopUpModal';
 
 interface PropsAccordion {
     title?: string;
@@ -6,7 +8,13 @@ interface PropsAccordion {
     id?: string | number;
     firstIndex?: number;
     questionId?: string | number;
-    openModal?: () => void;
+
+    openModal({}: { questionId: number | string }): void;
+}
+
+enum IdModal {
+    deleteAnswer = 'modal-delete-answer-',
+    createAnswer = 'modal-create-answer-'
 }
 
 const Accordion: FC<PropsAccordion> = (props) => {
@@ -20,8 +28,6 @@ const Accordion: FC<PropsAccordion> = (props) => {
 
     const handlerClick = () => {
         if (props.openModal) {
-            //todo нужно понять как типизировать пропсы которые возвращаются от дочернего к родителю
-            //@ts-ignore
             props.openModal({
                 questionId: props.id,
             });
@@ -29,6 +35,14 @@ const Accordion: FC<PropsAccordion> = (props) => {
     };
     return (
         <>
+            <PopUpModal
+                idModal={IdModal.deleteAnswer + id}
+                textAccept={'Да удалить'}
+                textCancel={'Отмена'}
+                handlerAccept={handlerClick}
+            >
+                Вы действительно хотите удалить ответ
+            </PopUpModal>
             <h2 id={`accordion-collapse-heading-${id}`}>
                 <button
                     type='button'
@@ -70,6 +84,11 @@ const Accordion: FC<PropsAccordion> = (props) => {
                     >
                         Создать ответ
                     </button>
+
+                    <BtnPopUpOpenModal
+                        popUpTarget={IdModal.deleteAnswer + id}
+                        text='Удалить ответ'
+                    />
                     <button
                         className='focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'
                     >

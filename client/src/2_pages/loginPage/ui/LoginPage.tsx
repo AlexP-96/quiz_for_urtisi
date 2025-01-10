@@ -24,7 +24,7 @@ import {Input} from '6_shared/ui/Input/Input';
 import {Label} from '6_shared/ui/Label/Label';
 import {SelectorUserError} from "4_entities/templateSlice/model/selectors";
 import {errorUser} from "4_entities/templateSlice/slice/userSlice";
-import {Modal} from "6_shared/ui/Modal";
+import {Modal} from "6_shared/ui/Modals";
 
 interface reqData {
     email: string;
@@ -107,7 +107,7 @@ const LoginPage = () => {
 
     return (
         <>
-            {/*<Modal >*/}
+            {/*<Modals >*/}
             {/*    Пользователь не зарегестрирован, пройдите регстрацию*/}
             {/*    <Link*/}
             {/*        to='/register'*/}
@@ -120,7 +120,7 @@ const LoginPage = () => {
             {/*            Перейти*/}
             {/*        </Buttons>*/}
             {/*    </Link>*/}
-            {/*</Modal>*/}
+            {/*</Modals>*/}
             <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     <h2 className='mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>

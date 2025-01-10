@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import ButtonColor from '../../../6_shared/ui/Buttons/ui/ButtonColor';
-import ButtonExtraSmall from '../../../6_shared/ui/Buttons/ui/ButtonExtraSmall';
+import ButtonColor from '../../Buttons/ui/ButtonColor';
+import ButtonExtraSmall from '../../Buttons/ui/ButtonExtraSmall';
 
 interface IQuizzesData {
     quiz_id: number;
@@ -32,7 +32,7 @@ interface QuizPageProps {
     quizData: [];
 }
 
-const CardViewQuiz: FC<QuizPageProps> = ({
+const QuizItemBody: FC<QuizPageProps> = ({
     quizData,
     quizId,
 }) => {
@@ -70,4 +70,4 @@ const CardViewQuiz: FC<QuizPageProps> = ({
     );
 };
 
-export default CardViewQuiz;
+export default QuizItemBody;
