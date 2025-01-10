@@ -41,13 +41,14 @@ import {
     setLSUserNull,
 } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import {
-    Accordion,
+    AccordionBody,
     AccordionWrapper,
 } from '../../../6_shared/ui/Accordion';
 import {
     ListGroupBody,
     ListGroupWrapper,
 } from '../../../6_shared/ui/ListGroup';
+import QuestionsList from './QuestionsList';
 
 interface IQuizId {
     quiz_id: number;
@@ -219,30 +220,35 @@ const QuizPage: FC = () => {
                                     Вопросов нет, создайте первый</p>
                                 : null
                         }
-                        <AccordionWrapper>
-                            {quiz.questions.map((question: IQuestionData, index) => {
-                                return (
-                                    <Accordion
-                                        key={question.question_id}
-                                        title={question.question_name}
-                                        id={question.question_id}
-                                        firstIndex={index}
-                                        openModal={openModalCreateAnswer}
-                                    >
-                                        <ListGroupWrapper>
-                                            {question.answers.map((answer: IAnswerData) => {
-                                                return (
-                                                    <ListGroupBody
-                                                        key={answer.answer_id}
-                                                        title={answer.answer_name}
-                                                    />
-                                                );
-                                            })}
-                                        </ListGroupWrapper>
-                                    </Accordion>
-                                );
-                            })}
-                        </AccordionWrapper>
+                        <QuestionsList
+                            questionsArr={quiz.questions}
+                            createAnswer={submitAnswer}
+                        />;
+
+                        {/*<AccordionWrapper>*/}
+                        {/*    {quiz.questions.map((question: IQuestionData, index) => {*/}
+                        {/*        return (*/}
+                        {/*            <AccordionBody*/}
+                        {/*                key={question.question_id}*/}
+                        {/*                title={question.question_name}*/}
+                        {/*                id={question.question_id}*/}
+                        {/*                firstIndex={index}*/}
+                        {/*                openModal={openModalCreateAnswer}*/}
+                        {/*            >*/}
+                        {/*                <ListGroupWrapper>*/}
+                        {/*                    {question.answers.map((answer: IAnswerData) => {*/}
+                        {/*                        return (*/}
+                        {/*                            <ListGroupBody*/}
+                        {/*                                key={answer.answer_id}*/}
+                        {/*                                text={answer.answer_name}*/}
+                        {/*                            />*/}
+                        {/*                        );*/}
+                        {/*                    })}*/}
+                        {/*                </ListGroupWrapper>*/}
+                        {/*            </AccordionBody>*/}
+                        {/*        );*/}
+                        {/*    })}*/}
+                        {/*</AccordionWrapper>*/}
                         <button
                             onClick={openModalCreateQuestion}
                             className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'

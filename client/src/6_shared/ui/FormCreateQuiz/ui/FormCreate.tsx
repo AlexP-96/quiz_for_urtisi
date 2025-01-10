@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { Input } from '../../Input/Input';
+import { Input } from '../../Inputs/ui/Input';
 
 type PropsForm = {
     submitForm(event: React.FormEvent<HTMLFormElement>): void;

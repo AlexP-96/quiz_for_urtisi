@@ -3,18 +3,12 @@ import React, { FC } from 'react';
 interface PropsPopUpModal {
     idModal: string;
     children: React.ReactNode;
-    textAccept: string;
-    textCancel: string;
-    handlerAccept: () => void;
 }
 
 const PopUpModal: FC<PropsPopUpModal> = (props) => {
     const {
         idModal,
-        textCancel,
-        textAccept,
         children,
-        handlerAccept,
     } = props;
 
     return (
@@ -45,27 +39,12 @@ const PopUpModal: FC<PropsPopUpModal> = (props) => {
                                 d='m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6'
                             />
                         </svg>
-                        <span className='sr-only'>Close modal</span>
+                        <span className='sr-only'>Закрыть модальное окно</span>
                     </button>
                     <div className='p-4 md:p-5 text-center'>
                         <div className='mb-5'>
                             {children}
                         </div>
-                        <button
-                            data-modal-hide={idModal}
-                            type='button'
-                            className='text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center'
-                            onClick={handlerAccept}
-                        >
-                            {textAccept}
-                        </button>
-                        <button
-                            data-modal-hide={idModal}
-                            type='button'
-                            className='py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
-                        >
-                            {textCancel}
-                        </button>
                     </div>
                 </div>
             </div>

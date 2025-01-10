@@ -7,7 +7,7 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import { Button } from '../../../6_shared/ui/Buttons/Button';
-import { Input } from '6_shared/ui/Input/Input';
+import { Input } from '../../../6_shared/ui/Inputs/ui/Input';
 import { Label } from '6_shared/ui/Label/Label';
 import axios, { AxiosResponse } from 'axios';
 

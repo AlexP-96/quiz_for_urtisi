@@ -20,11 +20,10 @@ import {
 import {axiosPostData} from '6_shared/api/axiosRequests';
 import { setLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import {Button} from '../../../6_shared/ui/Buttons/Button';
-import {Input} from '6_shared/ui/Input/Input';
+import {Input} from '../../../6_shared/ui/Inputs/ui/Input';
 import {Label} from '6_shared/ui/Label/Label';
 import {SelectorUserError} from "4_entities/templateSlice/model/selectors";
 import {errorUser} from "4_entities/templateSlice/slice/userSlice";
-import {Modal} from "6_shared/ui/Modals";
 
 interface reqData {
     email: string;

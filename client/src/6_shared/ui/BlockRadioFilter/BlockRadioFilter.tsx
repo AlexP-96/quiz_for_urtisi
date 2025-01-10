@@ -3,7 +3,7 @@ import {EventHandler, FC, MouseEventHandler, PropsWithChildren, ReactNode, Synth
 import {classNames} from '6_shared/lib/helpers/classNames/classNames';
 import cls from './BlockRadioFilter.module.scss';
 import {Text} from "6_shared/ui/Text/Text";
-import {Input} from "6_shared/ui/Input/Input";
+import {Input} from "../Inputs/ui/Input";
 
 interface BlockRadioFilterProps extends PropsWithChildren {
     className?: string;

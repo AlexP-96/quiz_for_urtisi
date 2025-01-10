@@ -52,7 +52,7 @@ const QuizItemBody: FC<QuizPageProps> = ({
                                             return (
                                                 <div key={answer.answer_id}>
                                                     <ButtonColor
-                                                        title={answer.answer_name}
+                                                        text={answer.answer_name}
                                                         color={'yellow'}
                                                         className={'ml-3'}
                                                     />

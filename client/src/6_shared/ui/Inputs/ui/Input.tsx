@@ -1,5 +1,5 @@
 import React from 'react';
-import { classNames } from '6_shared/lib/helpers/classNames/classNames';
+import { classNames } from '../../../lib/helpers/classNames/classNames';
 import cls from './Input.module.scss';
 
 interface InputProps {

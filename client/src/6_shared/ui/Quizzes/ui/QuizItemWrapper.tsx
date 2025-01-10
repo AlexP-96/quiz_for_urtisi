@@ -1,6 +1,4 @@
-import { Button } from '@headlessui/react';
 import QuizItemBody from './QuizItemBody';
-import { Link } from 'react-router-dom';
 import { AppLink } from '6_shared/ui/AppLink/AppLink';
 
 //todo сложить нормально типы и интерфейсы
