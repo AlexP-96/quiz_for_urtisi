@@ -2,7 +2,10 @@ import {
     AxiosError,
     AxiosResponse,
 } from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, {
+    useEffect,
+    useState,
+} from 'react';
 import {
     useDispatch,
     useSelector,
@@ -11,19 +14,24 @@ import {
     Link,
     useNavigate,
 } from 'react-router-dom';
-import {AppDispatch} from '1_app/providers/redux/store/store';
+import { AppDispatch } from '1_app/providers/redux/store/store';
 import {
     closeModal,
-    emailUser, openModal,
+    emailUser,
+    isLoading,
+    openModal,
     userId,
 } from '4_entities/templateSlice';
-import {axiosPostData} from '6_shared/api/axiosRequests';
+import {
+    axiosPostData,
+    loginUser,
+} from '6_shared/api/axiosRequests';
 import { setLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
-import {Button} from '../../../6_shared/ui/Buttons/Button';
-import {Input} from '../../../6_shared/ui/Inputs/ui/Input';
-import {Label} from '6_shared/ui/Label/Label';
-import {SelectorUserError} from "4_entities/templateSlice/model/selectors";
-import {errorUser} from "4_entities/templateSlice/slice/userSlice";
+import { Button } from '../../../6_shared/ui/Buttons/Button';
+import { Input } from '../../../6_shared/ui/Inputs/ui/Input';
+import { Label } from '6_shared/ui/Label/Label';
+import { SelectorUserError } from '4_entities/templateSlice/model/selectors';
+import { errorUser } from '4_entities/templateSlice/slice/userSlice';
 
 interface reqData {
     email: string;
@@ -43,7 +51,7 @@ interface resDataLoginLocal {
 }
 
 interface resErrorLogin {
-    error: string
+    error: string;
 }
 
 const LoginPage = () => {
@@ -51,7 +59,7 @@ const LoginPage = () => {
         email: '',
         password: '',
     });
-    const [isVisibleModal, setIsVisibleModal] = useState(false);
+
     const dispatch = useDispatch<AppDispatch>();
     const errorLogin = useSelector(SelectorUserError);
 
@@ -59,46 +67,41 @@ const LoginPage = () => {
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        axiosPostData('/login', data)
+        loginUser(data, () => dispatch(isLoading(true)))
             .then((response: AxiosResponse) => {
-                if (response.status === 401) {
-                    dispatch(errorUser(response.data.error));
-                    dispatch(openModal())
-                    return;
-                }
                 if (response.status === 200) {
+                    dispatch(isLoading(false));
+
                     const {
                         user_id,
                         token,
                         email,
                     }: resDataLogin = response.data.data;
 
-                    console.log('login')
-
                     dispatch(emailUser(email));
                     dispatch(userId(user_id));
 
-                    setLSUser({email, token, user_id})
-                    console.log();
+                    setLSUser({
+                        email,
+                        token,
+                        user_id,
+                    });
 
                     if (user_id && email) {
                         navigate('/main_menu');
                     }
                 }
-
-                if (response.status === 403) {
-                    console.log(403)
-                }
             })
             .catch((error: AxiosError) => {
-
+                dispatch(isLoading(false));
+                return error;
             });
         ;
     };
 
     const handlerCloseModal = () => {
-        dispatch(closeModal())
-    }
+        dispatch(closeModal());
+    };
 
     useEffect(() => {
 

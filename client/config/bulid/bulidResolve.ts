@@ -14,6 +14,9 @@ export function buildResolve(options: BuildOptions): webpack.ResolveOptions {
             'node_modules',
         ],
         mainFiles: ['index'],
-        alias: {},
+        alias: { 'node:process': 'process' },
+        fallback: {
+            process: require.resolve('process'),
+        },
     };
 }

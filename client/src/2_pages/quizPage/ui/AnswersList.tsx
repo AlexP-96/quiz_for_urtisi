@@ -54,9 +54,13 @@ const AnswersList: FC<PropsAnswersList> = (props) => {
         dispatch(answersUser(e.target.value));
     };
 
-    const submitForm = (e: FormEvent<HTMLFormElement>) => {
+    const submitFormAnswer = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         dispatch(answersUser(''));
+    };
+
+    const submitFormDeleteAnswer = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
     };
 
     return (
@@ -69,7 +73,7 @@ const AnswersList: FC<PropsAnswersList> = (props) => {
                                 idModal={nameModalIdAnswers.change + answer.answer_id}
                             >
                                 <FormModal
-                                    submitForm={submitForm}
+                                    submitForm={submitFormAnswer}
                                 >
                                     <InputDefault
                                         value={answerValueSelector}
@@ -95,7 +99,23 @@ const AnswersList: FC<PropsAnswersList> = (props) => {
                             <PopUpModal
                                 idModal={nameModalIdAnswers.delete + answer.answer_id}
                             >
-                                Вы действительно хотите удалить данный ответ?
+                                <FormModal submitForm={submitFormDeleteAnswer}>
+                                    <span>Вы действительно хотите удалить данный ответ?</span>
+                                    <div className='justify-between'>
+                                        <BtnPopUpCloseModal
+                                            popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
+                                            text='Удалить'
+                                            type={'submit'}
+                                            color={'yellow'}
+                                        />
+                                        <BtnPopUpCloseModal
+                                            popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
+                                            text='Отмена'
+                                            type={'button'}
+                                            color={'red'}
+                                        />
+                                    </div>
+                                </FormModal>
                             </PopUpModal>
                             <ListGroupBody
                                 key={answer.answer_id}

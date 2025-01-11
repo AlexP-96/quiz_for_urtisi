@@ -102,7 +102,7 @@ const QuizListPage = () => {
         dispatch(quizUserName(''));
         setIsVisibleModal(false);
     };
-
+2
     const handlerLogout = () => {
         setIsVisibleModal(true);
     };

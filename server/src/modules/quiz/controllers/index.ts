@@ -22,18 +22,6 @@ class QuizController {
         this.getOneQuiz = this.getOneQuiz.bind(this);
     }
 
-    async getAllModelQuiz(req: Request, res: Response) {
-        try {
-
-        } catch (error) {
-            res.send(500)
-                .send({
-                    data: null,
-                    error: error,
-                });
-        }
-    }
-
     async getAllQuiz(req: Request, res: Response) {
         try {
             const { user_id } = req.params;

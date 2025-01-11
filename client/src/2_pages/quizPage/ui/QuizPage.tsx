@@ -223,7 +223,7 @@ const QuizPage: FC = () => {
                         <QuestionsList
                             questionsArr={quiz.questions}
                             createAnswer={submitAnswer}
-                        />;
+                        />
 
                         {/*<AccordionWrapper>*/}
                         {/*    {quiz.questions.map((question: IQuestionData, index) => {*/}
