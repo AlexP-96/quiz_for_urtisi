@@ -13,6 +13,7 @@ import {
     useDispatch,
     useSelector,
 } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
     answersUser,
     isLoading,
@@ -28,7 +29,7 @@ import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
 import { InputModal } from '../../../6_shared/ui/Inputs';
-import PopUpModal from '../../../6_shared/ui/Modals/ui/PopUpModal';
+import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import AnswersPage from './AnswersPage';
 
 enum nameIdModalAnswer {
@@ -50,8 +51,10 @@ interface PropsQuestionsList {
 const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     const {
         questionsArr,
-        createAnswer,
     } = props;
+
+    const params = useParams();
+
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const [questionId, setQuestionId] = useState<string | number>('');
 
@@ -61,15 +64,20 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
         dispatch(answersUser(e.target.value));
     };
 
-    const submitForm = (e: FormEvent<HTMLFormElement>) => {
+    const handlerCloseModal = () => {
+        dispatch(answersUser(''));
+    };
+
+    const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
         e.preventDefault();
-        console.log('questionId', questionId);
         createAnswerAxios({
             user_id: getLSUser().user_id,
-            postData: { answer_name: answerValueSelector },
+            quiz_id: params.quiz_id,
+            question_id: questionID,
+            postData: answerValueSelector,
         }, () => dispatch(isLoading(true)))
             .then((response: AxiosResponse) => {
-
+                dispatch(answersUser(''));
             })
             .catch((error: AxiosError) => {
                 return {
@@ -84,11 +92,12 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
                 questionsArr.map((question: IQuestionData) => {
                     return (
                         <Fragment key={question.question_id}>
-                            <PopUpModal
+                            <ModalPopUp
                                 idModal={nameIdModalAnswer.createAnswer + question.question_id}
+                                onClick={handlerCloseModal}
                             >
                                 <FormModal
-                                    submitForm={submitForm}
+                                    submitForm={(e) => submitForm(e, question.question_id)}
                                     method='post'
                                     sectionButtons={[
                                         <BtnPopUpCloseModal
@@ -104,6 +113,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
                                             text='Отмена'
                                             type='button'
                                             color={'red'}
+                                            onClick={handlerCloseModal}
                                         />,
                                     ]}
                                 >
@@ -113,7 +123,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
                                         changeEvent={handlerChangeInput}
                                     />
                                 </FormModal>
-                            </PopUpModal>
+                            </ModalPopUp>
                             <Accordion.Body
                                 id={question.question_id}
                                 key={question.question_id}

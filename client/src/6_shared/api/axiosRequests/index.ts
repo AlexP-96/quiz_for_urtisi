@@ -30,6 +30,9 @@ interface requestDataUser<T = {}> {
     answer_id?: string | number;
     postData?: T;
 }
+type requestDataAnswerDel<T = {}> = Omit<requestDataUser, 'postData'>
+type requestDataAnswerChange<T = {}> = requestDataUser;
+
 
 //USER
 export const loginUserAxios = async (
@@ -72,7 +75,6 @@ export const registerUserAxios = async (
 export const getAllQuizAxios = async (user_id: string, callback: () => void): Promise<AxiosResponse | AxiosError> => {
     callback();
     try {
-        console.log('AxiosTOKEN', getLSUser().token);
         return await axios({
                 baseURL: HOST,
                 method: 'get',
@@ -232,7 +234,7 @@ export const getAllAnswerAxios = async (data: requestDataUser, callback: () => v
 };
 
 export const createAnswerAxios = async (
-    data: requestDataUser<postDataAnswer>,
+    data: requestDataUser<string>,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
     callback();
@@ -253,7 +255,7 @@ export const createAnswerAxios = async (
     }
 };
 
-export const updateAnswerAxios = async (data: requestDataUser<postDataAnswer>) => {
+export const updateAnswerAxios = async (data: requestDataAnswerChange<string>) => {
     try {
         return await axios({
             method: 'patch',
@@ -268,11 +270,12 @@ export const updateAnswerAxios = async (data: requestDataUser<postDataAnswer>) =
     }
 };
 
-export const deleteAnswerAxios = async (data: requestDataUser) => {
+export const deleteAnswerAxios = async (data: requestDataAnswerDel) => {
     try {
         return await axios({
+            baseURL: HOST,
             method: 'delete',
-            url: `${HOST}/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_delete/${data.answer_id}`,
+            url: `/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_delete/${data.answer_id}`,
             headers: {
                 Authorization: getLSUser().token,
             },

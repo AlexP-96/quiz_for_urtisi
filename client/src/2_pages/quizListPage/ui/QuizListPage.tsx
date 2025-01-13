@@ -36,7 +36,7 @@ import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
 import { InputModal } from '../../../6_shared/ui/Inputs';
-import PopUpModal from '../../../6_shared/ui/Modals/ui/PopUpModal';
+import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import QuizItemWrapper from '../../../6_shared/ui/Quizzes/ui/QuizItemWrapper';
 import { Spinner } from '../../../6_shared/ui/Spinner';
 import { FirstQuiz } from '../../firstQuizPage';
@@ -131,7 +131,7 @@ const QuizListPage = () => {
 
     return (
         <Fragment>
-            <PopUpModal
+            <ModalPopUp
                 idModal={'modal-list-quiz'}
             >
                 <FormModal
@@ -159,7 +159,7 @@ const QuizListPage = () => {
                         changeEvent={handlerInputChange}
                     />
                 </FormModal>
-            </PopUpModal>
+            </ModalPopUp>
             {
                 quizDataSelector.length > 0 && <QuizItemWrapper quizList={quizDataSelector} />
             }

@@ -127,7 +127,7 @@ class AnswerController {
     async deleteAnswer(req: Request, res: Response) {
         try {
             const { answer_id } = req?.params;
-
+            console.log('log');
             const {
                 data,
                 error,

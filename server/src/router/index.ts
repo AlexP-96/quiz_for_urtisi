@@ -53,7 +53,7 @@ export const updateAnswerRoute = router.patch(
     answerController.updateAnswer,
 );
 export const deleteAnswerRoute = router.delete(
-    '/:user_id/quiz/:quiz_id/question/:question_id/answer_delete/:answer_id',
+    '/:answer_id/answer_delete',
     answerController.deleteAnswer,
 );
 

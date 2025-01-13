@@ -46,7 +46,7 @@ import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal
 import { FormModal } from '../../../6_shared/ui/Forms';
 import { InputModal } from '../../../6_shared/ui/Inputs';
 
-import PopUpModal from '../../../6_shared/ui/Modals/ui/PopUpModal';
+import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import QuestionsPage from './QuestionsPage';
 
 interface IQuizId {
@@ -145,7 +145,7 @@ const QuizPage: FC = () => {
             user_id: getLSUser().user_id,
             quiz_id: quiz_id,
             question_id: questionId,
-            postData: { answer_name: answerNameSelector },
+            postData: answerNameSelector,
         }, () => dispatch(isLoading(true)))
             .then((response: AxiosResponse) => {
 
@@ -153,25 +153,6 @@ const QuizPage: FC = () => {
             .catch((error: AxiosError) => {
 
             });
-
-        // axiosAuthPostData(
-        //     `/${userIdSelector}/quiz/${quiz_id}/questions/${questionId}/answer_create`,
-        //     { answer_name: answerNameSelector },
-        // )
-        //     .then((response: AxiosResponse) => {
-        //         if (response.status === 200) {
-        //             getAllQuiz();
-        //         }
-        //         if (response.status === 403) {
-        //             navigate('/login');
-        //             console.log('Был успешный запрос на создание новго квиза', response);
-        //         }
-        //         dispatch(questionUserText(''));
-        //     })
-        //     .catch((error: AxiosError) => {
-        //         dispatch(questionUserText(''));
-        //         console.log('Клиентская ошибка', error);
-        //     });
     };
 
     const changeInputQuestion = (e: ChangeEvent<HTMLInputElement>) => {
@@ -201,7 +182,7 @@ const QuizPage: FC = () => {
                             className='mx-auto w-full'
                             key={quiz.quiz_id}
                         >
-                            <PopUpModal
+                            <ModalPopUp
                                 idModal={'first-question'}
                             >
                                 <FormModal
@@ -229,7 +210,7 @@ const QuizPage: FC = () => {
                                         changeEvent={changeInputQuestion}
                                     />
                                 </FormModal>
-                            </PopUpModal>
+                            </ModalPopUp>
                             <h2 className='pb-10 font-extrabold'>{quiz.quiz_name}</h2>
                             {
                                 quiz.questions.length === 0
