@@ -2,7 +2,7 @@ import {RouteProps} from 'react-router-dom';
 import {HomePage} from '2_pages/homePage';
 import {LoginPage} from '../../../2_pages/loginPage';
 import {QuizListPage} from '../../../2_pages/quizListPage';
-import {QuizPage} from '2_pages/quizPage';
+import {QuizPage} from '2_pages/quizzesPage';
 import {RegisterPage} from '../../../2_pages/registerPage';
 import React from "react";
 import {NotFoundPage} from "2_pages/notFoundPage";

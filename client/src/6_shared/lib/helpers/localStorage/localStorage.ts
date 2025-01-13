@@ -15,7 +15,11 @@ export const setLSUserNull = () => {
     );
 };
 export const getLSUser = (): IDataUserLocalStorage => {
-    return JSON.parse(localStorage.getItem('data_user'));
+    return JSON.parse(localStorage.getItem('data_user')) ?? {
+        email: '',
+        user_id: '',
+        token: '',
+    };
 };
 
 export const setLSUser = (object: IDataUserLocalStorage) => {
@@ -23,6 +27,6 @@ export const setLSUser = (object: IDataUserLocalStorage) => {
         'data_user',
         JSON.stringify(object),
     );
-}
+};
 
 

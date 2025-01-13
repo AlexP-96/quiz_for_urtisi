@@ -1,6 +1,10 @@
 import React, { FC } from 'react';
 import { GlobalColorEnum } from '../../../api/types/types';
 
+interface PropsAccordionWrapper {
+    children: React.ReactNode;
+}
+
 interface PropsAccordion {
     title?: string;
     children?: React.ReactNode;
@@ -12,7 +16,18 @@ interface PropsAccordion {
     openModal?({}: { questionId: number | string }): void;
 }
 
-const AccordionBody: FC<PropsAccordion> = (props) => {
+const Accordion: FC<PropsAccordionWrapper> & { Body: FC<PropsAccordion> } = ({ children }) => {
+    return (
+        <div
+            id='accordion-collapse'
+            data-accordion='open'
+        >
+            {children}
+        </div>
+    );
+};
+
+Accordion.Body = (props) => {
     const {
         title,
         children,
@@ -64,4 +79,4 @@ const AccordionBody: FC<PropsAccordion> = (props) => {
     );
 };
 
-// export default AccordionBody;
+export default Accordion;

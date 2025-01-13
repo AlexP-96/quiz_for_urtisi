@@ -1,7 +1,7 @@
-import InputDefault from './ui/InputDefault';
+import InputModal from './ui/InputModal';
 import { Input } from './ui/Input';
 
 export {
-    InputDefault,
+    InputModal,
     Input
 }

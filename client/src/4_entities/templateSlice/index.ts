@@ -5,7 +5,7 @@ import
     emailUser,
     quizUserName,
     answersUser,
-    questionUserName,
+    questionUserText,
     arrQuizDb,
     isLoading
 } from './slice/userSlice';
@@ -27,7 +27,7 @@ export {
     emailUser,
     quizUserName,
     answersUser,
-    questionUserName,
+    questionUserText,
     arrQuizDb,
     isLoading
 };

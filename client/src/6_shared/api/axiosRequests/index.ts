@@ -5,7 +5,6 @@ import axios, {
 import { getLSUser } from '../../lib/helpers/localStorage/localStorage';
 
 const HOST = 'http://localhost:4000';
-const TOKEN = getLSUser().token;
 
 interface postDataUser {
     email: string;
@@ -33,7 +32,7 @@ interface requestDataUser<T = {}> {
 }
 
 //USER
-export const loginUser = async (
+export const loginUserAxios = async (
     data: postDataUser,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -51,7 +50,7 @@ export const loginUser = async (
     }
 };
 
-export const registerUser = async (
+export const registerUserAxios = async (
     data: requestDataUser<postDataUser>,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -70,13 +69,15 @@ export const registerUser = async (
 };
 
 //QUIZZES
-export const getAllQuiz = async (data: requestDataUser, callback: () => void): Promise<AxiosResponse | AxiosError> => {
+export const getAllQuizAxios = async (user_id: string, callback: () => void): Promise<AxiosResponse | AxiosError> => {
     callback();
     try {
-        return await axios.get(
-            `${HOST}/user/${data.user_id}/quiz_all`,
-            {
-                headers: { Authorization: TOKEN },
+        console.log('AxiosTOKEN', getLSUser().token);
+        return await axios({
+                baseURL: HOST,
+                method: 'get',
+                url: `/user/${user_id}/quiz_all`,
+                headers: { Authorization: getLSUser().token },
             },
         );
     } catch (error) {
@@ -84,7 +85,7 @@ export const getAllQuiz = async (data: requestDataUser, callback: () => void): P
     }
 };
 
-export const createQuiz = async (
+export const createQuizAxios = async (
     data: requestDataUser<postDataQuiz>,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -95,7 +96,7 @@ export const createQuiz = async (
             url: `${HOST}/user/${data.user_id}/create_quiz`,
             data: data.postData,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -103,7 +104,7 @@ export const createQuiz = async (
     }
 };
 
-export const updateQuiz = async (
+export const updateQuizAxios = async (
     data: requestDataUser<postDataQuiz>,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -114,7 +115,7 @@ export const updateQuiz = async (
             url: `${HOST}/user/${data.user_id}/update_quiz/${data.quiz_id}`,
             data: data.postData,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -122,7 +123,7 @@ export const updateQuiz = async (
     }
 };
 
-export const deleteQuiz = async (
+export const deleteQuizAxios = async (
     data: requestDataUser,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -132,7 +133,7 @@ export const deleteQuiz = async (
             method: 'delete',
             url: `${HOST}/user/${data.user_id}/delete_quiz/${data.quiz_id}`,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -142,7 +143,7 @@ export const deleteQuiz = async (
 
 //QUESTIONS
 
-export const getAllQuestion = async (
+export const getAllQuestionAxios = async (
     data: requestDataUser,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -151,7 +152,7 @@ export const getAllQuestion = async (
         return await axios.get(
             `${HOST}/user/${data.user_id}/questions/${data.quiz_id}/question_all`,
             {
-                headers: { Authorization: TOKEN },
+                headers: { Authorization: getLSUser().token },
             },
         );
     } catch (error) {
@@ -159,7 +160,7 @@ export const getAllQuestion = async (
     }
 };
 
-export const createQuestion = async (
+export const createQuestionAxios = async (
     data: requestDataUser<postDataQuestion>,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -170,7 +171,7 @@ export const createQuestion = async (
             url: `${HOST}/user/${data.user_id}/questions/${data.quiz_id}/question_create`,
             data: data.postData,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -178,7 +179,7 @@ export const createQuestion = async (
     }
 };
 
-export const updateQuestion = async (
+export const updateQuestionAxios = async (
     data: requestDataUser<postDataQuestion>,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -189,7 +190,7 @@ export const updateQuestion = async (
             url: `${HOST}/user/${data.user_id}/questions/${data.quiz_id}/question_update/${data.question_id}`,
             data: data.postData,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -197,7 +198,7 @@ export const updateQuestion = async (
     }
 };
 
-export const deleteQuestion = async (
+export const deleteQuestionAxios = async (
     data: requestDataUser,
     callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
@@ -207,7 +208,7 @@ export const deleteQuestion = async (
             method: 'delete',
             url: `${HOST}/user/${data.user_id}/questions/${data.quiz_id}/question_delete/${data.question_id}`,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -216,13 +217,13 @@ export const deleteQuestion = async (
 };
 
 //ANSWERS
-export const getAllAnswer = async (data: requestDataUser, callback: () => void) => {
+export const getAllAnswerAxios = async (data: requestDataUser, callback: () => void) => {
     callback();
     try {
         return await axios.get(
             `${HOST}/user/${data.user_id}/quiz/${data.quiz_id}/question/${data.question_id}/answer_all`,
             {
-                headers: { Authorization: TOKEN },
+                headers: { Authorization: getLSUser().token },
             },
         );
     } catch (error) {
@@ -230,14 +231,21 @@ export const getAllAnswer = async (data: requestDataUser, callback: () => void) 
     }
 };
 
-export const createAnswer = async (data: requestDataUser<postDataAnswer>) => {
+export const createAnswerAxios = async (
+    data: requestDataUser<postDataAnswer>,
+    callback: () => void,
+): Promise<AxiosResponse | AxiosError> => {
+    callback();
     try {
         return await axios({
+            baseURL: HOST,
             method: 'post',
-            url: `${HOST}/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_create`,
-            data: data.postData,
+            url: `/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_create`,
+            data: {
+                answer_name: data.postData,
+            },
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -245,14 +253,14 @@ export const createAnswer = async (data: requestDataUser<postDataAnswer>) => {
     }
 };
 
-export const updateAnswer = async (data: requestDataUser<postDataAnswer>) => {
+export const updateAnswerAxios = async (data: requestDataUser<postDataAnswer>) => {
     try {
         return await axios({
             method: 'patch',
             url: `${HOST}/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_update/${data.answer_id}`,
             data: data.postData,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {
@@ -260,13 +268,13 @@ export const updateAnswer = async (data: requestDataUser<postDataAnswer>) => {
     }
 };
 
-export const deleteAnswer = async (data: requestDataUser) => {
+export const deleteAnswerAxios = async (data: requestDataUser) => {
     try {
         return await axios({
             method: 'delete',
             url: `${HOST}/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_delete/${data.answer_id}`,
             headers: {
-                Authorization: TOKEN,
+                Authorization: getLSUser().token,
             },
         });
     } catch (error) {

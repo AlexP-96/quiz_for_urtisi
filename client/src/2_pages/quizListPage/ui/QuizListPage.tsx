@@ -1,8 +1,8 @@
 import React, {
+    ChangeEvent,
+    Fragment,
     useEffect,
-    useState,
 } from 'react';
-import { Simulate } from 'react-dom/test-utils';
 import {
     useDispatch,
     useSelector,
@@ -10,7 +10,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import {
     AppDispatch,
-    RootState,
 } from '1_app/providers/redux/store/store';
 import {
     arrQuizDb,
@@ -26,19 +25,21 @@ import {
     SelectorUserQuiz,
 } from '4_entities/templateSlice/model/selectors';
 import {
-    axiosAuthPostData,
-    axiosGetData,
+    createQuizAxios,
+    getAllQuizAxios,
 } from '6_shared/api/axiosRequests';
 import {
     getLSUser,
     setLSUserNull,
 } from '../../../6_shared/lib/helpers/localStorage/localStorage';
-import FormCreate from '../../../6_shared/ui/FormCreateQuiz/ui/FormCreate';
-import { Modal } from '../../../6_shared/ui/Modals';
+import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
+import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
+import { FormModal } from '../../../6_shared/ui/Forms';
+import { InputModal } from '../../../6_shared/ui/Inputs';
+import PopUpModal from '../../../6_shared/ui/Modals/ui/PopUpModal';
 import QuizItemWrapper from '../../../6_shared/ui/Quizzes/ui/QuizItemWrapper';
 import { Spinner } from '../../../6_shared/ui/Spinner';
 import { FirstQuiz } from '../../firstQuizPage';
-import { Button } from '@headlessui/react';
 import { errorUser } from '4_entities/templateSlice/slice/userSlice';
 import {
     AxiosError,
@@ -47,7 +48,6 @@ import {
 
 const QuizListPage = () => {
     const dispatch: AppDispatch = useDispatch();
-    const [isVisibleModal, setIsVisibleModal] = useState(false);
 
     const nameQuizSelector = useSelector(SelectorUserQuiz);
     const userIdSelector = useSelector(SelectorUserId);
@@ -57,35 +57,46 @@ const QuizListPage = () => {
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-        axiosGetData(
-            `/${getLSUser().user_id}/quiz_all`,
-            () => dispatch(isLoading(true)),
-        ).then((response: AxiosResponse) => {
-            dispatch(isLoading(false));
+        getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading(true)))
+            .then((response: AxiosResponse) => {
+                dispatch(isLoading(false));
 
-            if (response.status === 403) {
-                dispatch(errorUser(response.data.response.data));
+                if (response.status === 403) {
+                    dispatch(errorUser('Ошибка авторизации'));
+
+                    setLSUserNull();
+
+                    dispatch(userId(''));
+                    dispatch(emailUser(''));
+
+                    navigate('/login');
+                }
+
+                if (response.status === 200) {
+                    dispatch(arrQuizDb(response.data.data));
+                }
+            })
+            .catch((error: AxiosError) => {
+                console.log('error', error.response.data);
+                dispatch(isLoading(false));
                 setLSUserNull();
+
                 dispatch(userId(''));
                 dispatch(emailUser(''));
+
                 navigate('/login');
-                return;
-            }
-            dispatch(arrQuizDb(response.data.data));
-        }).catch(error => {
-            console.log('error', error);
-            setLSUserNull();
-            dispatch(userId(''));
-            dispatch(emailUser(''));
-            navigate('/login');
-            dispatch(isLoading(false));
-        });
+            });
     };
 
-    const submitData = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitData =   (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        axiosAuthPostData(`/${userIdSelector}/create_quiz`, { quiz_name: nameQuizSelector })
+        createQuizAxios({
+            user_id: userIdSelector,
+            postData: { quiz_name: nameQuizSelector },
+        }, () => dispatch(isLoading(true)))
             .then((response: AxiosResponse) => {
+                dispatch(isLoading(false));
+
                 if (response.status === 200) {
                     getAllQuiz();
                     console.log('Был успешный запрос на создание нового квиза', response);
@@ -96,68 +107,73 @@ const QuizListPage = () => {
                 }
             })
             .catch((error: AxiosError) => {
-                console.log(error);
-            });
+                dispatch(isLoading(false));
 
-        dispatch(quizUserName(''));
-        setIsVisibleModal(false);
+                console.log('error при создании квиза', error);
+            });
     };
-2
+
     const handlerLogout = () => {
-        setIsVisibleModal(true);
+
+    };
+
+    const handlerInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        dispatch(quizUserName(event.target.value));
     };
 
     useEffect(() => {
         getAllQuiz();
     }, []);
 
+    if (quizDataSelector.length === 0) {
+        return <FirstQuiz />;
+    }
+
     return (
-        <>
+        <Fragment>
+            <PopUpModal
+                idModal={'modal-list-quiz'}
+            >
+                <FormModal
+                    submitForm={submitData}
+                    sectionButtons={[
+                        <BtnPopUpCloseModal
+                            key='1'
+                            popUpTarget={'modal-list-quiz'}
+                            text='Создать'
+                            type='submit'
+                            color='blue'
+                        />,
+                        <BtnPopUpCloseModal
+                            key='2'
+                            popUpTarget={'modal-list-quiz'}
+                            text='Отмена'
+                            type='button'
+                            color='red'
+                        />,
+                    ]}
+                >
+                    <InputModal
+                        labelText='Введите название вашего Квиза'
+                        value={nameQuizSelector}
+                        changeEvent={handlerInputChange}
+                    />
+                </FormModal>
+            </PopUpModal>
             {
-                loadDataSelector
-                    ? <Spinner />
-                    :
-                    <>
-                        {
-                            quizDataSelector.length > 0 && (
-                                <>
-                                    {
-                                        <>
-                                            <QuizItemWrapper quizList={quizDataSelector} />
-                                            <div
-                                                className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8'
-                                            >
-                                                <Button
-                                                    onClick={handlerLogout}
-                                                    className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                                                >
-                                                    Создать новый Quiz
-                                                </Button>
-                                            </div>
-                                        </>
-                                    }
-                                </>
-                            )
-                        }
-                        <Modal
-                            visible={isVisibleModal}
-                            handlerClose={() => setIsVisibleModal(false)}
-                        >
-                            <FormCreate
-                                title='Введите название вашего Квиза'
-                                valueInput={nameQuizSelector}
-                                submitForm={submitData}
-                                dispatchInput={(e) => dispatch(quizUserName(e.target.value))}
-                            />
-                        </Modal>
-                        {
-                            quizDataSelector.length === 0 && (
-                                <FirstQuiz />
-                            )
-                        }
-                    </>
+                quizDataSelector.length > 0 && <QuizItemWrapper quizList={quizDataSelector} />
             }
-        </>
+            {/*//todo сделать контейнер для стилей*/}
+            <div
+                className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8'
+            >
+                <BtnPopUpOpenModal
+                    type='button'
+                    text='Создать новый Quiz'
+                    idPopUpTarget={'modal-list-quiz'}
+                />
+            </div>
+        </Fragment>
     );
 };
 

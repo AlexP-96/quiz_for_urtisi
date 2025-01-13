@@ -38,7 +38,7 @@ const userSlice = createSlice({
         quizUserName: (state: UserState, action: PayloadAction<string>) => {
             state.quiz = action.payload;
         },
-        questionUserName: (state: UserState, action: PayloadAction<string>) => {
+        questionUserText: (state: UserState, action: PayloadAction<string>) => {
             state.question = action.payload;
         },
         answersUser: (state: UserState, action: PayloadAction<string>) => {
@@ -57,7 +57,7 @@ export const {
     userId,
     emailUser,
     quizUserName,
-    questionUserName,
+    questionUserText,
     answersUser,
     arrQuizDb,
     isLoading,

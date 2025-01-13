@@ -2,7 +2,6 @@ import React, {
     FC,
     FormEvent,
     Fragment,
-    SyntheticEvent,
     useState,
 } from 'react';
 import {
@@ -14,13 +13,12 @@ import { SelectorUserAnswers } from '../../../4_entities/templateSlice/model/sel
 import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
-import InputDefault from '../../../6_shared/ui/Inputs/ui/InputDefault';
+import InputModal from '../../../6_shared/ui/Inputs/ui/InputModal';
 import {
     ListGroupBody,
     ListGroupWrapper,
 } from '../../../6_shared/ui/ListGroup';
 import PopUpModal from '../../../6_shared/ui/Modals/ui/PopUpModal';
-import loginPage from '../../loginPage/ui/LoginPage';
 
 enum nameModalIdAnswers {
     change = 'modal-change-answer-',
@@ -37,7 +35,7 @@ interface PropsAnswersList {
     answersArr: IAnswerData[];
 }
 
-const AnswersList: FC<PropsAnswersList> = (props) => {
+const AnswersPage: FC<PropsAnswersList> = (props) => {
     const { answersArr } = props;
 
     const [answerId, setAnswerId] = useState<number>(null);
@@ -74,67 +72,75 @@ const AnswersList: FC<PropsAnswersList> = (props) => {
                             >
                                 <FormModal
                                     submitForm={submitFormAnswer}
-                                >
-                                    <InputDefault
-                                        value={answerValueSelector}
-                                        text='Введите новое имя вашего ответа'
-                                        changeEvent={handlerChangeInput}
-                                    />
-                                    <div className='justify-between'>
+                                    method='patch'
+                                    sectionButtons={[
                                         <BtnPopUpCloseModal
+                                            key='1'
                                             popUpTarget={nameModalIdAnswers.change + answer.answer_id}
                                             text='Изменить'
                                             type={'submit'}
                                             color={'yellow'}
-                                        />
+                                        />,
                                         <BtnPopUpCloseModal
+                                            key='2'
                                             popUpTarget={nameModalIdAnswers.change + answer.answer_id}
                                             text='Отмена'
                                             type={'button'}
                                             color={'red'}
-                                        />
-                                    </div>
+                                        />,
+                                    ]}
+                                >
+                                    <InputModal
+                                        value={answerValueSelector}
+                                        labelText='Введите новое имя вашего ответа'
+                                        changeEvent={handlerChangeInput}
+                                    />
                                 </FormModal>
                             </PopUpModal>
                             <PopUpModal
                                 idModal={nameModalIdAnswers.delete + answer.answer_id}
                             >
-                                <FormModal submitForm={submitFormDeleteAnswer}>
-                                    <span>Вы действительно хотите удалить данный ответ?</span>
-                                    <div className='justify-between'>
+                                <FormModal
+                                    submitForm={submitFormDeleteAnswer}
+                                    sectionButtons={[
                                         <BtnPopUpCloseModal
+                                            key='1'
                                             popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
                                             text='Удалить'
-                                            type={'submit'}
-                                            color={'yellow'}
-                                        />
+                                            type='submit'
+                                            color='yellow'
+                                        />,
                                         <BtnPopUpCloseModal
+                                            key='2'
                                             popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
                                             text='Отмена'
-                                            type={'button'}
-                                            color={'red'}
-                                        />
-                                    </div>
+                                            type='button'
+                                            color='red'
+                                        />,
+                                    ]}
+                                >
+                                    <span>Вы действительно хотите удалить данный ответ?</span>
                                 </FormModal>
                             </PopUpModal>
                             <ListGroupBody
                                 key={answer.answer_id}
                                 text={answer.answer_name}
-                            />
-                            <BtnPopUpOpenModal
-                                handlerClick={handlerClick}
-                                id={answer.answer_id}
-                                idPopUpTarget={nameModalIdAnswers.change + answer.answer_id}
-                                text='Изменить'
-                                color={'yellow'}
-                                type='button'
-                            />
-                            <BtnPopUpOpenModal
-                                idPopUpTarget={nameModalIdAnswers.delete + answer.answer_id}
-                                text='Удалить'
-                                color={'red'}
-                                type='button'
-                            />
+                            >
+                                <BtnPopUpOpenModal
+                                    handlerClick={handlerClick}
+                                    id={answer.answer_id}
+                                    idPopUpTarget={nameModalIdAnswers.change + answer.answer_id}
+                                    text='Изменить'
+                                    color='yellow'
+                                    type='button'
+                                />
+                                <BtnPopUpOpenModal
+                                    idPopUpTarget={nameModalIdAnswers.delete + answer.answer_id}
+                                    text='Удалить'
+                                    color='red'
+                                    type='button'
+                                />
+                            </ListGroupBody>
                         </Fragment>
                     );
                 })
@@ -143,4 +149,4 @@ const AnswersList: FC<PropsAnswersList> = (props) => {
     );
 };
 
-export default AnswersList;
+export default AnswersPage;

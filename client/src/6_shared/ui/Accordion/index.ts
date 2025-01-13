@@ -1,7 +1,5 @@
-import AccordionBody from './ui/AccordionBody';
-import AccordionWrapper from './ui/AccordionWrapper';
+import Accordion from './ui/Accordion';
 
 export {
-    AccordionBody,
-    AccordionWrapper
+    Accordion
 }

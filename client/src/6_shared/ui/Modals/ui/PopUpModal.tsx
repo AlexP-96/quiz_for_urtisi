@@ -1,4 +1,6 @@
-import React, { FC } from 'react';
+import React, {
+    FC,
+} from 'react';
 
 interface PropsPopUpModal {
     idModal: string;
@@ -41,10 +43,8 @@ const PopUpModal: FC<PropsPopUpModal> = (props) => {
                         </svg>
                         <span className='sr-only'>Закрыть модальное окно</span>
                     </button>
-                    <div className='p-4 md:p-5 text-center'>
-                        <div className='mb-5'>
-                            {children}
-                        </div>
+                    <div className='p-4 md:p-5 space-y-4'>
+                        {children}
                     </div>
                 </div>
             </div>

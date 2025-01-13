@@ -19,12 +19,10 @@ import {
     closeModal,
     emailUser,
     isLoading,
-    openModal,
     userId,
 } from '4_entities/templateSlice';
 import {
-    axiosPostData,
-    loginUser,
+    loginUserAxios,
 } from '6_shared/api/axiosRequests';
 import { setLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import { Button } from '../../../6_shared/ui/Buttons/Button';
@@ -55,7 +53,7 @@ interface resErrorLogin {
 }
 
 const LoginPage = () => {
-    const [data, setData] = React.useState<reqData>({
+    const [data, setData] = useState<reqData>({
         email: '',
         password: '',
     });
@@ -67,7 +65,7 @@ const LoginPage = () => {
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        loginUser(data, () => dispatch(isLoading(true)))
+        loginUserAxios(data, () => dispatch(isLoading(true)))
             .then((response: AxiosResponse) => {
                 if (response.status === 200) {
                     dispatch(isLoading(false));
@@ -86,7 +84,6 @@ const LoginPage = () => {
                         token,
                         user_id,
                     });
-
                     if (user_id && email) {
                         navigate('/main_menu');
                     }
@@ -94,6 +91,8 @@ const LoginPage = () => {
             })
             .catch((error: AxiosError) => {
                 dispatch(isLoading(false));
+                dispatch(errorUser('Ошибка при авторизации'));
+
                 return error;
             });
         ;
@@ -106,7 +105,7 @@ const LoginPage = () => {
     useEffect(() => {
 
     }, [errorLogin]);
-
+    //todo переделать страницу авторизации на компоненты
     return (
         <>
             {/*<Modals >*/}

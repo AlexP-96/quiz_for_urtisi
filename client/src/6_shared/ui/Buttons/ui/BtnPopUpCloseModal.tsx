@@ -1,4 +1,7 @@
-import React, { FC } from 'react';
+import React, {
+    FC,
+    MouseEventHandler,
+} from 'react';
 import { GlobalColorEnum } from '../../../api/types/types';
 
 interface PropsBtnPopUpCloseModal {

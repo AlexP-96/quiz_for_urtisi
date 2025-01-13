@@ -14,7 +14,7 @@ const BtnPopUpOpenModal: FC<PropsButtonPopUpModal> = (props) => {
     const {
         idPopUpTarget,
         text,
-        color,
+        color = 'blue',
         type,
         handlerClick,
         id

@@ -60,8 +60,7 @@ export default function MenuHeader() {
 
     const navigate = useNavigate();
 
-    const dataUserStorage: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {email: '', token: '', user_id: ''}
-    console.log('это MenuHeader dataUserStorage',dataUserStorage);
+    const dataUserStorage: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {email: '', token: '', user_id: ''};
 
     //todo здесь баг, который нужно исправить, а конкретно при протухании токена меню остается прежним, потому что сначала данные из LS попадают в редакс, а после удаляются из LS
 
