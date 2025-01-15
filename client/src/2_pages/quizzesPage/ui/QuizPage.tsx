@@ -92,10 +92,10 @@ const QuizPage: FC = () => {
     const getAllQuiz = () => {
         console.log(`/${getLSUser().user_id}/quiz_all`);
         axiosGetData(`/${getLSUser().user_id}/quiz_all`, () => {
-            dispatch(isLoading(true));
+            dispatch(isLoading('loading'));
         })
             .then((response: AxiosResponse) => {
-                dispatch(isLoading(false));
+                dispatch(isLoading('succeeded'));
 
                 if (response.status === 403) {
                     dispatch(errorUser(response.data.response.data));
@@ -146,7 +146,7 @@ const QuizPage: FC = () => {
             quiz_id: quiz_id,
             question_id: questionId,
             postData: answerNameSelector,
-        }, () => dispatch(isLoading(true)))
+        }, () => dispatch(isLoading('loading')))
             .then((response: AxiosResponse) => {
 
             })

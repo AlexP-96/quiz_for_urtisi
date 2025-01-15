@@ -40,7 +40,10 @@ import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import QuizItemWrapper from '../../../6_shared/ui/Quizzes/ui/QuizItemWrapper';
 import { Spinner } from '../../../6_shared/ui/Spinner';
 import { FirstQuiz } from '../../firstQuizPage';
-import { errorUser } from '4_entities/templateSlice/slice/userSlice';
+import {
+    errorUser,
+    fetchQuizzesAll,
+} from '4_entities/templateSlice/slice/userSlice';
 import {
     AxiosError,
     AxiosResponse,
@@ -57,7 +60,8 @@ const QuizListPage = () => {
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-        getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading(true)));
+        dispatch(fetchQuizzesAll(getLSUser().user_id))
+        // getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading('loading')));
     };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,9 +69,9 @@ const QuizListPage = () => {
         createQuizAxios({
             user_id: userIdSelector,
             postData: { quiz_name: nameQuizSelector },
-        }, () => dispatch(isLoading(true)))
+        }, () => dispatch(isLoading('loading')))
             .then((response: AxiosResponse) => {
-                dispatch(isLoading(false));
+                dispatch(isLoading('succeeded'));
 
                 if (response.status === 200) {
                     getAllQuiz();
@@ -79,7 +83,7 @@ const QuizListPage = () => {
                 }
             })
             .catch((error: AxiosError) => {
-                dispatch(isLoading(false));
+                dispatch(isLoading('failed'));
 
                 console.log('error при создании квиза', error);
             });
@@ -95,7 +99,6 @@ const QuizListPage = () => {
 
     useEffect(() => {
         getAllQuiz();
-        const kk = getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading(true)));
     }, []);
 
     if (quizDataSelector.length === 0) {

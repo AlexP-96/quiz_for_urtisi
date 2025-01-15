@@ -65,10 +65,10 @@ const LoginPage = () => {
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        loginUserAxios(data, () => dispatch(isLoading(true)))
+        loginUserAxios(data, () => dispatch(isLoading('loading')))
             .then((response: AxiosResponse) => {
                 if (response.status === 200) {
-                    dispatch(isLoading(false));
+                    dispatch(isLoading('succeeded'));
 
                     const {
                         user_id,
@@ -90,7 +90,7 @@ const LoginPage = () => {
                 }
             })
             .catch((error: AxiosError) => {
-                dispatch(isLoading(false));
+                dispatch(isLoading('failed'));
                 dispatch(errorUser('Ошибка при авторизации'));
 
                 return error;

@@ -75,7 +75,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
             quiz_id: params.quiz_id,
             question_id: questionID,
             postData: answerValueSelector,
-        }, () => dispatch(isLoading(true)))
+        }, () => dispatch(isLoading('loading')))
             .then((response: AxiosResponse) => {
                 dispatch(answersUser(''));
             })
