@@ -30,7 +30,7 @@ import {
 } from 'axios';
 import {
     answersUser,
-    arrQuizDb,
+    allQuizzes,
     emailUser,
     isLoading,
     questionUserText,
@@ -106,7 +106,7 @@ const QuizPage: FC = () => {
                     return;
                 }
 
-                dispatch(arrQuizDb(response.data.data));
+                dispatch(allQuizzes(response.data.data));
             })
             .catch((error: AxiosError) => {
                 console.log('errorQuiz_PAge', error);

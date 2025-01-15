@@ -6,7 +6,7 @@ import
     quizUserName,
     answersUser,
     questionUserText,
-    arrQuizDb,
+    allQuizzes,
     isLoading
 } from './slice/userSlice';
 import {
@@ -28,6 +28,6 @@ export {
     quizUserName,
     answersUser,
     questionUserText,
-    arrQuizDb,
+    allQuizzes,
     isLoading
 };

@@ -6,6 +6,7 @@ import React, {
     FC,
     FormEvent,
     Fragment,
+    useEffect,
     useState,
 } from 'react';
 import { Simulate } from 'react-dom/test-utils';
@@ -14,10 +15,17 @@ import {
     useSelector,
 } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { answersUser } from '../../../4_entities/templateSlice';
-import { SelectorUserAnswers } from '../../../4_entities/templateSlice/model/selectors';
+import {
+    answersUser,
+    allQuizzes,
+} from '../../../4_entities/templateSlice';
+import {
+    SelectorUserAnswers,
+    SelectorUserArrQuizzes,
+} from '../../../4_entities/templateSlice/model/selectors';
 import {
     deleteAnswerAxios,
+    getAllQuizAxios,
     updateAnswerAxios,
 } from '../../../6_shared/api/axiosRequests';
 import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
@@ -58,11 +66,15 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
     const [answerId, setAnswerId] = useState<number>(null);
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
-
+    const arrQuizzes = useSelector(SelectorUserArrQuizzes);
     const dispatch = useDispatch();
 
     const handlerChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(answersUser(e.target.value));
+    };
+
+    const getAllQuizzes = () => {
+
     };
 
     const submitFormAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
@@ -81,17 +93,21 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
                 return error;
             });
     };
+    useEffect(() => {
+        // getAllQuizzes()
+    }, [arrQuizzes]);
 
     const submitFormDeleteAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
         e.preventDefault();
         axios({
             baseURL: 'http://localhost:4000',
             method: 'delete',
-            url: `/${ids.answer_id}/answer_delete`,
+            url: `/user/${ids.answer_id}/answer_delete`,
             headers: {
-                Authorization: getLSUser().token
-            }
-        })
+                Authorization: getLSUser().token,
+            },
+        }).then(res => {
+        });
         // deleteAnswerAxios({
         //     user_id: getLSUser().user_id,
         //     quiz_id,

@@ -1,7 +1,11 @@
+import { UnknownAction } from '@reduxjs/toolkit';
+import { RootState } from '1_app/providers/redux/store/store';
 import axios, {
     AxiosError,
     AxiosResponse,
 } from 'axios';
+import { ThunkAction } from 'redux-thunk';
+import { allQuizzes } from '../../../4_entities/templateSlice';
 import { getLSUser } from '../../lib/helpers/localStorage/localStorage';
 
 const HOST = 'http://localhost:4000';
@@ -30,9 +34,9 @@ interface requestDataUser<T = {}> {
     answer_id?: string | number;
     postData?: T;
 }
+
 type requestDataAnswerDel<T = {}> = Omit<requestDataUser, 'postData'>
 type requestDataAnswerChange<T = {}> = requestDataUser;
-
 
 //USER
 export const loginUserAxios = async (
@@ -72,20 +76,27 @@ export const registerUserAxios = async (
 };
 
 //QUIZZES
-export const getAllQuizAxios = async (user_id: string, callback: () => void): Promise<AxiosResponse | AxiosError> => {
-    callback();
-    try {
-        return await axios({
-                baseURL: HOST,
-                method: 'get',
-                url: `/user/${user_id}/quiz_all`,
-                headers: { Authorization: getLSUser().token },
-            },
-        );
-    } catch (error) {
-        return error;
-    }
-};
+export const getAllQuizAxios = (
+    user_id: string,
+    callback: () => void,
+): ThunkAction<void, RootState, unknown, UnknownAction> =>
+    async (dispatch, getState): Promise<AxiosResponse | AxiosError> => {
+        console.log(11213);
+        try {
+            callback();
+            const response: AxiosResponse<{ data: [] | null, error: null | {} }> = await axios({
+                    baseURL: HOST,
+                    method: 'get',
+                    url: `/user/${user_id}/quiz_all`,
+                    headers: { Authorization: getLSUser().token },
+                },
+            );
+            console.log(getState);
+            dispatch(allQuizzes(response.data.data));
+        } catch (error) {
+            return error;
+        }
+    };
 
 export const createQuizAxios = async (
     data: requestDataUser<postDataQuiz>,

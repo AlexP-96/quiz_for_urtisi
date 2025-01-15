@@ -8,7 +8,7 @@ interface UserState {
     quiz: string;
     question: string;
     answers: string;
-    arrQuizDb: [];
+    allQuizzes: [];
 }
 
 const initialState: UserState = {
@@ -19,7 +19,7 @@ const initialState: UserState = {
     quiz: '',
     answers: '',
     question: '',
-    arrQuizDb: [],
+    allQuizzes: [],
 };
 
 const userSlice = createSlice({
@@ -44,8 +44,8 @@ const userSlice = createSlice({
         answersUser: (state: UserState, action: PayloadAction<string>) => {
             state.answers = action.payload;
         },
-        arrQuizDb: (state: UserState, action: PayloadAction<[]>) => {
-            state.arrQuizDb = action.payload;
+        allQuizzes: (state: UserState, action: PayloadAction<[]>) => {
+            state.allQuizzes = action.payload;
         },
         errorUser: (state: UserState, action: PayloadAction<string>) => {
             state.errorUser = action.payload
@@ -59,7 +59,7 @@ export const {
     quizUserName,
     questionUserText,
     answersUser,
-    arrQuizDb,
+    allQuizzes,
     isLoading,
     errorUser
 } = userSlice.actions;

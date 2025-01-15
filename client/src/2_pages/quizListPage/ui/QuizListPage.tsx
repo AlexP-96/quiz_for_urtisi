@@ -12,7 +12,7 @@ import {
     AppDispatch,
 } from '1_app/providers/redux/store/store';
 import {
-    arrQuizDb,
+    allQuizzes,
     emailUser,
     isLoading,
     quizUserName,
@@ -57,38 +57,10 @@ const QuizListPage = () => {
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-        getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading(true)))
-            .then((response: AxiosResponse) => {
-                dispatch(isLoading(false));
-
-                if (response.status === 403) {
-                    dispatch(errorUser('Ошибка авторизации'));
-
-                    setLSUserNull();
-
-                    dispatch(userId(''));
-                    dispatch(emailUser(''));
-
-                    navigate('/login');
-                }
-
-                if (response.status === 200) {
-                    dispatch(arrQuizDb(response.data.data));
-                }
-            })
-            .catch((error: AxiosError) => {
-                console.log('error', error.response.data);
-                dispatch(isLoading(false));
-                setLSUserNull();
-
-                dispatch(userId(''));
-                dispatch(emailUser(''));
-
-                navigate('/login');
-            });
+        getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading(true)));
     };
 
-    const submitData =   (e: React.FormEvent<HTMLFormElement>) => {
+    const submitData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         createQuizAxios({
             user_id: userIdSelector,
@@ -123,6 +95,7 @@ const QuizListPage = () => {
 
     useEffect(() => {
         getAllQuiz();
+        const kk = getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading(true)));
     }, []);
 
     if (quizDataSelector.length === 0) {
