@@ -15,6 +15,8 @@ import {
     closeModal,
 } from './slice/modalSlice';
 
+const HOST = 'http://localhost:4000'
+
 import {SelectorUserId} from './model/selectors';
 
 export {
@@ -29,5 +31,6 @@ export {
     answersUser,
     questionUserText,
     allQuizzes,
-    isLoading
+    isLoading,
+    HOST
 };

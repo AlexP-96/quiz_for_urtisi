@@ -26,24 +26,14 @@ import {
 } from '4_entities/templateSlice/model/selectors';
 import {
     createQuizAxios,
-    getAllQuizAxios,
 } from '6_shared/api/axiosRequests';
-import {
-    getLSUser,
-    setLSUserNull,
-} from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
 import { InputModal } from '../../../6_shared/ui/Inputs';
 import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import QuizItemWrapper from '../../../6_shared/ui/Quizzes/ui/QuizItemWrapper';
-import { Spinner } from '../../../6_shared/ui/Spinner';
 import { FirstQuiz } from '../../firstQuizPage';
-import {
-    errorUser,
-    fetchQuizzesAll,
-} from '4_entities/templateSlice/slice/userSlice';
 import {
     AxiosError,
     AxiosResponse,
@@ -60,8 +50,7 @@ const QuizListPage = () => {
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-        dispatch(fetchQuizzesAll(getLSUser().user_id))
-        // getAllQuizAxios(String(getLSUser().user_id), () => dispatch(isLoading('loading')));
+      
     };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -98,7 +87,7 @@ const QuizListPage = () => {
     };
 
     useEffect(() => {
-        getAllQuiz();
+
     }, []);
 
     if (quizDataSelector.length === 0) {

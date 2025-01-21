@@ -60,13 +60,11 @@ export default function MenuHeader() {
 
     const navigate = useNavigate();
 
-    const dataUserStorage: IUserData = JSON.parse(localStorage.getItem('data_user')) ?? {email: '', token: '', user_id: ''};
-
     //todo здесь баг, который нужно исправить, а конкретно при протухании токена меню остается прежним, потому что сначала данные из LS попадают в редакс, а после удаляются из LS
 
     useEffect(() => {
-        if (dataUserStorage.email) dispatch(emailUser(dataUserStorage.email))
-        if (dataUserStorage.user_id) dispatch(userId(dataUserStorage.user_id))
+        if (getLSUser().email) dispatch(emailUser(getLSUser().email))
+        if (getLSUser().user_id) dispatch(userId(getLSUser().user_id))
         if (quizDataSelector.length > 0) navigate('/main_menu');
     }, []);
 

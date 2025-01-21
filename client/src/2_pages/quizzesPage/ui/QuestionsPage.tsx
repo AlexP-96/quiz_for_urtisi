@@ -65,7 +65,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     };
 
     const handlerCloseModal = () => {
-        dispatch(answersUser(''));
+        // dispatch(answersUser(''));
     };
 
     const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
@@ -77,9 +77,13 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
             postData: answerValueSelector,
         }, () => dispatch(isLoading('loading')))
             .then((response: AxiosResponse) => {
+
+                questionsArr.filter(question => question.question_id == response.data.data.title.question_id);
+
                 dispatch(answersUser(''));
             })
             .catch((error: AxiosError) => {
+                dispatch(answersUser(''))
                 return {
                     error: error,
                 };

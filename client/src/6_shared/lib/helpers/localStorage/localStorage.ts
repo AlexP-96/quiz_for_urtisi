@@ -1,5 +1,5 @@
 interface IDataUserLocalStorage {
-    user_id?: string;
+    user_id?: number;
     email?: string;
     token?: string;
 }

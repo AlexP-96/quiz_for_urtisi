@@ -37,7 +37,7 @@ interface reqData {
 }
 
 interface resDataLogin {
-    user_id: string;
+    user_id: number;
     email: string;
     token: string;
 }

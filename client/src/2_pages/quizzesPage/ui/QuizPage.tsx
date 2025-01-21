@@ -20,23 +20,21 @@ import {
 } from '4_entities/templateSlice/model/selectors';
 import {
     axiosAuthPostData,
-    axiosGetData,
     createAnswerAxios,
-    createQuizAxios,
 } from '6_shared/api/axiosRequests';
 import {
     AxiosError,
     AxiosResponse,
 } from 'axios';
 import {
-    answersUser,
-    allQuizzes,
-    emailUser,
     isLoading,
     questionUserText,
-    userId,
 } from '4_entities/templateSlice';
 import { errorUser } from '4_entities/templateSlice/slice/userSlice';
+import {
+    fetchQuizTest,
+    fetchQuizzesAll,
+} from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import {
     getLSUser,
     setLSUserNull,
@@ -90,28 +88,30 @@ const QuizPage: FC = () => {
 
     //todo сделать обновление данных в локальном хранилище отдельной функцией
     const getAllQuiz = () => {
-        console.log(`/${getLSUser().user_id}/quiz_all`);
-        axiosGetData(`/${getLSUser().user_id}/quiz_all`, () => {
-            dispatch(isLoading('loading'));
-        })
-            .then((response: AxiosResponse) => {
-                dispatch(isLoading('succeeded'));
 
-                if (response.status === 403) {
-                    dispatch(errorUser(response.data.response.data));
-                    setLSUserNull();
-                    dispatch(userId(''));
-                    dispatch(emailUser(''));
-                    navigate('/login');
-                    return;
-                }
 
-                dispatch(allQuizzes(response.data.data));
-            })
-            .catch((error: AxiosError) => {
-                console.log('errorQuiz_PAge', error);
-                navigate('/login');
-            });
+
+        // axiosGetData(`/${getLSUser().user_id}/quiz_all`, () => {
+        //     dispatch(isLoading('loading'));
+        // })
+        //     .then((response: AxiosResponse) => {
+        //         // dispatch(isLoading('succeeded'));
+        //
+        //         if (response.status === 403) {
+        //             // dispatch(errorUser(response.data.response.data));
+        //             setLSUserNull();
+        //             dispatch(userId(''));
+        //             dispatch(emailUser(''));
+        //             navigate('/login');
+        //             return;
+        //         }
+        //
+        //         dispatch(allQuizzes(response.data.data));
+        //     })
+        //     .catch((error: AxiosError) => {
+        //         console.log('errorQuiz_PAge', error);
+        //         navigate('/login');
+        //     });
     };
 
     const submitQuestion = (e: React.FormEvent<HTMLFormElement>) => {

@@ -62,8 +62,6 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
     const { answersArr } = props;
 
     const { quiz_id } = useParams();
-    console.log('answersArr', answersArr);
-    const [answerId, setAnswerId] = useState<number>(null);
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const arrQuizzes = useSelector(SelectorUserArrQuizzes);
@@ -87,6 +85,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
             postData: answerValueSelector,
         })
             .then((response: AxiosResponse) => {
+                console.log('responseAnswer', response);
                 dispatch(answersUser(''));
             })
             .catch((error: AxiosError) => {

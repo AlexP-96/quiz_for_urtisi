@@ -1,26 +1,19 @@
 import {
     createSlice,
     PayloadAction,
-    createAsyncThunk,
 } from '@reduxjs/toolkit';
-import axios, {
-    AxiosError,
-    AxiosResponse,
-} from 'axios';
-import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
+import { fetchQuizzesAll } from '../asyncThunks/QuizAsyncThunk';
 
 interface UserState {
     loadStatus: 'loading' | 'succeeded' | 'failed';
     error: unknown | null;
-    user_id: string | null;
+    user_id: number | null;
     email: string | null;
     quiz: string;
     question: string;
     answers: string;
     allQuizzes: [];
 }
-
-const HOST = 'http://localhost:4000';
 
 const initialState: UserState = {
     loadStatus: 'loading',
@@ -33,25 +26,6 @@ const initialState: UserState = {
     allQuizzes: [],
 };
 
-export const fetchQuizzesAll = createAsyncThunk(
-    'quizzes/get/all',
-    async (userId: string, thunkAPI) => {
-        try {
-            const response: AxiosResponse<{ data: [] | null, error: null | {} }> = await axios({
-                    baseURL: HOST,
-                    method: 'get',
-                    url: `/user/${userId}/quiz_all`,
-                    headers: { Authorization: getLSUser().token },
-                },
-            );
-            console.log(thunkAPI.getState())
-            return response.data.data;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
-    },
-);
-
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -59,7 +33,7 @@ const userSlice = createSlice({
         isLoading: (state: UserState, action: PayloadAction<'loading' | 'succeeded' | 'failed'>) => {
             state.loadStatus = action.payload;
         },
-        userId: (state: UserState, action: PayloadAction<string>) => {
+        userId: (state: UserState, action: PayloadAction<number>) => {
             state.user_id = action.payload;
         },
         emailUser: (state: UserState, action: PayloadAction<string>) => {
@@ -95,6 +69,7 @@ const userSlice = createSlice({
                 state.error = action.payload;
             });
     },
+
 });
 
 export const {

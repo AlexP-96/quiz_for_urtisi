@@ -250,6 +250,7 @@ export const createAnswerAxios = async (
 ): Promise<AxiosResponse | AxiosError> => {
     callback();
     try {
+        console.log('data.postData', data);
         return await axios({
             baseURL: HOST,
             method: 'post',
