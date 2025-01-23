@@ -30,14 +30,11 @@ import {
     isLoading,
     questionUserText,
 } from '4_entities/templateSlice';
-import { errorUser } from '4_entities/templateSlice/slice/userSlice';
 import {
-    fetchQuizTest,
     fetchQuizzesAll,
 } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import {
     getLSUser,
-    setLSUserNull,
 } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
@@ -84,34 +81,11 @@ const QuizPage: FC = () => {
     const answerNameSelector = useSelector(SelectorUserAnswers);
 
     const currentQuiz = quizDataSelector.filter((quiz: IQuizId) => quiz.quiz_id === Number(quiz_id));
-    console.log(currentQuiz[0]);
+    console.log('currentQuiz[0]', currentQuiz[0]);
 
     //todo сделать обновление данных в локальном хранилище отдельной функцией
-    const getAllQuiz = () => {
-
-
-
-        // axiosGetData(`/${getLSUser().user_id}/quiz_all`, () => {
-        //     dispatch(isLoading('loading'));
-        // })
-        //     .then((response: AxiosResponse) => {
-        //         // dispatch(isLoading('succeeded'));
-        //
-        //         if (response.status === 403) {
-        //             // dispatch(errorUser(response.data.response.data));
-        //             setLSUserNull();
-        //             dispatch(userId(''));
-        //             dispatch(emailUser(''));
-        //             navigate('/login');
-        //             return;
-        //         }
-        //
-        //         dispatch(allQuizzes(response.data.data));
-        //     })
-        //     .catch((error: AxiosError) => {
-        //         console.log('errorQuiz_PAge', error);
-        //         navigate('/login');
-        //     });
+    function getAllQuiz() {
+        dispatch(fetchQuizzesAll(3));
     };
 
     const submitQuestion = (e: React.FormEvent<HTMLFormElement>) => {
@@ -156,7 +130,7 @@ const QuizPage: FC = () => {
     };
 
     const changeInputQuestion = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(questionUserText(e.target.value));
+
     };
 
     const handlerCloseModal = () => {

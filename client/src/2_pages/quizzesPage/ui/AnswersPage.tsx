@@ -17,15 +17,12 @@ import {
 import { useParams } from 'react-router-dom';
 import {
     answersUser,
-    allQuizzes,
 } from '../../../4_entities/templateSlice';
 import {
     SelectorUserAnswers,
     SelectorUserArrQuizzes,
 } from '../../../4_entities/templateSlice/model/selectors';
 import {
-    deleteAnswerAxios,
-    getAllQuizAxios,
     updateAnswerAxios,
 } from '../../../6_shared/api/axiosRequests';
 import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';

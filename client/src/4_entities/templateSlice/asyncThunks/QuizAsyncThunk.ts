@@ -1,5 +1,8 @@
 import {
+    AsyncThunk,
+    AsyncThunkAction,
     createAsyncThunk,
+    GetThunkAPI,
     UnknownAction,
 } from '@reduxjs/toolkit';
 import axios, { AxiosResponse } from 'axios';
@@ -14,10 +17,11 @@ import {
     HOST,
 } from '../index';
 
-export const fetchQuizzesAll = createAsyncThunk(
+export const fetchQuizzesAll: AsyncThunk<any, any, any> = createAsyncThunk(
     'quizzes/get/all',
     async (userId: number, thunkAPI) => {
         try {
+            //todo написать тип для ответа с сервера
             const response: AxiosResponse<{ data: [] | null, error: null | {} }> = await axios({
                     baseURL: HOST,
                     method: 'get',

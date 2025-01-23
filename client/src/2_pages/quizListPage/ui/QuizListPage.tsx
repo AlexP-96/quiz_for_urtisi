@@ -27,6 +27,8 @@ import {
 import {
     createQuizAxios,
 } from '6_shared/api/axiosRequests';
+import { fetchQuizzesAll } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
+import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
@@ -50,7 +52,7 @@ const QuizListPage = () => {
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-      
+        dispatch(fetchQuizzesAll(getLSUser().user_id));
     };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,7 +89,7 @@ const QuizListPage = () => {
     };
 
     useEffect(() => {
-
+        getAllQuiz();
     }, []);
 
     if (quizDataSelector.length === 0) {

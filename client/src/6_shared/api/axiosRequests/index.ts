@@ -1,4 +1,7 @@
-import { UnknownAction } from '@reduxjs/toolkit';
+import {
+    Action,
+    UnknownAction,
+} from '@reduxjs/toolkit';
 import { RootState } from '1_app/providers/redux/store/store';
 import axios, {
     AxiosError,
@@ -78,12 +81,9 @@ export const registerUserAxios = async (
 //QUIZZES
 export const getAllQuizAxios = (
     user_id: string,
-    callback: () => void,
-): ThunkAction<void, RootState, unknown, UnknownAction> =>
+): ThunkAction<void, RootState, unknown, any> =>
     async (dispatch, getState): Promise<AxiosResponse | AxiosError> => {
-        console.log(11213);
         try {
-            callback();
             const response: AxiosResponse<{ data: [] | null, error: null | {} }> = await axios({
                     baseURL: HOST,
                     method: 'get',
@@ -91,7 +91,7 @@ export const getAllQuizAxios = (
                     headers: { Authorization: getLSUser().token },
                 },
             );
-            console.log(getState);
+            console.log('getState', getState);
             dispatch(allQuizzes(response.data.data));
         } catch (error) {
             return error;
