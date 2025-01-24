@@ -45,7 +45,7 @@ interface IQuestionData {
 interface PropsQuestionsList {
     questionsArr: IQuestionData[];
 
-    createAnswer(e: FormEvent<HTMLFormElement>): void;
+    createAnswer?(e: FormEvent<HTMLFormElement>): void;
 }
 
 const QuestionsPage: FC<PropsQuestionsList> = (props) => {
@@ -54,8 +54,10 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     } = props;
 
     const params = useParams();
-    const [data, setData] = useState(questionsArr);
 
+    const [data, setData] = useState<any>(questionsArr);
+
+    console.log('data', data);
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const [questionId, setQuestionId] = useState<string | number>('');
 
@@ -69,7 +71,42 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
         // dispatch(answersUser(''));
     };
 
+    const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
+        e.preventDefault();
+        createAnswerAxios({
+            user_id: getLSUser().user_id,
+            quiz_id: params.quiz_id,
+            question_id: questionID,
+            postData: answerValueSelector,
+        }, () => dispatch(isLoading('loading')))
+            .then((response: AxiosResponse) => {
+                console.log('response_questions', response);
+                console.log('response.data.data.title', response.data.data);
+                const updateData = data
+                    .map((question: any) => {
+                        if (question.question_id === questionID) {
+                            return {
+                                ...question,
+                                answers: [
+                                    ...question.answers,
+                                    response.data.data
+                                ]
+                            }
+                        }
+                        return question;
+                    });
+                console.log('updateData', updateData);
 
+                setData(updateData);
+                dispatch(isLoading('succeeded'));
+            })
+            .catch((error: AxiosError) => {
+                dispatch(answersUser(''));
+                return {
+                    error: error,
+                };
+            });
+    };
 
     return (
         <Accordion>
@@ -84,6 +121,45 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
                             >
                                 <AnswersPage answersArr={question.answers} />
                             </Accordion.Body>
+
+                            <ModalPopUp
+                                idModal={question.question_name + question.question_id}
+                                onClick={handlerCloseModal}
+                            >
+                                <FormModal
+                                    submitForm={(e) => submitForm(e, question.question_id)}
+                                    method='post'
+                                    sectionButtons={[
+                                        <BtnPopUpCloseModal
+                                            key='1'
+                                            popUpTarget={question.question_name + question.question_id}
+                                            text='Создать'
+                                            type='submit'
+                                            color={'green'}
+                                        />,
+                                        <BtnPopUpCloseModal
+                                            key='2'
+                                            popUpTarget={question.question_name + question.question_id}
+                                            text='Отмена'
+                                            type='button'
+                                            color={'red'}
+                                            onClick={handlerCloseModal}
+                                        />,
+                                    ]}
+                                >
+                                    <InputModal
+                                        labelText='Введите название вашего ответа'
+                                        value={answerValueSelector}
+                                        changeEvent={handlerChangeInput}
+                                    />
+                                </FormModal>
+                            </ModalPopUp>
+                            <BtnPopUpOpenModal
+                                idPopUpTarget={question.question_name + question.question_id}
+                                text='Создать ответ'
+                                type='submit'
+                                color='green'
+                            />
                         </Fragment>
                     );
                 })

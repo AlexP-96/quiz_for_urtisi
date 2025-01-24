@@ -42,10 +42,7 @@ class AnswerService {
             });
 
             return {
-                data: {
-                    title: data,
-                    name: params.answer_name,
-                },
+                data,
                 error: null,
             };
         } catch (error) {

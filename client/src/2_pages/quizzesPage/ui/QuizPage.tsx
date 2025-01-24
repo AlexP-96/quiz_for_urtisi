@@ -119,7 +119,7 @@ const QuizPage: FC = () => {
             postData: answerNameSelector,
         }, () => dispatch(isLoading('loading')))
             .then((response: AxiosResponse) => {
-
+                console.log('asdasdasdasdasdasdasd');
             })
             .catch((error: AxiosError) => {
 
