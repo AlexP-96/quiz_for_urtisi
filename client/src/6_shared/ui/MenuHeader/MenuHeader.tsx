@@ -35,12 +35,14 @@ import {
 import {
     SelectorUserArrQuizzes,
     SelectorUserEmail,
+    SelectorUserError,
 } from '4_entities/templateSlice/model/selectors';
+import { fetchQuizzesAll } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import { getLSUser } from '../../lib/helpers/localStorage/localStorage';
-import {Button} from '../Buttons/Button';
-import {QuizResData} from '../Quizzes/ui/QuizItemWrapper';
-import {Modal} from "6_shared/ui/Modals";
-import {AppDispatch} from "1_app/providers/redux/store/store";
+import { Button } from '../Buttons/Button';
+import { QuizResData } from '../Quizzes/ui/QuizItemWrapper';
+import { Modal } from '6_shared/ui/Modals';
+import { AppDispatch } from '1_app/providers/redux/store/store';
 
 interface IUserData {
     user_id: string;
@@ -57,29 +59,39 @@ export default function MenuHeader() {
     const userEmailSelector = useSelector(SelectorUserEmail);
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
     const isUserEmailSelector = useSelector(SelectorUserEmail);
-
+    const authErrorSelector = useSelector(SelectorUserError);
+    console.log('authErrorSelector', authErrorSelector);
     const navigate = useNavigate();
 
     //todo здесь баг, который нужно исправить, а конкретно при протухании токена меню остается прежним, потому что сначала данные из LS попадают в редакс, а после удаляются из LS
 
     useEffect(() => {
-        if (getLSUser().email) dispatch(emailUser(getLSUser().email))
-        if (getLSUser().user_id) dispatch(userId(getLSUser().user_id))
+        if (getLSUser().email && getLSUser().user_id) {
+            dispatch(emailUser(getLSUser().email));
+            dispatch(userId(getLSUser().user_id));
+        }
+        if (authErrorSelector) {
+            navigate('/login');
+        }
         if (quizDataSelector.length > 0) navigate('/main_menu');
-    }, []);
+    }, [authErrorSelector]);
 
     const handlerLogout = () => {
-        setIsVisibleModal(true)
-    }
+        setIsVisibleModal(true);
+    };
 
     return (
         <>
             {
                 isVisibleModal &&
-                <Modal visible={isVisibleModal} handlerClose={() => setIsVisibleModal(false)}>
+                <Modal
+                    visible={isVisibleModal}
+                    handlerClose={() => setIsVisibleModal(false)}
+                >
                     Вы действительно хотите выйти?
                     <Button
-                        className='rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+                        className='rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                    >
                         Да
                     </Button>
                 </Modal>
@@ -130,9 +142,10 @@ export default function MenuHeader() {
                             onClose={setMobileMenuOpen}
                             className='lg:hidden'
                         >
-                            <div className='fixed inset-0 z-10'/>
+                            <div className='fixed inset-0 z-10' />
                             <DialogPanel
-                                className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+                                className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'
+                            >
                                 <div className='mt-6 flow-root'>
                                     <div className='-my-6 divide-y divide-gray-500/10'>
                                         <div className='py-6'>
@@ -179,7 +192,8 @@ export default function MenuHeader() {
                                 <PopoverGroup className='hidden lg:flex lg:gap-x-12'>
                                     <Popover className='relative'>
                                         <PopoverButton
-                                            className='flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900'>
+                                            className='flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900'
+                                        >
                                             Ваши квизы
                                             <ChevronDownIcon
                                                 aria-hidden='true'
@@ -203,7 +217,7 @@ export default function MenuHeader() {
                                                                 className='block font-semibold text-gray-900'
                                                             >
                                                                 {item.quiz_name}
-                                                                <span className='absolute inset-0'/>
+                                                                <span className='absolute inset-0' />
                                                             </Link>
                                                         </div>
                                                     </div>
@@ -246,9 +260,10 @@ export default function MenuHeader() {
                                 onClose={setMobileMenuOpen}
                                 className='lg:hidden'
                             >
-                                <div className='fixed inset-0 z-10'/>
+                                <div className='fixed inset-0 z-10' />
                                 <DialogPanel
-                                    className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'>
+                                    className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10'
+                                >
                                     <div className='flex items-center justify-between'>
                                         <button
                                             type='button'
@@ -270,7 +285,8 @@ export default function MenuHeader() {
                                                     className='-mx-3'
                                                 >
                                                     <DisclosureButton
-                                                        className='group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50'>
+                                                        className='group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50'
+                                                    >
                                                         Ваши квизы
                                                         <ChevronDownIcon
                                                             aria-hidden='true'

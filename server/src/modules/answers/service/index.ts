@@ -40,7 +40,7 @@ class AnswerService {
                 question_id: params.question_id,
                 answer_name: params.answer_name,
             });
-            console.log(data);
+
             return {
                 data: {
                     title: data,
@@ -79,9 +79,7 @@ class AnswerService {
             const data = await this.answerDao.delete(params);
 
             return {
-                data: {
-                    delete: data,
-                },
+                data,
                 error: null,
             };
         } catch (error) {

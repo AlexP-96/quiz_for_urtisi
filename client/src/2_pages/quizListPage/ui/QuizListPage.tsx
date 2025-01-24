@@ -47,12 +47,11 @@ const QuizListPage = () => {
     const nameQuizSelector = useSelector(SelectorUserQuiz);
     const userIdSelector = useSelector(SelectorUserId);
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
-    const loadDataSelector = useSelector(SelectorUserLoad);
 
     const navigate = useNavigate();
 
     const getAllQuiz = () => {
-        dispatch(fetchQuizzesAll(getLSUser().user_id));
+
     };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,8 +88,8 @@ const QuizListPage = () => {
     };
 
     useEffect(() => {
-        getAllQuiz();
-    }, []);
+        dispatch(fetchQuizzesAll(getLSUser().user_id));
+    }, [quizDataSelector.length]);
 
     if (quizDataSelector.length === 0) {
         return <FirstQuiz />;

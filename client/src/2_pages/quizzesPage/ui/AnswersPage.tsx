@@ -15,14 +15,17 @@ import {
     useSelector,
 } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
     answersUser,
+    isLoading,
 } from '../../../4_entities/templateSlice';
 import {
     SelectorUserAnswers,
     SelectorUserArrQuizzes,
 } from '../../../4_entities/templateSlice/model/selectors';
 import {
+    createAnswerAxios,
     updateAnswerAxios,
 } from '../../../6_shared/api/axiosRequests';
 import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
@@ -58,14 +61,20 @@ interface PropsAnswersList {
 const AnswersPage: FC<PropsAnswersList> = (props) => {
     const { answersArr } = props;
 
+    const [data, setData] = useState(answersArr);
+
     const { quiz_id } = useParams();
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const arrQuizzes = useSelector(SelectorUserArrQuizzes);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const handlerChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(answersUser(e.target.value));
+    };
+
+    const handlerCloseModal = () => {
+        // dispatch(answersUser(''));
     };
 
     const getAllQuizzes = () => {
@@ -91,7 +100,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
     };
     useEffect(() => {
         // getAllQuizzes()
-    }, [arrQuizzes]);
+    }, [answersArr]);
 
     const submitFormDeleteAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
         e.preventDefault();
@@ -103,117 +112,166 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
                 Authorization: getLSUser().token,
             },
         }).then(res => {
+            setData(data.filter((answer) => answer.answer_id !== Number(res.data.data.delete)));
+            console.log(res.data.data.delete);
         });
-        // deleteAnswerAxios({
-        //     user_id: getLSUser().user_id,
-        //     quiz_id,
-        //     question_id: ids.question_id,
-        //     answer_id: ids.answer_id,
-        // })
-        //     .then((response: AxiosResponse) => {
-        //         if (response.status === 200) {
-        //
-        //         }
-        //     })
-        //     .catch((error: AxiosError) => {
-        //         console.log('error');
-        //         return error;
-        //     });
+    };
+
+    const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
+        e.preventDefault();
+        createAnswerAxios({
+            user_id: getLSUser().user_id,
+            quiz_id: quiz_id,
+            question_id: questionID,
+            postData: answerValueSelector,
+        }, () => dispatch(isLoading('loading')))
+            .then((response: AxiosResponse) => {
+                console.log('response_questions', response);
+                // questionsArr.filter(question => question.question_id == response.data.data.title.question_id);
+
+                dispatch(answersUser(''));
+            })
+            .catch((error: AxiosError) => {
+                dispatch(answersUser(''));
+                return {
+                    error: error,
+                };
+            });
     };
 
     return (
-        <ListGroupWrapper>
-            {
-                answersArr.map((answer: IAnswerData) => {
-                    return (
-                        <Fragment key={answer.answer_id}>
-                            <ModalPopUp
-                                idModal={nameModalIdAnswers.change + answer.answer_id}
-                            >
-                                <FormModal
-                                    submitForm={(e) => submitFormAnswer(
-                                        e,
-                                        {
+        <Fragment>
+            <ListGroupWrapper>
+                {
+                    data.map((answer: IAnswerData) => {
+                        return (
+                            <Fragment key={answer.answer_id}>
+                                <ModalPopUp
+                                    idModal={nameModalIdAnswers.change + answer.answer_id}
+                                >
+                                    <FormModal
+                                        submitForm={(e) => submitFormAnswer(
+                                            e,
+                                            {
+                                                answer_id: answer.answer_id,
+                                                question_id: answer.question_id,
+                                            },
+                                        )}
+                                        method='patch'
+                                        sectionButtons={[
+                                            <BtnPopUpCloseModal
+                                                key='1'
+                                                popUpTarget={nameModalIdAnswers.change + answer.answer_id}
+                                                text='Изменить'
+                                                type={'submit'}
+                                                color={'yellow'}
+                                            />,
+                                            <BtnPopUpCloseModal
+                                                key='2'
+                                                popUpTarget={nameModalIdAnswers.change + answer.answer_id}
+                                                text='Отмена'
+                                                type={'button'}
+                                                color={'red'}
+                                            />,
+                                        ]}
+                                    >
+                                        <InputModal
+                                            value={answerValueSelector}
+                                            labelText='Введите новое имя вашего ответа'
+                                            changeEvent={handlerChangeInput}
+                                        />
+                                    </FormModal>
+                                </ModalPopUp>
+                                <ModalPopUp
+                                    idModal={nameModalIdAnswers.delete + answer.answer_id}
+                                >
+                                    <FormModal
+                                        submitForm={(e) => submitFormDeleteAnswer(e, {
                                             answer_id: answer.answer_id,
                                             question_id: answer.question_id,
-                                        },
-                                    )}
-                                    method='patch'
-                                    sectionButtons={[
-                                        <BtnPopUpCloseModal
-                                            key='1'
-                                            popUpTarget={nameModalIdAnswers.change + answer.answer_id}
-                                            text='Изменить'
-                                            type={'submit'}
-                                            color={'yellow'}
-                                        />,
-                                        <BtnPopUpCloseModal
-                                            key='2'
-                                            popUpTarget={nameModalIdAnswers.change + answer.answer_id}
-                                            text='Отмена'
-                                            type={'button'}
-                                            color={'red'}
-                                        />,
-                                    ]}
+                                        })}
+                                        sectionButtons={[
+                                            <BtnPopUpCloseModal
+                                                key='1'
+                                                popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
+                                                text='Удалить'
+                                                type='submit'
+                                                color='yellow'
+                                            />,
+                                            <BtnPopUpCloseModal
+                                                key='2'
+                                                popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
+                                                text='Отмена'
+                                                type='button'
+                                                color='red'
+                                            />,
+                                        ]}
+                                    >
+                                        <span>Вы действительно хотите удалить данный ответ?</span>
+                                    </FormModal>
+                                </ModalPopUp>
+                                <ListGroupBody
+                                    key={answer.answer_id}
+                                    text={answer.answer_name}
                                 >
-                                    <InputModal
-                                        value={answerValueSelector}
-                                        labelText='Введите новое имя вашего ответа'
-                                        changeEvent={handlerChangeInput}
+                                    <BtnPopUpOpenModal
+                                        id={answer.answer_id}
+                                        idPopUpTarget={nameModalIdAnswers.change + answer.answer_id}
+                                        text='Изменить'
+                                        color='yellow'
+                                        type='button'
                                     />
-                                </FormModal>
-                            </ModalPopUp>
-                            <ModalPopUp
-                                idModal={nameModalIdAnswers.delete + answer.answer_id}
-                            >
-                                <FormModal
-                                    submitForm={(e) => submitFormDeleteAnswer(e, {
-                                        answer_id: answer.answer_id,
-                                        question_id: answer.question_id,
-                                    })}
-                                    sectionButtons={[
-                                        <BtnPopUpCloseModal
-                                            key='1'
-                                            popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
-                                            text='Удалить'
-                                            type='submit'
-                                            color='yellow'
-                                        />,
-                                        <BtnPopUpCloseModal
-                                            key='2'
-                                            popUpTarget={nameModalIdAnswers.delete + answer.answer_id}
-                                            text='Отмена'
-                                            type='button'
-                                            color='red'
-                                        />,
-                                    ]}
-                                >
-                                    <span>Вы действительно хотите удалить данный ответ?</span>
-                                </FormModal>
-                            </ModalPopUp>
-                            <ListGroupBody
-                                key={answer.answer_id}
-                                text={answer.answer_name}
-                            >
-                                <BtnPopUpOpenModal
-                                    id={answer.answer_id}
-                                    idPopUpTarget={nameModalIdAnswers.change + answer.answer_id}
-                                    text='Изменить'
-                                    color='yellow'
-                                    type='button'
-                                />
-                                <BtnPopUpOpenModal
-                                    idPopUpTarget={nameModalIdAnswers.delete + answer.answer_id}
-                                    text='Удалить'
-                                    color='red'
-                                    type='button'
-                                />
-                            </ListGroupBody>
-                        </Fragment>
-                    );
-                })
-            }
-        </ListGroupWrapper>
+                                    <BtnPopUpOpenModal
+                                        idPopUpTarget={nameModalIdAnswers.delete + answer.answer_id}
+                                        text='Удалить'
+                                        color='red'
+                                        type='button'
+                                    />
+                                </ListGroupBody>
+                            </Fragment>
+                        );
+                    })
+                }
+            </ListGroupWrapper>
+            <ModalPopUp
+                idModal={answer.answer_name + answer.answer_id}
+                onClick={handlerCloseModal}
+            >
+                <FormModal
+                    submitForm={(e) => submitForm(e, answer.question_id)}
+                    method='post'
+                    sectionButtons={[
+                        <BtnPopUpCloseModal
+                            key='1'
+                            popUpTarget={answer.answer_name + answer.answer_id}
+                            text='Создать'
+                            type='submit'
+                            color={'green'}
+                        />,
+                        <BtnPopUpCloseModal
+                            key='2'
+                            popUpTarget={answer.answer_name + answer.answer_id}
+                            text='Отмена'
+                            type='button'
+                            color={'red'}
+                            onClick={handlerCloseModal}
+                        />,
+                    ]}
+                >
+                    <InputModal
+                        labelText='Введите название вашего ответа'
+                        value={answerValueSelector}
+                        changeEvent={handlerChangeInput}
+                    />
+                </FormModal>
+            </ModalPopUp>
+            <BtnPopUpOpenModal
+                idPopUpTarget={answer.answer_name + answer.answer_id}
+                text='Создать ответ'
+                type='submit'
+                color='green'
+            />
+        </Fragment>
     );
 };
 

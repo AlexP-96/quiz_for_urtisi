@@ -30,6 +30,7 @@ import {
     isLoading,
     questionUserText,
 } from '4_entities/templateSlice';
+import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
     fetchQuizzesAll,
 } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
@@ -73,21 +74,18 @@ const QuizPage: FC = () => {
 
     const [questionId, setQuestionId] = useState<null | number>(null);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
     const userIdSelector = useSelector(SelectorUserId);
     const questionTextSelector = useSelector(SelectorUserQuestions);
     const answerNameSelector = useSelector(SelectorUserAnswers);
 
+    console.log('answerNameSelector', answerNameSelector);
+
     const currentQuiz = quizDataSelector.filter((quiz: IQuizId) => quiz.quiz_id === Number(quiz_id));
-    console.log('currentQuiz[0]', currentQuiz[0]);
 
     //todo сделать обновление данных в локальном хранилище отдельной функцией
-    function getAllQuiz() {
-        dispatch(fetchQuizzesAll(3));
-    };
-
     const submitQuestion = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         axiosAuthPostData(
@@ -96,7 +94,7 @@ const QuizPage: FC = () => {
         )
             .then((response: AxiosResponse) => {
                 if (response.status === 200) {
-                    getAllQuiz();
+
                 }
                 if (response.status === 403) {
                     navigate('/login');
@@ -111,7 +109,6 @@ const QuizPage: FC = () => {
     };
 
     //todo обработать на сервере если пустой ответ
-
     const submitAnswer = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -144,7 +141,7 @@ const QuizPage: FC = () => {
     };
 
     useEffect(() => {
-        getAllQuiz();
+        dispatch(fetchQuizzesAll(getLSUser().user_id));
     }, []);
 
     return (

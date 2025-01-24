@@ -41,9 +41,13 @@ class AnswerDao {
     }
 
     async delete(params: string | number) {
-        return await this.answerDb.destroy(
+        const data = await this.answerDb.destroy(
             { where: { answer_id: params } },
         );
+        return {
+            data,
+            delete: params,
+        };
     }
 }
 

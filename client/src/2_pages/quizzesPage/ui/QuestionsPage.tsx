@@ -54,6 +54,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     } = props;
 
     const params = useParams();
+    const [data, setData] = useState(questionsArr);
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const [questionId, setQuestionId] = useState<string | number>('');
@@ -68,78 +69,20 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
         // dispatch(answersUser(''));
     };
 
-    const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
-        e.preventDefault();
-        createAnswerAxios({
-            user_id: getLSUser().user_id,
-            quiz_id: params.quiz_id,
-            question_id: questionID,
-            postData: answerValueSelector,
-        }, () => dispatch(isLoading('loading')))
-            .then((response: AxiosResponse) => {
 
-                questionsArr.filter(question => question.question_id == response.data.data.title.question_id);
-
-                dispatch(answersUser(''));
-            })
-            .catch((error: AxiosError) => {
-                dispatch(answersUser(''))
-                return {
-                    error: error,
-                };
-            });
-    };
 
     return (
         <Accordion>
             {
-                questionsArr.map((question: IQuestionData) => {
+                data.map((question: IQuestionData) => {
                     return (
                         <Fragment key={question.question_id}>
-                            <ModalPopUp
-                                idModal={nameIdModalAnswer.createAnswer + question.question_id}
-                                onClick={handlerCloseModal}
-                            >
-                                <FormModal
-                                    submitForm={(e) => submitForm(e, question.question_id)}
-                                    method='post'
-                                    sectionButtons={[
-                                        <BtnPopUpCloseModal
-                                            key='1'
-                                            popUpTarget={nameIdModalAnswer.createAnswer + question.question_id}
-                                            text='Создать'
-                                            type='submit'
-                                            color={'green'}
-                                        />,
-                                        <BtnPopUpCloseModal
-                                            key='2'
-                                            popUpTarget={nameIdModalAnswer.createAnswer + question.question_id}
-                                            text='Отмена'
-                                            type='button'
-                                            color={'red'}
-                                            onClick={handlerCloseModal}
-                                        />,
-                                    ]}
-                                >
-                                    <InputModal
-                                        labelText='Введите название вашего ответа'
-                                        value={answerValueSelector}
-                                        changeEvent={handlerChangeInput}
-                                    />
-                                </FormModal>
-                            </ModalPopUp>
                             <Accordion.Body
                                 id={question.question_id}
                                 key={question.question_id}
                                 title={question.question_name}
                             >
                                 <AnswersPage answersArr={question.answers} />
-                                <BtnPopUpOpenModal
-                                    idPopUpTarget={nameIdModalAnswer.createAnswer + question.question_id}
-                                    text='Создать ответ'
-                                    type='submit'
-                                    color='green'
-                                />
                             </Accordion.Body>
                         </Fragment>
                     );
