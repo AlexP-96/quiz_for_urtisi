@@ -79,10 +79,6 @@ const QuizListPage = () => {
             });
     };
 
-    const handlerLogout = () => {
-
-    };
-
     const handlerInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         dispatch(quizUserName(event.target.value));
     };

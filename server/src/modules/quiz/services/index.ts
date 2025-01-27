@@ -20,10 +20,28 @@ class QuizService {
 
     async findAll(params: string) {
         try {
-            const data: string = await this.quizDao.findAll(params);
+            const {
+                data,
+                allQuestions,
+                allAnswers,
+            } = await this.quizDao.findAll(params);
+            const allQuizzes: any[] = [];
+
+            data.map((quiz: any) => {
+                const newObj: any = {};
+                for (const key in quiz.dataValues) {
+                    if (key !== 'questions') {
+                        newObj[key] = quiz.dataValues[key];
+                    }
+                }
+                allQuizzes.push(newObj);
+            });
 
             return {
                 data,
+                allQuizzes,
+                allQuestions,
+                allAnswers,
                 error: null,
             };
 

@@ -28,7 +28,11 @@ class QuizController {
 
             const {
                 data,
+                allQuizzes,
+                allQuestions,
+                allAnswers,
                 error,
+
             } = await this.quizService.findAll(user_id);
 
             if (error) {
@@ -42,6 +46,9 @@ class QuizController {
             res.status(200)
                 .send({
                     data,
+                    allQuizzes,
+                    allQuestions,
+                    allAnswers,
                     error,
                 });
         } catch (error) {

@@ -32,6 +32,8 @@ export const fetchQuizzesAll: AsyncThunk<any, any, any> = createAsyncThunk(
             if (response.status === 403) {
                 thunkAPI.rejectWithValue(thunkAPI.signal);
             }
+
+            console.log(response);
             return response.data.data;
         } catch (error) {
             setLSUserNull();

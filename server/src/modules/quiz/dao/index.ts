@@ -19,7 +19,7 @@ class QuizDao {
     }
 
     async findAll(params: string) {
-        return await this.quizDb.findAll({
+        const data = await this.quizDb.findAll({
             where: {
                 user_id: params,
             },
@@ -36,6 +36,30 @@ class QuizDao {
                 },
             ],
         });
+
+        const allQuestions: any[] = [];
+
+        data.map((quiz: any) => {
+            quiz.questions.map((question: any) => {
+                allQuestions.push(question);
+            });
+        });
+
+        const allAnswers: any[] = [];
+
+        data.map((quiz: any) => {
+            quiz.questions.map((question: any) => {
+                question.answers.map((answer: any) => {
+                    allAnswers.push(answer);
+                });
+            });
+        });
+
+        return {
+            data,
+            allQuestions,
+            allAnswers,
+        };
     }
 
     async findOne(params: string) {
