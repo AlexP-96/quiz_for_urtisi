@@ -1,4 +1,3 @@
-import QuizItemBody from './QuizItemBody';
 import { AppLink } from '6_shared/ui/AppLink/AppLink';
 
 //todo сложить нормально типы и интерфейсы
@@ -13,7 +12,9 @@ export interface QuizResData {
 }
 
 const QuizItemWrapper = (props: PropsQuizView) => {
-    const { quizList } = props;
+    const {
+        quizList,
+    } = props;
 
     return (
         <div className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8'>
@@ -25,12 +26,12 @@ const QuizItemWrapper = (props: PropsQuizView) => {
                     <h5 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
                         {quiz.quiz_name}
                     </h5>
-                    {
-                        <QuizItemBody
-                            quizId={quiz.quiz_id}
-                            quizData={quizList}
-                        />
-                    }
+                    {/*{*/}
+                    {/*    <QuizItemBody*/}
+                    {/*        quizId={quiz.quiz_id}*/}
+                    {/*        quizData={quizList}*/}
+                    {/*    />*/}
+                    {/*}*/}
                     <AppLink
                         to={`/quiz/${quiz.quiz_id}`}
                         className='inline-flex items-center px-3 py-2 text-sm mt-5 font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800'

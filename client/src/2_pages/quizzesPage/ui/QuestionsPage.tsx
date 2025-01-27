@@ -14,12 +14,18 @@ import {
     useSelector,
 } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
     answersUser,
     isLoading,
 } from '../../../4_entities/templateSlice';
-import { SelectorUserAnswers } from '../../../4_entities/templateSlice/model/selectors';
-import { errorUser } from '../../../4_entities/templateSlice/slice/userSlice';
+import { createQuestions } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
+import {
+    SelectorUserAnswers,
+    SelectorUserArrAnswers,
+    SelectorUserArrQuestions,
+} from '../../../4_entities/templateSlice/model/selectors';
+import { IQuestions } from '../../../4_entities/templateSlice/slice/userSlice';
 import { createAnswerAxios } from '../../../6_shared/api/axiosRequests';
 import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import {
@@ -32,10 +38,6 @@ import { InputModal } from '../../../6_shared/ui/Inputs';
 import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import AnswersPage from './AnswersPage';
 
-enum nameIdModalAnswer {
-    createAnswer = 'modal-create-answer-'
-}
-
 interface IQuestionData {
     question_name: string;
     question_id: number;
@@ -43,7 +45,7 @@ interface IQuestionData {
 }
 
 interface PropsQuestionsList {
-    questionsArr: IQuestionData[];
+    questionsArr: IQuestions[];
 
     createAnswer?(e: FormEvent<HTMLFormElement>): void;
 }
@@ -57,11 +59,10 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
 
     const [data, setData] = useState<any>(questionsArr);
 
-    console.log('data', data);
     const answerValueSelector = useSelector(SelectorUserAnswers);
-    const [questionId, setQuestionId] = useState<string | number>('');
+    const questionsDataSelector = useSelector(SelectorUserArrQuestions);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const handlerChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(answersUser(e.target.value));
@@ -73,45 +74,18 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
 
     const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
         e.preventDefault();
-        createAnswerAxios({
+        dispatch(createQuestions({
             user_id: getLSUser().user_id,
-            quiz_id: params.quiz_id,
+            quiz_id: Number(params.quiz_id),
             question_id: questionID,
-            postData: answerValueSelector,
-        }, () => dispatch(isLoading('loading')))
-            .then((response: AxiosResponse) => {
-                console.log('response_questions', response);
-                console.log('response.data.data.title', response.data.data);
-                const updateData = data
-                    .map((question: any) => {
-                        if (question.question_id === questionID) {
-                            return {
-                                ...question,
-                                answers: [
-                                    ...question.answers,
-                                    response.data.data
-                                ]
-                            }
-                        }
-                        return question;
-                    });
-                console.log('updateData', updateData);
-
-                setData(updateData);
-                dispatch(isLoading('succeeded'));
-            })
-            .catch((error: AxiosError) => {
-                dispatch(answersUser(''));
-                return {
-                    error: error,
-                };
-            });
+            post_data: answerValueSelector,
+        }));
     };
 
     return (
         <Accordion>
             {
-                data.map((question: IQuestionData) => {
+                questionsDataSelector.map((question: any) => {
                     return (
                         <Fragment key={question.question_id}>
                             <Accordion.Body
@@ -119,7 +93,9 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
                                 key={question.question_id}
                                 title={question.question_name}
                             >
-                                <AnswersPage answersArr={question.answers} />
+                                <AnswersPage
+                                    answersArr={question.answers}
+                                />
                             </Accordion.Body>
 
                             <ModalPopUp

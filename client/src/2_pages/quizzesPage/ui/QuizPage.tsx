@@ -14,6 +14,7 @@ import {
 } from 'react-redux';
 import {
     SelectorUserAnswers,
+    SelectorUserArrQuestions,
     SelectorUserArrQuizzes,
     SelectorUserId,
     SelectorUserQuestions,
@@ -73,6 +74,7 @@ const QuizPage: FC = () => {
     const navigate = useNavigate();
 
     const [questionId, setQuestionId] = useState<null | number>(null);
+    const questionDataSelector = useSelector(SelectorUserArrQuestions);
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -146,65 +148,59 @@ const QuizPage: FC = () => {
 
     return (
         <div className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 py-16 sm:px-6 sm:py-15 lg:max-w-7xl lg:px-8'>
-            {
-                currentQuiz.map((quiz: IQuizData) => {
-                    return (
-                        <div
-                            className='mx-auto w-full'
-                            key={quiz.quiz_id}
-                        >
-                            <ModalPopUp
-                                idModal={'first-question'}
-                            >
-                                <FormModal
-                                    submitForm={submitAnswer}
-                                    sectionButtons={[
-                                        <BtnPopUpCloseModal
-                                            key='1'
-                                            popUpTarget='first-question'
-                                            text='Создать'
-                                            type='submit'
-                                            color='green'
-                                        />,
-                                        <BtnPopUpCloseModal
-                                            key='2'
-                                            popUpTarget='first-question'
-                                            text='Отмена'
-                                            type='button'
-                                            color='red'
-                                        />,
-                                    ]}
-                                >
-                                    <InputModal
-                                        labelText='Введите название первого вопроса'
-                                        value={questionTextSelector}
-                                        changeEvent={changeInputQuestion}
-                                    />
-                                </FormModal>
-                            </ModalPopUp>
-                            <h2 className='pb-10 font-extrabold'>{quiz.quiz_name}</h2>
-                            {
-                                quiz.questions.length === 0
-                                    ?
-                                    <div
-                                        className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8'
-                                    >
-                                        Вопросов нет, создайте первый
-                                    </div>
-                                    : null
-                            }
-                            <QuestionsPage
-                                questionsArr={quiz.questions}
-                                createAnswer={submitAnswer}
-                            />
-                            <BtnPopUpOpenModal
-                                idPopUpTarget='first-question'
-                                text='Добавить вопрос'
+            <div
+                className='mx-auto w-full'
+            >
+                <ModalPopUp
+                    idModal={'first-question'}
+                >
+                    <FormModal
+                        submitForm={submitAnswer}
+                        sectionButtons={[
+                            <BtnPopUpCloseModal
+                                key='1'
+                                popUpTarget='first-question'
+                                text='Создать'
+                                type='submit'
+                                color='green'
+                            />,
+                            <BtnPopUpCloseModal
+                                key='2'
+                                popUpTarget='first-question'
+                                text='Отмена'
                                 type='button'
-                            />
-                        </div>);
-                })
-            }
+                                color='red'
+                            />,
+                        ]}
+                    >
+                        <InputModal
+                            labelText='Введите название вопроса'
+                            value={questionTextSelector}
+                            changeEvent={changeInputQuestion}
+                        />
+                    </FormModal>
+                </ModalPopUp>
+                <h2 className='pb-10 font-extrabold'>{}</h2>
+                {
+                    questionDataSelector.length === 0
+                        ?
+                        <div
+                            className='mx-auto flex flex-wrap gap-2 max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8'
+                        >
+                            Вопросов нет, создайте первый
+                        </div>
+                        : null
+                }
+                <QuestionsPage
+                    questionsArr={questionDataSelector}
+                    createAnswer={submitAnswer}
+                />
+                <BtnPopUpOpenModal
+                    idPopUpTarget='first-question'
+                    text='Добавить вопрос'
+                    type='button'
+                />
+            </div>
         </div>
     );
 };

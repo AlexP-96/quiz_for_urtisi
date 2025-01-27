@@ -8,8 +8,9 @@ export const SelectorUserQuiz = (state: RootState) => state.user.quiz;
 export const SelectorUserQuestions = (state: RootState) => state.user.question;
 export const SelectorUserAnswers = (state: RootState) => state.user.answers;
 export const SelectorUserArrQuizzes = (state: RootState) => state.user.allQuizzes;
+export const SelectorUserArrQuestions = (state: RootState) => state.user.allQuestions;
+export const SelectorUserArrAnswers = (state: RootState) => state.user.allAnswers;
 export const SelectorUserError = (state: RootState) => state.user.error;
-
 
 export const SelectorModalOpen = (state: RootState) => state.modal.isOpen;
 

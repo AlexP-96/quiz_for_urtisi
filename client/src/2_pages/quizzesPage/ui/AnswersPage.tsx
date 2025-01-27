@@ -26,6 +26,7 @@ import {
     SelectorUserError,
     SelectorUserLoad,
 } from '../../../4_entities/templateSlice/model/selectors';
+import { IAnswer } from '../../../4_entities/templateSlice/slice/userSlice';
 import {
     createAnswerAxios,
     updateAnswerAxios,
@@ -57,7 +58,7 @@ interface IAnswerData {
 type TypeIds = { answer_id: number, question_id: number }
 
 interface PropsAnswersList {
-    answersArr: IAnswerData[];
+    answersArr: IAnswer[];
 }
 
 const AnswersPage: FC<PropsAnswersList> = (props) => {
@@ -70,6 +71,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const loadingSelector = useSelector(SelectorUserLoad);
     const arrQuizzes = useSelector(SelectorUserArrQuizzes);
+
     const dispatch = useDispatch<AppDispatch>();
 
     const handlerChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +95,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
                 return error;
             });
     };
+
     useEffect(() => {
         console.log('answersArr111111', answersArr);
     }, []);
@@ -115,7 +118,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
     return (
         <ListGroupWrapper>
             {
-                data.map((answer: IAnswerData) => {
+                answersArr.map((answer: IAnswerData) => {
                     return (
                         <Fragment key={answer.answer_id}>
                             <ModalPopUp

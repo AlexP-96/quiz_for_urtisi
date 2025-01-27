@@ -27,6 +27,7 @@ interface IAnswerData {
 }
 
 //todo сделать нормальный нейминг для страниц потому что данный компонент это отвечает только за визуал карточки квиза
+//TODO ВОЗМОЖНО УДАЛИТЬ ДАННЫЙ КОМПОНЕТ!!!
 interface QuizPageProps {
     quizId: number;
     quizData: [];
@@ -69,5 +70,3 @@ const QuizItemBody: FC<QuizPageProps> = ({
         </div>
     );
 };
-
-export default QuizItemBody;

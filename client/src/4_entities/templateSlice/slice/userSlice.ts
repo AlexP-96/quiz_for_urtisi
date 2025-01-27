@@ -2,7 +2,36 @@ import {
     createSlice,
     PayloadAction,
 } from '@reduxjs/toolkit';
-import { fetchQuizzesAll } from '../asyncThunks/QuizAsyncThunk';
+import {
+    createQuestions,
+    fetchQuizzesAll,
+} from '../asyncThunks/QuizAsyncThunk';
+
+export interface IQuizzes {
+    createdAt: string;
+    quiz_id: number;
+    quiz_name: string;
+    updatedAt: string;
+    user_id: number;
+}
+
+export interface IQuestions {
+    createdAt: string;
+    question_id: number;
+    question_name: string;
+    quiz_id: number;
+    updatedAt: string;
+    answers?: IAnswer[]
+}
+
+export interface IAnswer {
+    answer_id: number;
+    answer_name: string;
+    createdAt: string;
+    question_id: number;
+    type: string;
+    updatedAt: string;
+}
 
 interface UserState {
     loadStatus: 'loading' | 'succeeded' | 'failed';
@@ -13,6 +42,8 @@ interface UserState {
     question: string;
     answers: string;
     allQuizzes: [];
+    allQuestions: IQuestions[];
+    allAnswers: IAnswer[];
 }
 
 const initialState: UserState = {
@@ -24,6 +55,8 @@ const initialState: UserState = {
     answers: '',
     question: '',
     allQuizzes: [],
+    allAnswers: [],
+    allQuestions: [],
 };
 
 const userSlice = createSlice({
@@ -51,6 +84,12 @@ const userSlice = createSlice({
         allQuizzes: (state: UserState, action: PayloadAction<[]>) => {
             state.allQuizzes = action.payload;
         },
+        allQuestions: (state: UserState, action: PayloadAction<any>) => {
+            state.allQuestions = action.payload;
+        },
+        allAnswers: (state: UserState, action: PayloadAction<[]>) => {
+            state.allAnswers = action.payload;
+        },
         errorUser: (state: UserState, action: PayloadAction<string>) => {
             state.error = action.payload;
         },
@@ -62,7 +101,9 @@ const userSlice = createSlice({
             })
             .addCase(fetchQuizzesAll.fulfilled, (state, action) => {
                 state.loadStatus = 'succeeded';
-                state.allQuizzes = action.payload;
+                state.allQuestions = action.payload.allQuestions;
+                state.allQuizzes = action.payload.data;
+                state.allAnswers = action.payload.allAnswers;
             })
             .addCase(fetchQuizzesAll.rejected, (state, action) => {
                 state.loadStatus = 'failed';
@@ -81,6 +122,7 @@ export const {
     allQuizzes,
     isLoading,
     errorUser,
+    allQuestions,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

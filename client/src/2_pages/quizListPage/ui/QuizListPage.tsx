@@ -12,16 +12,13 @@ import {
     AppDispatch,
 } from '1_app/providers/redux/store/store';
 import {
-    allQuizzes,
-    emailUser,
     isLoading,
     quizUserName,
-    userId,
 } from '4_entities/templateSlice';
 import {
+    SelectorUserArrQuestions,
     SelectorUserArrQuizzes,
     SelectorUserId,
-    SelectorUserLoad,
     SelectorUserQuiz,
 } from '4_entities/templateSlice/model/selectors';
 import {
@@ -47,12 +44,8 @@ const QuizListPage = () => {
     const nameQuizSelector = useSelector(SelectorUserQuiz);
     const userIdSelector = useSelector(SelectorUserId);
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
-
+    const questionsDataSelector = useSelector(SelectorUserArrQuestions);
     const navigate = useNavigate();
-
-    const getAllQuiz = () => {
-
-    };
 
     const submitData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -64,7 +57,6 @@ const QuizListPage = () => {
                 dispatch(isLoading('succeeded'));
 
                 if (response.status === 200) {
-                    getAllQuiz();
                     console.log('Был успешный запрос на создание нового квиза', response);
                 }
                 if (response.status === 403) {
@@ -75,7 +67,6 @@ const QuizListPage = () => {
             .catch((error: AxiosError) => {
                 dispatch(isLoading('failed'));
 
-                console.log('error при создании квиза', error);
             });
     };
 
@@ -85,7 +76,7 @@ const QuizListPage = () => {
 
     useEffect(() => {
         dispatch(fetchQuizzesAll(getLSUser().user_id));
-    }, [quizDataSelector.length]);
+    }, []);
 
     if (quizDataSelector.length === 0) {
         return <FirstQuiz />;
@@ -123,7 +114,10 @@ const QuizListPage = () => {
                 </FormModal>
             </ModalPopUp>
             {
-                quizDataSelector.length > 0 && <QuizItemWrapper quizList={quizDataSelector} />
+                quizDataSelector.length > 0 &&
+                <QuizItemWrapper
+                    quizList={quizDataSelector}
+                />
             }
             {/*//todo сделать контейнер для стилей*/}
             <div
