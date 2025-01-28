@@ -7,6 +7,7 @@ import React, {
     FC,
     FormEvent,
     Fragment,
+    useEffect,
     useState,
 } from 'react';
 import {
@@ -19,7 +20,7 @@ import {
     answersUser,
     isLoading,
 } from '../../../4_entities/templateSlice';
-import { createQuestions } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
+import { createAnswer } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import {
     SelectorUserAnswers,
     SelectorUserArrAnswers,
@@ -61,6 +62,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const questionsDataSelector = useSelector(SelectorUserArrQuestions);
+    const answersDataSelector = useSelector(SelectorUserArrAnswers);
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -69,12 +71,16 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     };
 
     const handlerCloseModal = () => {
-        // dispatch(answersUser(''));
+
     };
 
+    console.log('answersDataSelector', answersDataSelector);
+    useEffect(() => {
+
+    }, []);
     const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
         e.preventDefault();
-        dispatch(createQuestions({
+        dispatch(createAnswer({
             user_id: getLSUser().user_id,
             quiz_id: Number(params.quiz_id),
             question_id: questionID,
@@ -94,7 +100,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
                                 title={question.question_name}
                             >
                                 <AnswersPage
-                                    answersArr={question.answers}
+                                    answersArr={answersDataSelector.filter(answer => answer.question_id == question.question_id)}
                                 />
                             </Accordion.Body>
 

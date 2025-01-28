@@ -8,7 +8,8 @@ import
     questionUserText,
     allQuizzes,
     isLoading,
-    allQuestions
+    allQuestions,
+    allAnswers
 } from './slice/userSlice';
 import {
     modalReducer,
@@ -34,5 +35,7 @@ export {
     allQuizzes,
     isLoading,
     allQuestions,
+    allAnswers,
+
     HOST
 };

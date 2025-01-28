@@ -3,7 +3,7 @@ import {
     PayloadAction,
 } from '@reduxjs/toolkit';
 import {
-    createQuestions,
+    createAnswer,
     fetchQuizzesAll,
 } from '../asyncThunks/QuizAsyncThunk';
 
@@ -21,7 +21,7 @@ export interface IQuestions {
     question_name: string;
     quiz_id: number;
     updatedAt: string;
-    answers?: IAnswer[]
+    answers?: IAnswer[];
 }
 
 export interface IAnswer {
@@ -36,7 +36,7 @@ export interface IAnswer {
 interface UserState {
     loadStatus: 'loading' | 'succeeded' | 'failed';
     error: unknown | null;
-    user_id: number | null;
+    user_id: number | string | null;
     email: string | null;
     quiz: string;
     question: string;
@@ -66,7 +66,7 @@ const userSlice = createSlice({
         isLoading: (state: UserState, action: PayloadAction<'loading' | 'succeeded' | 'failed'>) => {
             state.loadStatus = action.payload;
         },
-        userId: (state: UserState, action: PayloadAction<number>) => {
+        userId: (state: UserState, action: PayloadAction<number | string>) => {
             state.user_id = action.payload;
         },
         emailUser: (state: UserState, action: PayloadAction<string>) => {
@@ -87,7 +87,7 @@ const userSlice = createSlice({
         allQuestions: (state: UserState, action: PayloadAction<any>) => {
             state.allQuestions = action.payload;
         },
-        allAnswers: (state: UserState, action: PayloadAction<[]>) => {
+        allAnswers: (state: UserState, action: PayloadAction<IAnswer[]>) => {
             state.allAnswers = action.payload;
         },
         errorUser: (state: UserState, action: PayloadAction<string>) => {
@@ -123,6 +123,7 @@ export const {
     isLoading,
     errorUser,
     allQuestions,
+    allAnswers
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

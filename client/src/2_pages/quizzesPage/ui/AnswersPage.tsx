@@ -21,7 +21,12 @@ import {
     isLoading,
 } from '../../../4_entities/templateSlice';
 import {
+    deleteAnswer,
+    updateAnswer,
+} from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
+import {
     SelectorUserAnswers,
+    SelectorUserArrAnswers,
     SelectorUserArrQuizzes,
     SelectorUserError,
     SelectorUserLoad,
@@ -64,13 +69,9 @@ interface PropsAnswersList {
 const AnswersPage: FC<PropsAnswersList> = (props) => {
     const { answersArr } = props;
 
-    const [data, setData] = useState(answersArr);
-
     const { quiz_id } = useParams();
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
-    const loadingSelector = useSelector(SelectorUserLoad);
-    const arrQuizzes = useSelector(SelectorUserArrQuizzes);
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -78,41 +79,35 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
         dispatch(answersUser(e.target.value));
     };
 
-    const submitFormAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
+    const submitUpdateFormAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
         e.preventDefault();
-        updateAnswerAxios({
-            user_id: getLSUser().user_id,
-            quiz_id,
-            question_id: ids.question_id,
+        dispatch(updateAnswer({
             answer_id: ids.answer_id,
-            postData: answerValueSelector,
-        })
-            .then((response: AxiosResponse) => {
-                console.log('responseAnswer', response);
-                dispatch(answersUser(''));
-            })
-            .catch((error: AxiosError) => {
-                return error;
-            });
+            post_data: answerValueSelector,
+        }));
+        // updateAnswerAxios({
+        //     user_id: getLSUser().user_id,
+        //     quiz_id,
+        //     question_id: ids.question_id,
+        //     answer_id: ids.answer_id,
+        //     postData: answerValueSelector,
+        // })
+        //     .then((response: AxiosResponse) => {
+        //         console.log('responseAnswer', response);
+        //         dispatch(answersUser(''));
+        //     })
+        //     .catch((error: AxiosError) => {
+        //         return error;
+        //     });
     };
 
     useEffect(() => {
-        console.log('answersArr111111', answersArr);
+
     }, []);
 
     const submitFormDeleteAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
         e.preventDefault();
-        axios({
-            baseURL: 'http://localhost:4000',
-            method: 'delete',
-            url: `/user/${ids.answer_id}/answer_delete`,
-            headers: {
-                Authorization: getLSUser().token,
-            },
-        }).then(res => {
-            setData(data.filter((answer) => answer.answer_id !== Number(res.data.data.delete)));
-            console.log(res.data.data.delete);
-        });
+        dispatch(deleteAnswer({ answer_id: ids.answer_id }));
     };
 
     return (
@@ -125,7 +120,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
                                 idModal={nameModalIdAnswers.change + answer.answer_id}
                             >
                                 <FormModal
-                                    submitForm={(e) => submitFormAnswer(
+                                    submitForm={(e) => submitUpdateFormAnswer(
                                         e,
                                         {
                                             answer_id: answer.answer_id,

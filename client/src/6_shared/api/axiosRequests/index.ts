@@ -244,10 +244,12 @@ export const createAnswerAxios = async (
 
 export const updateAnswerAxios = async (data: requestDataAnswerChange<string>) => {
     try {
+        console.log('data_update', data);
         return await axios({
             method: 'patch',
-            url: `${HOST}/user/${data.user_id}/quiz/${data.quiz_id}/questions/${data.question_id}/answer_update/${data.answer_id}`,
-            data: data.postData,
+            url: `${HOST}/user/${data.answer_id}/answer_update`,
+            ///:user_id/quiz/:quiz_id/question/:question_id/answer_update/:answer_id
+            data: { answer_name: data.postData },
             headers: {
                 Authorization: getLSUser().token,
             },

@@ -34,10 +34,12 @@ class AnswerDao {
     }
 
     async update(params: IAnswerUpdate) {
-        return await this.answerDb.update(
+        const data = await this.answerDb.update(
             { answer_name: params.answer_name },
             { where: { answer_id: params.answer_id } },
         );
+        console.log('dataDaoUpadte', data);
+        return params;
     }
 
     async delete(params: string | number) {
@@ -46,7 +48,7 @@ class AnswerDao {
         );
         return {
             data,
-            delete: params,
+            delete: Number(params),
         };
     }
 }

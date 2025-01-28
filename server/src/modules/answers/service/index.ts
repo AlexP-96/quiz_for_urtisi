@@ -55,12 +55,10 @@ class AnswerService {
 
     async update(params: IAnswerUpdate) {
         try {
-            await this.answerDao.update(params);
+            const data = await this.answerDao.update(params);
 
             return {
-                data: {
-                    update: params.answer_name,
-                },
+                data,
                 error: null,
             };
         } catch (error) {

@@ -49,11 +49,15 @@ export const createAnswerRoute = router.post(
     answerController.createAnswer,
 );
 export const updateAnswerRoute = router.patch(
-    '/:user_id/quiz/:quiz_id/question/:question_id/answer_update/:answer_id',
+    '/:answer_id/answer_update',
+
+    //:user_id/quiz/:quiz_id/question/:question_id/answer_update/:answer_id
     answerController.updateAnswer,
 );
 export const deleteAnswerRoute = router.delete(
     '/:answer_id/answer_delete',
+    //todo написать пэйлоадом удаление ответа
+    //:user_id/quiz/:quiz_id/question/:question_id/answer_delete/:answer_id'
     answerController.deleteAnswer,
 );
 

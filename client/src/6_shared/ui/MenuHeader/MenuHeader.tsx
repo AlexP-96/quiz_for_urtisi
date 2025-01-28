@@ -60,7 +60,7 @@ export default function MenuHeader() {
     const quizDataSelector = useSelector(SelectorUserArrQuizzes);
     const isUserEmailSelector = useSelector(SelectorUserEmail);
     const authErrorSelector = useSelector(SelectorUserError);
-    console.log('authErrorSelector', authErrorSelector);
+
     const navigate = useNavigate();
 
     //todo здесь баг, который нужно исправить, а конкретно при протухании токена меню остается прежним, потому что сначала данные из LS попадают в редакс, а после удаляются из LS
