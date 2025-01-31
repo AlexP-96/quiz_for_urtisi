@@ -1,24 +1,17 @@
-import axios, {
-    AxiosError,
-    AxiosResponse,
-} from 'axios';
 import React, {
     FC,
     FormEvent,
     Fragment,
     useEffect,
-    useState,
+    useTransition,
 } from 'react';
-import { Simulate } from 'react-dom/test-utils';
 import {
     useDispatch,
     useSelector,
 } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
     answersValueUserReducer,
-    isLoadingReducer,
 } from '../../../4_entities/templateSlice';
 import {
     deleteAnswer,
@@ -26,17 +19,8 @@ import {
 } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import {
     SelectorUserAnswers,
-    SelectorUserArrAnswers,
-    SelectorUserArrQuizzes,
-    SelectorUserError,
-    SelectorUserLoad,
 } from '../../../4_entities/templateSlice/model/selectors';
 import { IAnswer } from '../../../4_entities/templateSlice/slice/userSlice';
-import {
-    createAnswerAxios,
-    updateAnswerAxios,
-} from '../../../6_shared/api/axiosRequests';
-import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStorage';
 import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
@@ -46,7 +30,6 @@ import {
     ListGroupWrapper,
 } from '../../../6_shared/ui/ListGroup';
 import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
-import error = Simulate.error;
 
 enum nameModalIdAnswers {
     change = 'modal-change-answer-',
@@ -83,6 +66,7 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
             answer_id: ids.answer_id,
             post_data: answerValueSelector,
         }));
+
     };
 
     useEffect(() => {

@@ -42,7 +42,7 @@ interface UserState {
     quiz: string;
     question: string;
     answers: string;
-    allQuizzes: [];
+    allQuizzes: IQuizzes[];
     allQuestions: IQuestions[];
     allAnswers: IAnswer[];
 }
@@ -73,6 +73,7 @@ const userSlice = createSlice({
         emailUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.email = action.payload;
         },
+
         quizValueUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.quiz = action.payload;
         },
@@ -82,7 +83,8 @@ const userSlice = createSlice({
         answersValueUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.answers = action.payload;
         },
-        allQuizzesUserReducer: (state: UserState, action: PayloadAction<[]>) => {
+
+        allQuizzesUserReducer: (state: UserState, action: PayloadAction<IQuizzes[]>) => {
             state.allQuizzes = action.payload;
         },
         allQuestionsReducer: (state: UserState, action: PayloadAction<any>) => {
@@ -91,6 +93,7 @@ const userSlice = createSlice({
         allAnswersReducer: (state: UserState, action: PayloadAction<IAnswer[]>) => {
             state.allAnswers = action.payload;
         },
+
         errorUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.error = action.payload;
         },

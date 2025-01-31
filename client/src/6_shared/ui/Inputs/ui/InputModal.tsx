@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 
 interface PropsInputDefault {
-    labelText: string;
+    labelText?: string;
     value: string;
 
     changeEvent(e: React.ChangeEvent<HTMLInputElement>): void;

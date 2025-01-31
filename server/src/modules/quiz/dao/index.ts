@@ -18,6 +18,7 @@ class QuizDao {
         this.delete = this.delete.bind(this);
     }
 
+    //todo сделать получение данных чтобы исключить из каждого вложенные массивы
     async findAll(params: string) {
         const data = await this.quizDb.findAll({
             where: {
@@ -89,11 +90,6 @@ class QuizDao {
             { where: { quiz_id: params } },
         );
     }
-
-    // async findOne(params: IEmail) {
-    //     return await this.userDb.findOne({ where: { email: params.email } });
-    // }
-
 }
 
 export default QuizDao;

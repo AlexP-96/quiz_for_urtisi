@@ -63,8 +63,6 @@ export default function MenuHeader() {
 
     const navigate = useNavigate();
 
-    //todo здесь баг, который нужно исправить, а конкретно при протухании токена меню остается прежним, потому что сначала данные из LS попадают в редакс, а после удаляются из LS
-
     useEffect(() => {
         if (getLSUser().email && getLSUser().user_id) {
             dispatch(emailUserReducer(getLSUser().email));

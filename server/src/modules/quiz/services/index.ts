@@ -77,10 +77,7 @@ class QuizService {
             });
 
             return {
-                data: {
-                    title: data,
-                    name: params.quiz_name,
-                },
+                data,
                 error: null,
             };
         } catch (error) {
@@ -93,12 +90,10 @@ class QuizService {
 
     async update(params: IQuizUpdate) {
         try {
-            await this.quizDao.update(params);
+            const data = await this.quizDao.update(params);
 
             return {
-                data: {
-                    update: params.quiz_name,
-                },
+                data,
                 error: null,
             };
         } catch (error) {
@@ -111,12 +106,10 @@ class QuizService {
 
     async delete(params: number | string) {
         try {
-            const data = await this.quizDao.delete(params);
+            await this.quizDao.delete(params);
 
             return {
-                data: {
-                    delete: data,
-                },
+                data: { quiz_id: Number(params) },
                 error: null,
             };
         } catch (error) {

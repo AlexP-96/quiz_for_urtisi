@@ -1,7 +1,6 @@
 import {
     AsyncThunk,
     createAsyncThunk,
-    GetThunkAPI,
 } from '@reduxjs/toolkit';
 import axios, { AxiosResponse } from 'axios';
 import {
@@ -16,6 +15,8 @@ import {
     answersValueUserReducer,
     emailUserReducer,
     HOST,
+    questionValueUserReducer,
+    quizValueUserReducer,
     userIdReducer,
 } from '../index';
 import {
@@ -58,14 +59,15 @@ export const fetchQuizzesAll: AsyncThunk<any, any, any> = createAsyncThunk(
     },
 );
 
-export const createQuiz: AsyncThunk<any, any, any> = createAsyncThunk(
+export const createQuiz: AsyncThunk<any, { user_id: number, post_data: string }, any> = createAsyncThunk(
     'createQuiz/post',
-    async (data: { user_id: number, post_data: string }, thunkAPI) => {
+    async (data, thunkAPI) => {
         try {
             const response = await axios({
+                baseURL: HOST,
                 method: 'post',
-                url: `${HOST}/user/${data.user_id}/create_quiz`,
-                data: data.post_data,
+                url: `/user/${data.user_id}/create_quiz`,
+                data: { quiz_name: data.post_data },
                 headers: {
                     Authorization: getLSUser().token,
                 },
@@ -75,7 +77,74 @@ export const createQuiz: AsyncThunk<any, any, any> = createAsyncThunk(
                 thunkAPI.rejectWithValue(thunkAPI.signal);
             }
 
-            return response.data.data;
+            const { user } = thunkAPI.getState() as RootState;
+
+            thunkAPI.dispatch(allQuizzesUserReducer([
+                ...user.allQuizzes,
+                {
+                    ...response.data.data,
+                    user_id: Number(response.data.data.user_id),
+                },
+            ]));
+            thunkAPI.dispatch(quizValueUserReducer(''));
+        } catch (error) {
+            setLSUserNull();
+            thunkAPI.dispatch(userIdReducer(''));
+            thunkAPI.dispatch(emailUserReducer(''));
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    },
+);
+
+export const deleteQuiz: AsyncThunk<any, { user_id: number, quiz_id: number }, any> = createAsyncThunk(
+    'deleteQuiz/delete',
+    async (data, thunkAPI) => {
+        try {
+            const response = await axios({
+                baseURL: HOST,
+                method: 'delete',
+                url: `/user/${data.user_id}/delete_quiz/${data.quiz_id}`,
+                headers: {
+                    Authorization: getLSUser().token,
+                },
+            });
+
+            if (response.status === 403) {
+                thunkAPI.rejectWithValue(thunkAPI.signal);
+            }
+
+            const { user } = thunkAPI.getState() as RootState;
+
+            thunkAPI.dispatch(allQuizzesUserReducer(user.allQuizzes.filter((quiz) => quiz.quiz_id !== response.data.data.quiz_id)));
+        } catch (error) {
+            setLSUserNull();
+            thunkAPI.dispatch(userIdReducer(''));
+            thunkAPI.dispatch(emailUserReducer(''));
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    },
+);
+
+export const updateQuiz: AsyncThunk<any, { user_id: number, quiz_id: number }, any> = createAsyncThunk(
+    'updateQuiz/patch',
+    async (data, thunkAPI) => {
+        try {
+            const response = await axios({
+                baseURL: HOST,
+                method: 'delete',
+                url: `/user/${data.user_id}/delete_quiz/${data.quiz_id}`,
+                headers: {
+                    Authorization: getLSUser().token,
+                },
+            });
+
+            if (response.status === 403) {
+                thunkAPI.rejectWithValue(thunkAPI.signal);
+            }
+
+            const { user } = thunkAPI.getState() as RootState;
+
+            thunkAPI.dispatch(allQuizzesUserReducer(user.allQuizzes.filter((quiz) => quiz.quiz_id !== response.data.data.quiz_id)));
         } catch (error) {
             setLSUserNull();
             thunkAPI.dispatch(userIdReducer(''));
@@ -100,7 +169,6 @@ export const createQuestion: AsyncThunk<any, { user_id: number, quiz_id: number,
                     Authorization: getLSUser().token,
                 },
             });
-            const result = response.data.data;
 
             if (response.status === 403) {
                 thunkAPI.rejectWithValue(thunkAPI.signal);
@@ -108,21 +176,20 @@ export const createQuestion: AsyncThunk<any, { user_id: number, quiz_id: number,
 
             const { user } = thunkAPI.getState() as RootState;
 
-            user.allQuestions.map((question) => {
-                if (question.question_id === Number(result.question_id)) {
-                    thunkAPI.dispatch(allQuestionsReducer([
-                        ...user.allQuestions,
-                        result,
-                    ]));
-                }
-            });
+            thunkAPI.dispatch(allQuestionsReducer([
+                ...user.allQuestions,
+                {
+                    ...response.data.data,
+                    quiz_id: Number(response.data.data.quiz_id),
+                },
+            ]));
 
-            console.log('response.data create_question', response.data.data);
-
+            thunkAPI.dispatch(questionValueUserReducer(''));
         } catch (error) {
             setLSUserNull();
             thunkAPI.dispatch(userIdReducer(''));
             thunkAPI.dispatch(emailUserReducer(''));
+
             return thunkAPI.rejectWithValue(error.message);
         }
     },
@@ -160,12 +227,13 @@ export const createAnswer: AsyncThunk<any, {
             }
 
             const state = getState() as RootState;
+
             dispatch(answersValueUserReducer(''));
             dispatch(allAnswersReducer([
                 ...state.user.allAnswers,
                 response.data.data,
             ]));
-
+            dispatch(answersValueUserReducer(''));
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }
@@ -202,7 +270,7 @@ export const updateAnswer: AsyncThunk<any, { answer_id: number, post_data: strin
         }
     },
 );
-
+//todo добавить payload-ом юзер, квиз, квешен, айди
 export const deleteAnswer: AsyncThunk<any, { answer_id: number }
     , any> = createAsyncThunk(
     'deleteAnswer/post',

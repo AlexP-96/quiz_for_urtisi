@@ -13,20 +13,10 @@ import {
     useSelector,
 } from 'react-redux';
 import {
-    SelectorUserAnswers,
     SelectorUserArrQuestions,
     SelectorUserArrQuizzes,
-    SelectorUserId,
     SelectorUserQuestions,
 } from '4_entities/templateSlice/model/selectors';
-import {
-    axiosAuthPostData,
-    createAnswerAxios,
-} from '6_shared/api/axiosRequests';
-import {
-    AxiosError,
-    AxiosResponse,
-} from 'axios';
 import {
     isLoadingReducer,
     questionValueUserReducer,
@@ -39,10 +29,14 @@ import {
 import {
     getLSUser,
 } from '../../../6_shared/lib/helpers/localStorage/localStorage';
-import { BtnPopUpCloseModal } from '../../../6_shared/ui/Buttons';
+import {
+    BtnPopUpCloseModal,
+    ButtonOpenModal,
+} from '../../../6_shared/ui/Buttons';
 import BtnPopUpOpenModal from '../../../6_shared/ui/Buttons/ui/BtnPopUpOpenModal';
 import { FormModal } from '../../../6_shared/ui/Forms';
 import { InputModal } from '../../../6_shared/ui/Inputs';
+import { ModalPopUpTailwind } from '../../../6_shared/ui/Modals';
 
 import ModalPopUp from '../../../6_shared/ui/Modals/ui/ModalPopUp';
 import QuestionsPage from './QuestionsPage';
@@ -69,46 +63,29 @@ interface IAnswerData {
     type: string;
 }
 
+//todo сделать нормальные нейминги компонентов
 const QuizPage: FC = () => {
     const { quiz_id } = useParams();
 
-    const navigate = useNavigate();
-
-    const [questionId, setQuestionId] = useState<null | number>(null);
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    const quizzesDataSelector = useSelector(SelectorUserArrQuizzes);
     const questionDataSelector = useSelector(SelectorUserArrQuestions);
 
     const dispatch = useDispatch<AppDispatch>();
 
-    const quizDataSelector = useSelector(SelectorUserArrQuizzes);
-    const userIdSelector = useSelector(SelectorUserId);
     const questionTextSelector = useSelector(SelectorUserQuestions);
-    const answerNameSelector = useSelector(SelectorUserAnswers);
+    const [{quiz_name}] = quizzesDataSelector.filter((quiz) => {
+        const { quiz_name } = quiz;
 
-    //todo сделать обновление данных в локальном хранилище отдельной функцией
-    const submitQuestion = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        axiosAuthPostData(
-            `/${userIdSelector}/questions/${quiz_id}/question_create`,
-            { question_name: questionTextSelector },
-        )
-            .then((response: AxiosResponse) => {
-                if (response.status === 200) {
+        if (quiz.quiz_id === Number(quiz_id)) {
+            console.log(quiz_name);
+            return quiz_name;
+        }
+    });
 
-                }
-                if (response.status === 403) {
-                    navigate('/login');
-                    console.log('Был успешный запрос на создание новго квиза', response);
-                }
-                dispatch(questionValueUserReducer(''));
-            })
-            .catch((error: AxiosError) => {
-                dispatch(questionValueUserReducer(''));
-                console.log('Клиентская ошибка', error);
-            });
-    };
+    console.log('titleQuiz', quiz_name);
 
-    //todo обработать на сервере если пустой ответ
-    const submitAnswer = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         dispatch(createQuestion({
             user_id: getLSUser().user_id,
@@ -121,16 +98,6 @@ const QuizPage: FC = () => {
         dispatch(questionValueUserReducer(e.target.value));
     };
 
-    const handlerCloseModal = () => {
-        setQuestionId(null);
-    };
-
-    const openModalCreateQuestion = () => {
-    };
-    const openModalCreateAnswer = (childProps?: { questionId: number }) => {
-        setQuestionId(childProps.questionId);
-    };
-
     useEffect(() => {
         dispatch(fetchQuizzesAll(getLSUser().user_id));
     }, []);
@@ -140,35 +107,19 @@ const QuizPage: FC = () => {
             <div
                 className='mx-auto w-full'
             >
-                <ModalPopUp
-                    idModal={'first-question'}
+                <ModalPopUpTailwind
+                    onCloseModal={() => setIsOpenModal(false)}
+                    isVisible={isOpenModal}
+                    textBtnCancel='Отмена'
+                    textBtnAccess='Добавить'
+                    title='Введите название нового вопроса'
+                    submitForm={submitForm}
                 >
-                    <FormModal
-                        submitForm={submitAnswer}
-                        sectionButtons={[
-                            <BtnPopUpCloseModal
-                                key='1'
-                                popUpTarget='first-question'
-                                text='Создать'
-                                type='submit'
-                                color='green'
-                            />,
-                            <BtnPopUpCloseModal
-                                key='2'
-                                popUpTarget='first-question'
-                                text='Отмена'
-                                type='button'
-                                color='red'
-                            />,
-                        ]}
-                    >
-                        <InputModal
-                            labelText='Введите название вопроса'
-                            value={questionTextSelector}
-                            changeEvent={changeInputQuestion}
-                        />
-                    </FormModal>
-                </ModalPopUp>
+                    <InputModal
+                        value={questionTextSelector}
+                        changeEvent={changeInputQuestion}
+                    />
+                </ModalPopUpTailwind>
                 <h2 className='pb-10 font-extrabold'>{}</h2>
                 {
                     questionDataSelector.length === 0
@@ -181,12 +132,13 @@ const QuizPage: FC = () => {
                         : null
                 }
 
-                <QuestionsPage />
+                <QuestionsPage
+                    questionName={quizzesDataSelector.filter(quiz => quiz.quiz_id === Number(quiz_id))}
+                />
 
-                <BtnPopUpOpenModal
-                    idPopUpTarget='first-question'
+                <ButtonOpenModal
                     text='Добавить вопрос'
-                    type='button'
+                    onOpenModal={() => setIsOpenModal(true)}
                 />
             </div>
         </div>
