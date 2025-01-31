@@ -38,7 +38,7 @@ class AnswerDao {
             { answer_name: params.answer_name },
             { where: { answer_id: params.answer_id } },
         );
-        console.log('dataDaoUpadte', data);
+
         return params;
     }
 

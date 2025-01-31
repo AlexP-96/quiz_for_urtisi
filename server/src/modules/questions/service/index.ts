@@ -42,10 +42,7 @@ class QuestionService {
             });
 
             return {
-                data: {
-                    title: data,
-                    name: params.question_name,
-                },
+                data,
                 error: null,
             };
         } catch (error) {

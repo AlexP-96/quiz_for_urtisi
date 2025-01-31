@@ -28,11 +28,12 @@ import {
     AxiosResponse,
 } from 'axios';
 import {
-    isLoading,
-    questionUserText,
+    isLoadingReducer,
+    questionValueUserReducer,
 } from '4_entities/templateSlice';
 import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
+    createQuestion,
     fetchQuizzesAll,
 } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import {
@@ -83,10 +84,6 @@ const QuizPage: FC = () => {
     const questionTextSelector = useSelector(SelectorUserQuestions);
     const answerNameSelector = useSelector(SelectorUserAnswers);
 
-    console.log('answerNameSelector', answerNameSelector);
-
-    const currentQuiz = quizDataSelector.filter((quiz: IQuizId) => quiz.quiz_id === Number(quiz_id));
-
     //todo сделать обновление данных в локальном хранилище отдельной функцией
     const submitQuestion = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -102,10 +99,10 @@ const QuizPage: FC = () => {
                     navigate('/login');
                     console.log('Был успешный запрос на создание новго квиза', response);
                 }
-                dispatch(questionUserText(''));
+                dispatch(questionValueUserReducer(''));
             })
             .catch((error: AxiosError) => {
-                dispatch(questionUserText(''));
+                dispatch(questionValueUserReducer(''));
                 console.log('Клиентская ошибка', error);
             });
     };
@@ -113,23 +110,15 @@ const QuizPage: FC = () => {
     //todo обработать на сервере если пустой ответ
     const submitAnswer = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        createAnswerAxios({
+        dispatch(createQuestion({
             user_id: getLSUser().user_id,
-            quiz_id: quiz_id,
-            question_id: questionId,
-            postData: answerNameSelector,
-        }, () => dispatch(isLoading('loading')))
-            .then((response: AxiosResponse) => {
-                console.log('asdasdasdasdasdasdasd');
-            })
-            .catch((error: AxiosError) => {
-
-            });
+            quiz_id: Number(quiz_id),
+            post_data: questionTextSelector,
+        }));
     };
 
     const changeInputQuestion = (e: ChangeEvent<HTMLInputElement>) => {
-
+        dispatch(questionValueUserReducer(e.target.value));
     };
 
     const handlerCloseModal = () => {
@@ -191,10 +180,9 @@ const QuizPage: FC = () => {
                         </div>
                         : null
                 }
-                <QuestionsPage
-                    questionsArr={questionDataSelector}
-                    createAnswer={submitAnswer}
-                />
+
+                <QuestionsPage />
+
                 <BtnPopUpOpenModal
                     idPopUpTarget='first-question'
                     text='Добавить вопрос'

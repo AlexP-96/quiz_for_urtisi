@@ -1,15 +1,16 @@
 import
 {
     userReducer,
-    userId,
-    emailUser,
-    quizUserName,
-    answersUser,
-    questionUserText,
-    allQuizzes,
-    isLoading,
-    allQuestions,
-    allAnswers
+    userIdReducer,
+    emailUserReducer,
+    quizValueUserReducer,
+    answersValueUserReducer,
+    questionValueUserReducer,
+    allQuizzesUserReducer,
+    isLoadingReducer,
+    allQuestionsReducer,
+    allAnswersReducer,
+    errorUserReducer,
 } from './slice/userSlice';
 import {
     modalReducer,
@@ -17,25 +18,26 @@ import {
     closeModal,
 } from './slice/modalSlice';
 
-const HOST = 'http://localhost:4000'
+const HOST = 'http://localhost:4000';
 
-import {SelectorUserId} from './model/selectors';
+import { SelectorUserId } from './model/selectors';
 
 export {
     userReducer,
     SelectorUserId,
-    userId,
+    userIdReducer,
     modalReducer,
     openModal,
     closeModal,
-    emailUser,
-    quizUserName,
-    answersUser,
-    questionUserText,
-    allQuizzes,
-    isLoading,
-    allQuestions,
-    allAnswers,
+    emailUserReducer,
+    quizValueUserReducer,
+    answersValueUserReducer,
+    questionValueUserReducer,
+    isLoadingReducer,
+    allQuizzesUserReducer,
+    allAnswersReducer,
+    allQuestionsReducer,
+    errorUserReducer,
 
-    HOST
+    HOST,
 };

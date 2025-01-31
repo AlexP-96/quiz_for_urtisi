@@ -29,8 +29,8 @@ import {
     useNavigate,
 } from 'react-router-dom';
 import {
-    emailUser,
-    userId,
+    emailUserReducer,
+    userIdReducer,
 } from '4_entities/templateSlice';
 import {
     SelectorUserArrQuizzes,
@@ -67,8 +67,8 @@ export default function MenuHeader() {
 
     useEffect(() => {
         if (getLSUser().email && getLSUser().user_id) {
-            dispatch(emailUser(getLSUser().email));
-            dispatch(userId(getLSUser().user_id));
+            dispatch(emailUserReducer(getLSUser().email));
+            dispatch(userIdReducer(getLSUser().user_id));
         }
         if (authErrorSelector) {
             navigate('/login');

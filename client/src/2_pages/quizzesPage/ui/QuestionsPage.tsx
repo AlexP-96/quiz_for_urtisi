@@ -17,8 +17,8 @@ import {
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
-    answersUser,
-    isLoading,
+    answersValueUserReducer,
+    isLoadingReducer,
 } from '../../../4_entities/templateSlice';
 import { createAnswer } from '../../../4_entities/templateSlice/asyncThunks/QuizAsyncThunk';
 import {
@@ -45,20 +45,9 @@ interface IQuestionData {
     answers: [];
 }
 
-interface PropsQuestionsList {
-    questionsArr: IQuestions[];
 
-    createAnswer?(e: FormEvent<HTMLFormElement>): void;
-}
-
-const QuestionsPage: FC<PropsQuestionsList> = (props) => {
-    const {
-        questionsArr,
-    } = props;
-
+const QuestionsPage: FC = () => {
     const params = useParams();
-
-    const [data, setData] = useState<any>(questionsArr);
 
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const questionsDataSelector = useSelector(SelectorUserArrQuestions);
@@ -67,7 +56,7 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const handlerChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(answersUser(e.target.value));
+        dispatch(answersValueUserReducer(e.target.value));
     };
 
     const handlerCloseModal = () => {
@@ -75,9 +64,11 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     };
 
     console.log('answersDataSelector', answersDataSelector);
+
     useEffect(() => {
 
-    }, []);
+    }, [answersDataSelector]);
+
     const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
         e.preventDefault();
         dispatch(createAnswer({
@@ -91,60 +82,61 @@ const QuestionsPage: FC<PropsQuestionsList> = (props) => {
     return (
         <Accordion>
             {
-                questionsDataSelector.map((question: any) => {
-                    return (
-                        <Fragment key={question.question_id}>
-                            <Accordion.Body
-                                id={question.question_id}
-                                key={question.question_id}
-                                title={question.question_name}
-                            >
-                                <AnswersPage
-                                    answersArr={answersDataSelector.filter(answer => answer.question_id == question.question_id)}
-                                />
-                            </Accordion.Body>
-
-                            <ModalPopUp
-                                idModal={question.question_name + question.question_id}
-                                onClick={handlerCloseModal}
-                            >
-                                <FormModal
-                                    submitForm={(e) => submitForm(e, question.question_id)}
-                                    method='post'
-                                    sectionButtons={[
-                                        <BtnPopUpCloseModal
-                                            key='1'
-                                            popUpTarget={question.question_name + question.question_id}
-                                            text='Создать'
-                                            type='submit'
-                                            color={'green'}
-                                        />,
-                                        <BtnPopUpCloseModal
-                                            key='2'
-                                            popUpTarget={question.question_name + question.question_id}
-                                            text='Отмена'
-                                            type='button'
-                                            color={'red'}
-                                            onClick={handlerCloseModal}
-                                        />,
-                                    ]}
+                questionsDataSelector.filter(question => question.quiz_id === Number(params.quiz_id))
+                    .map((question: any) => {
+                        return (
+                            <Fragment key={question.question_id}>
+                                <Accordion.Body
+                                    id={question.question_id}
+                                    key={question.question_id}
+                                    title={question.question_name}
                                 >
-                                    <InputModal
-                                        labelText='Введите название вашего ответа'
-                                        value={answerValueSelector}
-                                        changeEvent={handlerChangeInput}
+                                    <AnswersPage
+                                        answersArr={answersDataSelector.filter(answer => answer.question_id == question.question_id)}
                                     />
-                                </FormModal>
-                            </ModalPopUp>
-                            <BtnPopUpOpenModal
-                                idPopUpTarget={question.question_name + question.question_id}
-                                text='Создать ответ'
-                                type='submit'
-                                color='green'
-                            />
-                        </Fragment>
-                    );
-                })
+                                </Accordion.Body>
+
+                                <ModalPopUp
+                                    idModal={question.question_name + question.question_id}
+                                    onClick={handlerCloseModal}
+                                >
+                                    <FormModal
+                                        submitForm={(e) => submitForm(e, question.question_id)}
+                                        method='post'
+                                        sectionButtons={[
+                                            <BtnPopUpCloseModal
+                                                key='1'
+                                                popUpTarget={question.question_name + question.question_id}
+                                                text='Создать'
+                                                type='submit'
+                                                color={'green'}
+                                            />,
+                                            <BtnPopUpCloseModal
+                                                key='2'
+                                                popUpTarget={question.question_name + question.question_id}
+                                                text='Отмена'
+                                                type='button'
+                                                color={'red'}
+                                                onClick={handlerCloseModal}
+                                            />,
+                                        ]}
+                                    >
+                                        <InputModal
+                                            labelText='Введите название вашего ответа'
+                                            value={answerValueSelector}
+                                            changeEvent={handlerChangeInput}
+                                        />
+                                    </FormModal>
+                                </ModalPopUp>
+                                <BtnPopUpOpenModal
+                                    idPopUpTarget={question.question_name + question.question_id}
+                                    text='Создать ответ'
+                                    type='submit'
+                                    color='green'
+                                />
+                            </Fragment>
+                        );
+                    })
             }
         </Accordion>
     );

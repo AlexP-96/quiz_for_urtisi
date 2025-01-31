@@ -62,7 +62,7 @@ class QuestionController {
         try {
             const { question_name } = req?.body;
             const { quiz_id } = req?.params;
-
+            console.log(req?.body);
             const {
                 data,
                 error,

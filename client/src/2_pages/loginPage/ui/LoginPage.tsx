@@ -17,9 +17,9 @@ import {
 import { AppDispatch } from '1_app/providers/redux/store/store';
 import {
     closeModal,
-    emailUser,
-    isLoading,
-    userId,
+    emailUserReducer,
+    isLoadingReducer,
+    userIdReducer,
 } from '4_entities/templateSlice';
 import {
     loginUserAxios,
@@ -29,7 +29,7 @@ import { Button } from '../../../6_shared/ui/Buttons/Button';
 import { Input } from '../../../6_shared/ui/Inputs/ui/Input';
 import { Label } from '6_shared/ui/Label/Label';
 import { SelectorUserError } from '4_entities/templateSlice/model/selectors';
-import { errorUser } from '4_entities/templateSlice/slice/userSlice';
+import { errorUserReducer } from '4_entities/templateSlice/slice/userSlice';
 
 interface reqData {
     email: string;
@@ -65,10 +65,10 @@ const LoginPage = () => {
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        loginUserAxios(data, () => dispatch(isLoading('loading')))
+        loginUserAxios(data, () => dispatch(isLoadingReducer('loading')))
             .then((response: AxiosResponse) => {
                 if (response.status === 200) {
-                    dispatch(isLoading('succeeded'));
+                    dispatch(isLoadingReducer('succeeded'));
 
                     const {
                         user_id,
@@ -76,8 +76,8 @@ const LoginPage = () => {
                         email,
                     }: resDataLogin = response.data.data;
 
-                    dispatch(emailUser(email));
-                    dispatch(userId(user_id));
+                    dispatch(emailUserReducer(email));
+                    dispatch(userIdReducer(user_id));
 
                     setLSUser({
                         email,
@@ -90,8 +90,8 @@ const LoginPage = () => {
                 }
             })
             .catch((error: AxiosError) => {
-                dispatch(isLoading('failed'));
-                dispatch(errorUser('Ошибка при авторизации'));
+                dispatch(isLoadingReducer('failed'));
+                dispatch(errorUserReducer('Ошибка при авторизации'));
 
                 return error;
             });

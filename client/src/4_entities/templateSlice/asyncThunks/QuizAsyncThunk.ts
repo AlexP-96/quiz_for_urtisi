@@ -1,6 +1,7 @@
 import {
     AsyncThunk,
     createAsyncThunk,
+    GetThunkAPI,
 } from '@reduxjs/toolkit';
 import axios, { AxiosResponse } from 'axios';
 import {
@@ -9,11 +10,13 @@ import {
 } from '6_shared/lib/helpers/localStorage/localStorage';
 import { RootState } from '../../../1_app/providers/redux/store/store';
 import {
-    allAnswers,
-    allQuestions,
-    emailUser,
+    allAnswersReducer,
+    allQuestionsReducer,
+    allQuizzesUserReducer,
+    answersValueUserReducer,
+    emailUserReducer,
     HOST,
-    userId,
+    userIdReducer,
 } from '../index';
 import {
     IAnswer,
@@ -48,8 +51,8 @@ export const fetchQuizzesAll: AsyncThunk<any, any, any> = createAsyncThunk(
         } catch (error) {
             setLSUserNull();
             //todo почитать доку про редакс, как не дублировать диспатчи
-            thunkAPI.dispatch(userId(''));
-            thunkAPI.dispatch(emailUser(''));
+            thunkAPI.dispatch(userIdReducer(''));
+            thunkAPI.dispatch(emailUserReducer(''));
             return thunkAPI.rejectWithValue(error.message);
         }
     },
@@ -75,8 +78,51 @@ export const createQuiz: AsyncThunk<any, any, any> = createAsyncThunk(
             return response.data.data;
         } catch (error) {
             setLSUserNull();
-            thunkAPI.dispatch(userId(''));
-            thunkAPI.dispatch(emailUser(''));
+            thunkAPI.dispatch(userIdReducer(''));
+            thunkAPI.dispatch(emailUserReducer(''));
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    },
+);
+
+export const createQuestion: AsyncThunk<any, { user_id: number, quiz_id: number, post_data: string }, {
+    state: RootState
+}> = createAsyncThunk(
+    'createQuestion/post',
+    async (data, thunkAPI) => {
+        try {
+            const response = await axios({
+                baseURL: HOST,
+                method: 'post',
+                url: `/user/${data.user_id}/questions/${data.quiz_id}/question_create`,
+                data: { question_name: data.post_data },
+                headers: {
+                    Authorization: getLSUser().token,
+                },
+            });
+            const result = response.data.data;
+
+            if (response.status === 403) {
+                thunkAPI.rejectWithValue(thunkAPI.signal);
+            }
+
+            const { user } = thunkAPI.getState() as RootState;
+
+            user.allQuestions.map((question) => {
+                if (question.question_id === Number(result.question_id)) {
+                    thunkAPI.dispatch(allQuestionsReducer([
+                        ...user.allQuestions,
+                        result,
+                    ]));
+                }
+            });
+
+            console.log('response.data create_question', response.data.data);
+
+        } catch (error) {
+            setLSUserNull();
+            thunkAPI.dispatch(userIdReducer(''));
+            thunkAPI.dispatch(emailUserReducer(''));
             return thunkAPI.rejectWithValue(error.message);
         }
     },
@@ -91,6 +137,12 @@ export const createAnswer: AsyncThunk<any, {
     'createAnswer/post',
     async (data, thunkAPI) => {
         try {
+            const {
+                dispatch,
+                getState,
+                rejectWithValue,
+                signal,
+            } = thunkAPI;
             const response = await axios({
                 baseURL: HOST,
                 method: 'post',
@@ -104,12 +156,12 @@ export const createAnswer: AsyncThunk<any, {
             });
 
             if (response.status === 403) {
-                thunkAPI.rejectWithValue(thunkAPI.signal);
+                rejectWithValue(signal);
             }
 
-            const state = thunkAPI.getState() as RootState;
-            console.log('state.user.allQuestions', state.user.allAnswers);
-            thunkAPI.dispatch(allAnswers([
+            const state = getState() as RootState;
+            dispatch(answersValueUserReducer(''));
+            dispatch(allAnswersReducer([
                 ...state.user.allAnswers,
                 response.data.data,
             ]));
@@ -120,8 +172,7 @@ export const createAnswer: AsyncThunk<any, {
     },
 );
 
-export const updateAnswer: AsyncThunk<any, { answer_id: number, post_data: string }
-    , any> = createAsyncThunk(
+export const updateAnswer: AsyncThunk<any, { answer_id: number, post_data: string }, any> = createAsyncThunk(
     'updateAnswer/post',
     async (data, thunkAPI) => {
         try {
@@ -141,16 +192,11 @@ export const updateAnswer: AsyncThunk<any, { answer_id: number, post_data: strin
                 thunkAPI.rejectWithValue(thunkAPI.signal);
             }
 
-            const state = thunkAPI.getState() as RootState;
-            state.user.allAnswers.map((answer) => {
-                if(answer.answer_id === Number(response.data.data.answer_id)) {
+            return {
+                answer_id: Number(response.data.data.answer_id),
+                answer_name: response.data.data.answer_name,
+            };
 
-                }
-            })
-            console.log('response_update', response.data.data);
-
-            // const result = state.user.allAnswers.filter((answer) => answer.answer_id !== Number(response.data.data.delete));
-            // thunkAPI.dispatch(allAnswers(result));
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }
@@ -176,7 +222,7 @@ export const deleteAnswer: AsyncThunk<any, { answer_id: number }
 
             const state = thunkAPI.getState() as RootState;
             const result = state.user.allAnswers.filter((answer) => answer.answer_id !== Number(response.data.data.delete));
-            thunkAPI.dispatch(allAnswers(result));
+            thunkAPI.dispatch(allAnswersReducer(result));
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }

@@ -17,8 +17,8 @@ import {
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '../../../1_app/providers/redux/store/store';
 import {
-    answersUser,
-    isLoading,
+    answersValueUserReducer,
+    isLoadingReducer,
 } from '../../../4_entities/templateSlice';
 import {
     deleteAnswer,
@@ -69,14 +69,12 @@ interface PropsAnswersList {
 const AnswersPage: FC<PropsAnswersList> = (props) => {
     const { answersArr } = props;
 
-    const { quiz_id } = useParams();
-
     const answerValueSelector = useSelector(SelectorUserAnswers);
 
     const dispatch = useDispatch<AppDispatch>();
 
     const handlerChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(answersUser(e.target.value));
+        dispatch(answersValueUserReducer(e.target.value));
     };
 
     const submitUpdateFormAnswer = (e: FormEvent<HTMLFormElement>, ids: TypeIds) => {
@@ -85,20 +83,6 @@ const AnswersPage: FC<PropsAnswersList> = (props) => {
             answer_id: ids.answer_id,
             post_data: answerValueSelector,
         }));
-        // updateAnswerAxios({
-        //     user_id: getLSUser().user_id,
-        //     quiz_id,
-        //     question_id: ids.question_id,
-        //     answer_id: ids.answer_id,
-        //     postData: answerValueSelector,
-        // })
-        //     .then((response: AxiosResponse) => {
-        //         console.log('responseAnswer', response);
-        //         dispatch(answersUser(''));
-        //     })
-        //     .catch((error: AxiosError) => {
-        //         return error;
-        //     });
     };
 
     useEffect(() => {

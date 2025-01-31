@@ -12,8 +12,8 @@ import {
     AppDispatch,
 } from '1_app/providers/redux/store/store';
 import {
-    isLoading,
-    quizUserName,
+    isLoadingReducer,
+    quizValueUserReducer,
 } from '4_entities/templateSlice';
 import {
     SelectorUserArrQuestions,
@@ -52,9 +52,9 @@ const QuizListPage = () => {
         createQuizAxios({
             user_id: userIdSelector,
             postData: { quiz_name: nameQuizSelector },
-        }, () => dispatch(isLoading('loading')))
+        }, () => dispatch(isLoadingReducer('loading')))
             .then((response: AxiosResponse) => {
-                dispatch(isLoading('succeeded'));
+                dispatch(isLoadingReducer('succeeded'));
 
                 if (response.status === 200) {
                     console.log('Был успешный запрос на создание нового квиза', response);
@@ -65,13 +65,13 @@ const QuizListPage = () => {
                 }
             })
             .catch((error: AxiosError) => {
-                dispatch(isLoading('failed'));
+                dispatch(isLoadingReducer('failed'));
 
             });
     };
 
     const handlerInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        dispatch(quizUserName(event.target.value));
+        dispatch(quizValueUserReducer(event.target.value));
     };
 
     useEffect(() => {

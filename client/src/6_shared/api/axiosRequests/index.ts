@@ -150,9 +150,7 @@ export const getAllQuestionAxios = async (
 
 export const createQuestionAxios = async (
     data: requestDataUser<postDataQuestion>,
-    callback: () => void,
 ): Promise<AxiosResponse | AxiosError> => {
-    callback();
     try {
         return await axios({
             method: 'post',
@@ -225,7 +223,6 @@ export const createAnswerAxios = async (
 ): Promise<AxiosResponse | AxiosError> => {
     callback();
     try {
-        console.log('data.postData', data);
         return await axios({
             baseURL: HOST,
             method: 'post',

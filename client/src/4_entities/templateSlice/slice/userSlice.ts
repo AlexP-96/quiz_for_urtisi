@@ -5,6 +5,7 @@ import {
 import {
     createAnswer,
     fetchQuizzesAll,
+    updateAnswer,
 } from '../asyncThunks/QuizAsyncThunk';
 
 export interface IQuizzes {
@@ -63,34 +64,34 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        isLoading: (state: UserState, action: PayloadAction<'loading' | 'succeeded' | 'failed'>) => {
+        isLoadingReducer: (state: UserState, action: PayloadAction<'loading' | 'succeeded' | 'failed'>) => {
             state.loadStatus = action.payload;
         },
-        userId: (state: UserState, action: PayloadAction<number | string>) => {
+        userIdReducer: (state: UserState, action: PayloadAction<number | string>) => {
             state.user_id = action.payload;
         },
-        emailUser: (state: UserState, action: PayloadAction<string>) => {
+        emailUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.email = action.payload;
         },
-        quizUserName: (state: UserState, action: PayloadAction<string>) => {
+        quizValueUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.quiz = action.payload;
         },
-        questionUserText: (state: UserState, action: PayloadAction<string>) => {
+        questionValueUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.question = action.payload;
         },
-        answersUser: (state: UserState, action: PayloadAction<string>) => {
+        answersValueUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.answers = action.payload;
         },
-        allQuizzes: (state: UserState, action: PayloadAction<[]>) => {
+        allQuizzesUserReducer: (state: UserState, action: PayloadAction<[]>) => {
             state.allQuizzes = action.payload;
         },
-        allQuestions: (state: UserState, action: PayloadAction<any>) => {
+        allQuestionsReducer: (state: UserState, action: PayloadAction<any>) => {
             state.allQuestions = action.payload;
         },
-        allAnswers: (state: UserState, action: PayloadAction<IAnswer[]>) => {
+        allAnswersReducer: (state: UserState, action: PayloadAction<IAnswer[]>) => {
             state.allAnswers = action.payload;
         },
-        errorUser: (state: UserState, action: PayloadAction<string>) => {
+        errorUserReducer: (state: UserState, action: PayloadAction<string>) => {
             state.error = action.payload;
         },
     },
@@ -109,21 +110,41 @@ const userSlice = createSlice({
                 state.loadStatus = 'failed';
                 state.error = action.payload;
             });
+        builder
+            .addCase(updateAnswer.pending, (state) => {
+                state.loadStatus = 'loading';
+            })
+            .addCase(updateAnswer.fulfilled, (state, action) => {
+                state.loadStatus = 'succeeded';
+                state.answers = '';
+                state.allAnswers = state.allAnswers.map((answer) => {
+                    return answer.answer_id === action.payload.answer_id
+                        ? {
+                            ...answer,
+                            answer_name: action.payload.answer_name,
+                        }
+                        : answer;
+                });
+            })
+            .addCase(updateAnswer.rejected, (state, action) => {
+                state.loadStatus = 'failed';
+                state.error = action.payload;
+            });
     },
 
 });
 
 export const {
-    userId,
-    emailUser,
-    quizUserName,
-    questionUserText,
-    answersUser,
-    allQuizzes,
-    isLoading,
-    errorUser,
-    allQuestions,
-    allAnswers
+    userIdReducer,
+    emailUserReducer,
+    quizValueUserReducer,
+    questionValueUserReducer,
+    answersValueUserReducer,
+    allQuizzesUserReducer,
+    isLoadingReducer,
+    errorUserReducer,
+    allQuestionsReducer,
+    allAnswersReducer,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
