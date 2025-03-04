@@ -73,17 +73,20 @@ const QuizPage: FC = () => {
 
     const dispatch = useDispatch<AppDispatch>();
 
+    let quizName = '';
+
     const questionTextSelector = useSelector(SelectorUserQuestions);
-    const [{quiz_name}] = quizzesDataSelector.filter((quiz) => {
-        const { quiz_name } = quiz;
 
-        if (quiz.quiz_id === Number(quiz_id)) {
-            console.log(quiz_name);
-            return quiz_name;
-        }
-    });
+    if (quizzesDataSelector.length) {
+        quizzesDataSelector.filter((quiz) => {
+            const { quiz_name } = quiz;
 
-    console.log('titleQuiz', quiz_name);
+            if (quiz.quiz_id === Number(quiz_id)) {
+                quizName = quiz_name;
+                return quiz_name;
+            }
+        });
+    }
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -133,11 +136,12 @@ const QuizPage: FC = () => {
                 }
 
                 <QuestionsPage
-                    questionName={quizzesDataSelector.filter(quiz => quiz.quiz_id === Number(quiz_id))}
+                    quizName={quizName}
                 />
 
                 <ButtonOpenModal
                     text='Добавить вопрос'
+                    className='mt-10'
                     onOpenModal={() => setIsOpenModal(true)}
                 />
             </div>

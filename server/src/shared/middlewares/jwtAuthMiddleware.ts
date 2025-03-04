@@ -19,11 +19,11 @@ const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction
         jwt.verify(jwtToken, String(process.env.JWT_SECRET),
             (err: any, decoded: any) => {
                 if (decoded) {
-                    console.log('valid');
+                    console.log('valid token');
                     next();
                 }
                 if (err) {
-                    console.log('no valid');
+                    console.log('no valid token');
                     return res.status(403)
                         .send({data: null, message: 'Нужно пройти заново авторизацию' });
                 }

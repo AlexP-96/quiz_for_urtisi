@@ -26,6 +26,7 @@ import { getLSUser } from '../../../6_shared/lib/helpers/localStorage/localStora
 import {
     Accordion,
 } from '6_shared/ui/Accordion';
+import { AnswerSection } from '../../../6_shared/ui/Answers';
 import {
     BtnPopUpCloseModal,
     ButtonOpenModal,
@@ -39,17 +40,18 @@ import AnswersPage from './AnswersPage';
 import { PaperClipIcon } from '@heroicons/react/24/outline';
 
 interface IQuestionData {
-    questionName: any;
+    quizName: string;
 }
 
-const QuestionsPage: FC<IQuestionData> = ({ questionName }) => {
+const QuestionsPage: FC<IQuestionData> = ({ quizName }) => {
     const params = useParams();
-    console.log('questionName', questionName);
+
     const answerValueSelector = useSelector(SelectorUserAnswers);
     const questionsDataSelector = useSelector(SelectorUserArrQuestions);
     const answersDataSelector = useSelector(SelectorUserArrAnswers);
 
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    const [isChangeQuestionModal, setIsChangeQuestionModal] = useState<boolean>(false);
     const [questionId, setQuestionId] = useState<number | null>(null);
 
     const dispatch = useDispatch<AppDispatch>();
@@ -65,14 +67,18 @@ const QuestionsPage: FC<IQuestionData> = ({ questionName }) => {
     const handlerClickButton = (question_id: number) => {
         setIsOpenModal(true);
         setQuestionId(question_id);
-        console.log(question_id);
+    };
+
+    const handlerChangeQuestion = (question_id: number) => {
+        setIsChangeQuestionModal(true);
+        setQuestionId(question_id);
     };
 
     useEffect(() => {
 
-    }, [questionName]);
+    }, []);
 
-    const submitForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
+    const submitCreateNewAnswerForm = (e: FormEvent<HTMLFormElement>, questionID: number) => {
         e.preventDefault();
         dispatch(createAnswer({
             user_id: getLSUser().user_id,
@@ -83,113 +89,73 @@ const QuestionsPage: FC<IQuestionData> = ({ questionName }) => {
     };
 
     return (
-        <>
-            <div>
-                <ModalPopUpTailwind
-                    isVisible={isOpenModal}
-                    onCloseModal={() => setIsOpenModal(false)}
-                    title='Введите название вопроса'
-                    textBtnCancel='Отмена'
-                    textBtnAccess='Создать вопрос'
-                >
-                    <InputModal
-                        value={answerValueSelector}
-                        changeEvent={handlerChangeInput}
-                    />
-                </ModalPopUpTailwind>
-                <div className='px-4 sm:px-0'>
-                    <h3 className='text-base/7 font-semibold text-gray-900'>{questionName.quiz_name}</h3>
-                </div>
-                {questionsDataSelector.filter(question => question.quiz_id === Number(params.quiz_id))
-                    .map((question) => {
-                        return (
-                            <div
-                                className='mt-5 border-t border-gray-100'
-                                key={question.question_id}
-                            >
-                                <dl className='divide-y m-2 divide-gray-100'>
-                                    <h4 className='mt-1 py-5 max-w-2xl text-sm/6 font-extrabold text-gray-800'>
+        <Fragment>
+            <ModalPopUpTailwind
+                isVisible={isOpenModal}
+                onCloseModal={() => setIsOpenModal(false)}
+                title='Введите название нового ответа'
+                textBtnCancel='Отмена'
+                textBtnAccess='Создать ответ'
+                submitForm={(e) => submitCreateNewAnswerForm(e, questionId)}
+            >
+                <InputModal
+                    value={answerValueSelector}
+                    changeEvent={handlerChangeInput}
+                />
+            </ModalPopUpTailwind>
+            <ModalPopUpTailwind
+                isVisible={isChangeQuestionModal}
+                onCloseModal={() => setIsChangeQuestionModal(false)}
+                title='Изменить название вопроса'
+                textBtnCancel='Отмена'
+                textBtnAccess='Изменить вопрос'
+                submitForm={(e) => submitCreateNewAnswerForm(e, questionId)}
+            >
+                <InputModal
+                    value={answerValueSelector}
+                    changeEvent={handlerChangeInput}
+                />
+            </ModalPopUpTailwind>
+            <div className='px-4 sm:px-0'>
+                <h3 className='text-base/7 font-semibold text-gray-900'>{quizName}</h3>
+            </div>
+            {questionsDataSelector.filter(question => question.quiz_id === Number(params.quiz_id))
+                .map((question) => {
+                    return (
+                        <div
+                            className='mt-5 border-t border-gray-100 bg-blue-50 rounded-xl'
+                            key={question.question_id}
+                        >
+                            <dl className='divide-y divide-gray-100'>
+                                <div className='flex'>
+                                    <h4 className='py-5 text-sm/6 font-extrabold pl-5 text-gray-800 w-full bg-green-100 rounded-xl'>
                                         {question.question_name}
                                     </h4>
-                                    <div className='px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0'>
-                                        <dd className='mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0'>
-                                            Секция для названия вопросов
-                                        </dd>
-                                        <dt className='text-sm/6 font-medium text-gray-900'>Секция для кнопок</dt>
-                                    </div>
-                                    <div className='px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0'>
-                                        <dd className='mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0'>
-                                            <ButtonOpenModal
-                                                text='Создать ответ'
-                                                onOpenModal={() => handlerClickButton(question.question_id)}
-                                            />
-                                        </dd>
-                                    </div>
-                                </dl>
-                            </div>
-                        );
-                    })}
-            </div>
-            <Accordion>
-                {
-                    questionsDataSelector.filter(question => question.quiz_id === Number(params.quiz_id))
-                        .map((question) => {
-                            return (
-                                <Fragment key={question.question_id}>
-                                    <Accordion.Body
-                                        id={question.question_id}
-                                        key={question.question_id}
-                                        title={question.question_name}
-                                    >
-                                        <AnswersPage
-                                            answersArr={answersDataSelector.filter(answer => answer.question_id == question.question_id)}
-                                        />
-                                    </Accordion.Body>
-
-                                    <ModalPopUp
-                                        idModal={question.question_name + question.question_id}
-                                        onClick={handlerCloseModal}
-                                    >
-                                        <FormModal
-                                            submitForm={(e) => submitForm(e, question.question_id)}
-                                            method='post'
-                                            sectionButtons={[
-                                                <BtnPopUpCloseModal
-                                                    key='1'
-                                                    popUpTarget={question.question_name + question.question_id}
-                                                    text='Создать'
-                                                    type='submit'
-                                                    color={'green'}
-                                                />,
-                                                <BtnPopUpCloseModal
-                                                    key='2'
-                                                    popUpTarget={question.question_name + question.question_id}
-                                                    text='Отмена'
-                                                    type='button'
-                                                    color={'red'}
-                                                    onClick={handlerCloseModal}
-                                                />,
-                                            ]}
-                                        >
-                                            <InputModal
-                                                labelText='Введите название вашего ответа'
-                                                value={answerValueSelector}
-                                                changeEvent={handlerChangeInput}
-                                            />
-                                        </FormModal>
-                                    </ModalPopUp>
-                                    <BtnPopUpOpenModal
-                                        idPopUpTarget={question.question_name + question.question_id}
-                                        text='Создать ответ'
-                                        type='submit'
-                                        color='green'
+                                    <ButtonOpenModal
+                                        text='Изменить вопрос'
+                                        backgroundColor='green'
+                                        textColor='yellow'
+                                        onOpenModal={() => handlerChangeQuestion(question.question_id)}
                                     />
-                                </Fragment>
-                            );
-                        })
-                }
-            </Accordion>
-        </>
+                                </div>
+                                {
+                                    <AnswerSection answerArr={answersDataSelector.filter(answer => answer.question_id == question.question_id)} />
+                                }
+                                <div className='px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0'>
+                                    <dd className='mt-1 pl-5 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0'>
+                                        <ButtonOpenModal
+                                            text='Создать ответ'
+                                            backgroundColor='green'
+                                            textColor='yellow'
+                                            onOpenModal={() => handlerClickButton(question.question_id)}
+                                        />
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    );
+                })}
+        </Fragment>
     );
 };
 
